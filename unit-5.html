@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study: The 1973 Oil Crisis</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --aged: #e8dfc8;
+    --crude: #2b1a00;
+    --oil: #4a3000;
+    --amber: #c97d00;
+    --flame: #e85c00;
+    --highlight: #fff3c4;
+    --rule: #c4b89a;
+    --red: #c0392b;
+    --green: #1a6b3c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* Newspaper texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    background: var(--crude);
+    color: var(--paper);
+    text-align: center;
+    padding: 12px 20px 16px;
+    border-bottom: 4px solid var(--amber);
+  }
+
+  .masthead .overline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 6vw, 56px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -1px;
+  }
+
+  .masthead h1 em {
+    color: var(--amber);
+    font-style: italic;
+  }
+
+  .masthead .dateline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--rule);
+    margin-top: 10px;
+    letter-spacing: 2px;
+  }
+
+  /* TICKER BAR */
+  .ticker {
+    background: var(--amber);
+    color: var(--crude);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 25s linear infinite;
+    padding-left: 100%;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* LEARNING TARGETS BAR */
+  .targets-bar {
+    background: var(--aged);
+    border-bottom: 2px solid var(--rule);
+    padding: 18px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .targets-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--oil);
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  .target-pill {
+    background: var(--crude);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  /* MAIN LAYOUT */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0 24px;
+  }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: var(--crude);
+    padding: 4px 10px;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: var(--crude);
+    line-height: 1.2;
+  }
+
+  .rule-line {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* BODY TEXT */
+  .body-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink);
+    max-width: 700px;
+  }
+
+  .body-text p + p {
+    margin-top: 1em;
+  }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 5px solid var(--amber);
+    border-right: 5px solid var(--amber);
+    margin: 32px 0;
+    padding: 20px 32px;
+    background: var(--highlight);
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--crude);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  /* CONCEPT BOXES */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 28px 0;
+  }
+
+  .concept-box {
+    border: 1px solid var(--rule);
+    background: white;
+    padding: 24px;
+    position: relative;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .concept-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .concept-box::before {
+    content: attr(data-label);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .concept-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--crude);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .concept-box p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #444;
+  }
+
+  .concept-box.highlighted {
+    border-color: var(--amber);
+    border-width: 2px;
+    background: var(--highlight);
+  }
+
+  /* TIMELINE */
+  .timeline {
+    margin: 28px 0;
+    border-left: 3px solid var(--amber);
+    padding-left: 32px;
+  }
+
+  .timeline-event {
+    position: relative;
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateX(-10px);
+    animation: fadeSlide 0.5s forwards;
+  }
+
+  .timeline-event:nth-child(1) { animation-delay: 0.1s; }
+  .timeline-event:nth-child(2) { animation-delay: 0.2s; }
+  .timeline-event:nth-child(3) { animation-delay: 0.3s; }
+  .timeline-event:nth-child(4) { animation-delay: 0.4s; }
+  .timeline-event:nth-child(5) { animation-delay: 0.5s; }
+
+  @keyframes fadeSlide {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .timeline-event::before {
+    content: '';
+    position: absolute;
+    left: -39px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--amber);
+    border: 3px solid var(--paper);
+    box-shadow: 0 0 0 2px var(--amber);
+  }
+
+  .timeline-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .timeline-event h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--crude);
+    margin-bottom: 4px;
+  }
+
+  .timeline-event p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  /* PRICE CHART — pure CSS bar chart */
+  .chart-container {
+    background: var(--crude);
+    border-radius: 4px;
+    padding: 32px 32px 16px;
+    margin: 28px 0;
+    color: var(--paper);
+    position: relative;
+  }
+
+  .chart-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 20px;
+  }
+
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 160px;
+    border-bottom: 1px solid #4a3000;
+    border-left: 1px solid #4a3000;
+    padding-bottom: 0;
+    position: relative;
+  }
+
+  .bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+  }
+
+  .bar {
+    width: 100%;
+    max-width: 48px;
+    background: var(--amber);
+    transition: height 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    cursor: pointer;
+  }
+
+  .bar:hover {
+    background: var(--flame);
+  }
+
+  .bar-val {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--paper);
+    white-space: nowrap;
+  }
+
+  .bar-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: #8a7a5a;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* INFLATION TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+  }
+
+  .data-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--crude);
+    padding: 10px 16px;
+    text-align: left;
+  }
+
+  .data-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .data-table tr:nth-child(even) td {
+    background: var(--aged);
+  }
+
+  .data-table .up { color: var(--red); font-weight: 500; font-family: 'IBM Plex Mono', monospace; }
+  .data-table .ok { color: var(--green); font-family: 'IBM Plex Mono', monospace; }
+
+  /* STAGFLATION DIAGRAM */
+  .stagflation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 2px solid var(--rule);
+    margin: 28px 0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .quadrant {
+    padding: 24px;
+    border: 1px solid var(--rule);
+  }
+
+  .quadrant h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .quadrant p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #555;
+  }
+
+  .quadrant.danger { background: #fff5f5; }
+  .quadrant.danger h4 { color: var(--red); }
+  .quadrant.warning { background: #fffbf0; }
+  .quadrant.warning h4 { color: var(--amber); }
+  .quadrant.safe { background: #f0fff6; }
+  .quadrant.safe h4 { color: var(--green); }
+  .quadrant.neutral { background: var(--aged); }
+  .quadrant.neutral h4 { color: var(--oil); }
+
+  .quadrant-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rule);
+    padding: 0 24px;
+    margin-top: -1px;
+    background: white;
+    border: 1px solid var(--rule);
+    border-top: none;
+    border-bottom: none;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  /* CHECK-FOR-UNDERSTANDING */
+  .cfu-box {
+    background: var(--crude);
+    color: var(--paper);
+    padding: 32px 36px;
+    margin: 40px 0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cfu-box::before {
+    content: '?';
+    position: absolute;
+    right: -10px;
+    top: -20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 180px;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .cfu-box .cfu-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 16px;
+  }
+
+  .cfu-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .cfu-questions {
+    list-style: none;
+    counter-reset: q;
+  }
+
+  .cfu-questions li {
+    counter-increment: q;
+    padding: 10px 0 10px 36px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 15px;
+    line-height: 1.6;
+    position: relative;
+  }
+
+  .cfu-questions li::before {
+    content: counter(q);
+    position: absolute;
+    left: 0;
+    top: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--amber);
+    background: rgba(201,125,0,0.15);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+  }
+
+  .cfu-questions li:last-child {
+    border-bottom: none;
+  }
+
+  /* VOCAB SIDEBAR */
+  .vocab-strip {
+    background: var(--aged);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--amber);
+    padding: 20px 24px;
+    margin: 28px 0;
+  }
+
+  .vocab-strip .vocab-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 12px;
+  }
+
+  .vocab-item {
+    display: flex;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--rule);
+    font-size: 14px;
+  }
+
+  .vocab-item:last-child { border-bottom: none; }
+
+  .vocab-term {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    color: var(--crude);
+    min-width: 180px;
+    font-size: 13px;
+  }
+
+  .vocab-def {
+    color: #444;
+    line-height: 1.5;
+  }
+
+  /* LESSON NAVIGATION FOOTER */
+  .lesson-footer {
+    margin-top: 64px;
+    border-top: 2px solid var(--rule);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+
+  .footer-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--rule);
+    letter-spacing: 1px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--crude);
+    color: var(--amber);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    text-transform: uppercase;
+  }
+
+  hr.section-rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 8px 0 24px;
+  }
+
+  strong { font-weight: 500; color: var(--crude); }
+
+  @media (max-width: 600px) {
+    .targets-bar { padding: 14px 16px; }
+    .page { padding: 24px 16px 60px; }
+    .stagflation-grid { grid-template-columns: 1fr; }
+    .concept-grid { grid-template-columns: 1fr; }
+    .pull-quote { font-size: 18px; padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="overline">Economics Case Study Series &nbsp;·&nbsp; No. 1</div>
+  <h1>The <em>1973 Oil Crisis</em><br>& the Birth of Stagflation</h1>
+  <div class="dateline">October 1973 – March 1974 &nbsp;·&nbsp; OPEC Oil Embargo &nbsp;·&nbsp; United States & Western Economies</div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker">
+  <span class="ticker-inner">
+    CRUDE OIL PRICE: $3.00 → $12.00 PER BARREL &nbsp;·&nbsp; INFLATION HITS 11% &nbsp;·&nbsp; GDP GROWTH: NEGATIVE &nbsp;·&nbsp; GAS LINES STRETCH BLOCKS &nbsp;·&nbsp; OPEC CUTS PRODUCTION 5% PER MONTH &nbsp;·&nbsp; NIXON SIGNS EMERGENCY HIGHWAY ENERGY CONSERVATION ACT &nbsp;·&nbsp; HEATING OIL RATIONED &nbsp;·&nbsp; DOW JONES FALLS 45% &nbsp;·&nbsp;
+  </span>
+</div>
+
+<!-- LEARNING TARGETS -->
+<div class="targets-bar">
+  <span class="targets-label">Learning Targets:</span>
+  <span class="target-pill">Cartels</span>
+  <span class="target-pill">Price Makers vs. Price Takers</span>
+  <span class="target-pill">Cost-Push Inflation</span>
+  <span class="target-pill">Demand-Pull Inflation</span>
+  <span class="target-pill">Stagflation</span>
+</div>
+
+<main class="page">
+
+  <!-- SECTION 1: SETTING THE SCENE -->
+  <div class="section-header">
+    <div class="section-num">Section 01</div>
+    <h2>Setting the Scene: The World Before the Embargo</h2>
+    <div class="rule-line"></div>
+  </div>
+  <hr class="section-rule">
+
+  <div class="body-text">
+    <p>In the early 1970s, oil was cheap, abundant, and taken for granted. The United States, Western Europe, and Japan had built entire economies — their suburbs, factories, and power grids — on the assumption that petroleum would cost roughly <strong>$3 a barrel</strong> forever. Cars were big. Highways were long. Nobody insulated their houses.</p>
+    <p>Then, in October 1973, everything changed. The Arab members of the Organization of Petroleum Exporting Countries (OPEC) announced they would <strong>stop selling oil</strong> to the United States and several other Western nations. Within months, the price of oil had quadrupled. The result was one of the most dramatic economic disruptions of the 20th century — and it introduced the world to a word that economists hoped they'd never have to use: <em>stagflation.</em></p>
+  </div>
+
+  <div class="pull-quote">
+    "The Arabs have oil. We have their money. They have us where they want us."<br>
+    <small style="font-size:14px; font-style:normal; font-family:'IBM Plex Mono', monospace; letter-spacing:1px;">— Overheard on a Washington trading floor, 1973</small>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    <div class="timeline-event">
+      <div class="timeline-date">Oct. 6, 1973</div>
+      <h4>The Yom Kippur War Begins</h4>
+      <p>Egypt and Syria launch a surprise attack on Israel. The U.S. airlifts military supplies to Israel in response.</p>
+    </div>
+    <div class="timeline-event">
+      <div class="timeline-date">Oct. 17, 1973</div>
+      <h4>OPEC Announces the Embargo</h4>
+      <p>Arab oil ministers cut production and embargo the U.S., Portugal, Netherlands, and others who supported Israel.</p>
+    </div>
+    <div class="timeline-event">
+      <div class="timeline-date">Nov. – Dec., 1973</div>
+      <h4>Gas Lines Appear Across America</h4>
+      <p>Stations run out of fuel. Odd-even rationing begins. Speed limits are cut to 55 mph. Sunday driving bans are imposed.</p>
+    </div>
+    <div class="timeline-event">
+      <div class="timeline-date">Jan. 1974</div>
+      <h4>Oil Hits $12 a Barrel</h4>
+      <p>From $3 in October to $12 by January — a 400% increase in three months. Inflation surges. Growth collapses.</p>
+    </div>
+    <div class="timeline-event">
+      <div class="timeline-date">March 1974</div>
+      <h4>Embargo Lifted — Damage Done</h4>
+      <p>The embargo ends, but oil prices stay high. The era of cheap oil is over. The global economy is permanently changed.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2: CARTELS -->
+  <div class="section-header">
+    <div class="section-num">Section 02</div>
+    <h2>What Is a Cartel? (And Why Producers Love High Prices)</h2>
+    <div class="rule-line"></div>
+  </div>
+  <hr class="section-rule">
+
+  <div class="body-text">
+    <p>In a normal competitive market, if you raise your price, your customers just buy from someone else. You're a <strong>price taker</strong> — the market sets the price, and you accept it or lose business. This is how most markets work: wheat farmers, factory workers, small retailers.</p>
+    <p>But OPEC member nations figured out a way to beat this system. By <strong>coordinating</strong> with each other — agreeing to all produce less oil at the same time — they could force prices up and nobody could "shop around." This coordination is what makes a <strong>cartel</strong>.</p>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-box" data-label="Core Concept">
+      <h3>Price Taker</h3>
+      <p>A producer who must accept whatever price the market offers. If a wheat farmer tries to charge more than market price, buyers simply buy from another farmer. <strong>Individual sellers have no power over price.</strong> This describes most producers in competitive markets.</p>
+    </div>
+    <div class="concept-box highlighted" data-label="Core Concept">
+      <h3>Price Maker</h3>
+      <p>A producer who has enough market power to <em>set</em> (or heavily influence) price. Monopolies are the extreme case. A cartel creates price-maker power through coordination — acting like one giant monopolist even though many sellers exist.</p>
+    </div>
+    <div class="concept-box" data-label="Core Concept">
+      <h3>Cartel</h3>
+      <p>A group of producers who agree to coordinate output and pricing — essentially colluding to act as one. OPEC members agreed to cut production together so no single member lost market share. The goal: <strong>keep prices artificially high</strong> and share the profits.</p>
+    </div>
+  </div>
+
+  <div class="vocab-strip">
+    <div class="vocab-label">Why Do Producers Love High Prices?</div>
+    <div class="vocab-item">
+      <span class="vocab-term">More Revenue per Unit</span>
+      <span class="vocab-def">If you pump 1 million barrels a day, the difference between $3/barrel and $12/barrel is $9 million <em>per day</em>. OPEC nations made far more money selling less oil at higher prices.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Inelastic Demand</span>
+      <span class="vocab-def">Oil is hard to substitute quickly. Consumers and industries <em>need</em> it. Even at 4× the price, demand doesn't drop by 75%. This means raising prices dramatically increases total revenue.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Political Leverage</span>
+      <span class="vocab-def">High prices also gave OPEC members geopolitical power — the ability to punish countries they disagreed with (like the U.S. supporting Israel) by threatening their energy supply.</span>
+    </div>
+  </div>
+
+  <div class="cfu-box">
+    <div class="cfu-label">Check for Understanding</div>
+    <h3>Cartels &amp; Market Power</h3>
+    <ul class="cfu-questions">
+      <li>Explain why a single farmer can't raise wheat prices, but OPEC could raise oil prices. What's the key difference?</li>
+      <li>If OPEC produces 40% of the world's oil and decides to cut production by 25%, what happens to prices — and why?</li>
+      <li>What's the <em>biggest threat</em> to a cartel's power? Hint: think about what happens if one member secretly sells more than agreed.</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 3: INFLATION -->
+  <div class="section-header">
+    <div class="section-num">Section 03</div>
+    <h2>How Oil Prices Drive Inflation</h2>
+    <div class="rule-line"></div>
+  </div>
+  <hr class="section-rule">
+
+  <div class="body-text">
+    <p>When oil quadrupled in price, it didn't just make driving more expensive. Oil is an <strong>input</strong> in almost everything — gasoline to move trucks, fuel to heat factories, petrochemicals to make plastics. When the cost of a critical input skyrockets, the cost of making <em>everything</em> rises. This creates a specific kind of inflation economists call <strong>cost-push inflation.</strong></p>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-box" data-label="Inflation Type 1">
+      <h3>Demand-Pull Inflation</h3>
+      <p>"Too much money chasing too few goods." The economy is overheating — consumers are spending freely, businesses can't keep up with demand, so prices rise. The economy is <strong>growing</strong>. This is inflation policymakers are used to managing: raise interest rates, cool spending.</p>
+      <p style="margin-top:10px; font-size:13px; color: var(--green);"><strong>Think:</strong> Post-WWII boom, tech bubble 1990s, COVID reopening 2021.</p>
+    </div>
+    <div class="concept-box highlighted" data-label="Inflation Type 2">
+      <h3>Cost-Push Inflation ← 1973</h3>
+      <p>A <strong>supply shock</strong> drives up input costs, and businesses pass those costs to consumers. Output <em>falls</em> (businesses can't afford to produce as much), unemployment rises, AND prices rise simultaneously. This is the dangerous kind.</p>
+      <p style="margin-top:10px; font-size:13px; color: var(--red);"><strong>Think:</strong> 1973 oil embargo, 1979 Iran oil shock, COVID supply chain crunch.</p>
+    </div>
+  </div>
+
+  <!-- CSS Bar Chart -->
+  <div class="chart-container">
+    <div class="chart-title">U.S. Annual Inflation Rate (CPI) · 1970–1982</div>
+    <div class="bar-chart" id="inflChart">
+      <div class="bar-group"><div class="bar" style="height:27%" id="b1970"><span class="bar-val">5.8%</span></div><div class="bar-label">'70</div></div>
+      <div class="bar-group"><div class="bar" style="height:20%"><span class="bar-val">4.3%</span></div><div class="bar-label">'71</div></div>
+      <div class="bar-group"><div class="bar" style="height:16%"><span class="bar-val">3.3%</span></div><div class="bar-label">'72</div></div>
+      <div class="bar-group"><div class="bar" style="height:39%" title="Oil crisis begins"><span class="bar-val">6.2%</span></div><div class="bar-label">'73</div></div>
+      <div class="bar-group"><div class="bar" style="height:55%; background:var(--flame)"><span class="bar-val">11.0%</span></div><div class="bar-label">'74</div></div>
+      <div class="bar-group"><div class="bar" style="height:43%"><span class="bar-val">9.1%</span></div><div class="bar-label">'75</div></div>
+      <div class="bar-group"><div class="bar" style="height:26%"><span class="bar-val">5.8%</span></div><div class="bar-label">'76</div></div>
+      <div class="bar-group"><div class="bar" style="height:31%"><span class="bar-val">6.5%</span></div><div class="bar-label">'77</div></div>
+      <div class="bar-group"><div class="bar" style="height:42%"><span class="bar-val">7.6%</span></div><div class="bar-label">'78</div></div>
+      <div class="bar-group"><div class="bar" style="height:53%; background:var(--flame)"><span class="bar-val">11.3%</span></div><div class="bar-label">'79</div></div>
+      <div class="bar-group"><div class="bar" style="height:61%; background:var(--flame)"><span class="bar-val">13.5%</span></div><div class="bar-label">'80</div></div>
+      <div class="bar-group"><div class="bar" style="height:48%"><span class="bar-val">10.3%</span></div><div class="bar-label">'81</div></div>
+      <div class="bar-group"><div class="bar" style="height:28%"><span class="bar-val">6.1%</span></div><div class="bar-label">'82</div></div>
+    </div>
+    <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8a7a5a; margin-top:12px;">Note: Orange bars = spike years tied to oil shocks (1974, 1979–80). Data: U.S. Bureau of Labor Statistics.</p>
+  </div>
+
+  <!-- Economic data table -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Oil Price ($/barrel)</th>
+        <th>Inflation Rate</th>
+        <th>GDP Growth</th>
+        <th>Unemployment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1972</td>
+        <td>$3.00</td>
+        <td class="ok">3.3%</td>
+        <td class="ok">+5.3%</td>
+        <td>5.6%</td>
+      </tr>
+      <tr>
+        <td>1973</td>
+        <td>$3.00 → $12.00</td>
+        <td class="up">6.2% ↑</td>
+        <td class="ok">+5.6%</td>
+        <td>4.9%</td>
+      </tr>
+      <tr>
+        <td>1974</td>
+        <td>$12.00</td>
+        <td class="up">11.0% ↑↑</td>
+        <td class="up">−0.5% ↓</td>
+        <td class="up">5.6% ↑</td>
+      </tr>
+      <tr>
+        <td>1975</td>
+        <td>$12.00</td>
+        <td class="up">9.1% ↑</td>
+        <td class="up">−0.2% ↓</td>
+        <td class="up">8.5% ↑↑</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 4: STAGFLATION -->
+  <div class="section-header">
+    <div class="section-num">Section 04</div>
+    <h2>The Nightmare Scenario: Stagflation</h2>
+    <div class="rule-line"></div>
+  </div>
+  <hr class="section-rule">
+
+  <div class="body-text">
+    <p>Before 1973, economists largely believed inflation and unemployment were opposites — if one went up, the other went down. This relationship (called the <strong>Phillips Curve</strong>) gave policymakers a menu of choices: accept some inflation for lower unemployment, or vice versa.</p>
+    <p>The oil crisis broke this model completely. Suddenly, the economy had <strong>rising prices AND rising unemployment at the same time</strong>. The word economists invented for this impossible-seeming combination was <strong>stagflation</strong> — economic stagnation (slow growth, high unemployment) <em>plus</em> inflation.</p>
+    <p>Why was this so hard to fight? The usual cures were self-defeating. <strong>To fight inflation:</strong> raise interest rates → but that makes unemployment worse. <strong>To fight unemployment:</strong> lower rates, increase spending → but that makes inflation worse. The Federal Reserve was essentially trying to fight a fire with gasoline.</p>
+  </div>
+
+  <!-- Stagflation quadrant diagram -->
+  <div style="margin: 28px 0;">
+    <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--amber); margin-bottom:12px;">The Policymaker's Dilemma — 2×2 Economic States</p>
+    <div class="stagflation-grid">
+      <div class="quadrant safe">
+        <h4>↓ Inflation + ↓ Unemployment</h4>
+        <p><strong>The Goldilocks Economy.</strong> Low prices, people working. Every government's dream. Hard to achieve, hard to sustain. U.S. experienced this in the mid-1990s.</p>
+      </div>
+      <div class="quadrant warning">
+        <h4>↑ Inflation + ↓ Unemployment</h4>
+        <p><strong>Classic demand-pull overheating.</strong> Economy growing too fast. Fix: raise interest rates to cool spending. Painful but manageable.</p>
+      </div>
+      <div class="quadrant warning">
+        <h4>↓ Inflation + ↑ Unemployment</h4>
+        <p><strong>Recession with deflation risk.</strong> Fix: cut rates, stimulus spending. Standard Keynesian response. Also manageable.</p>
+      </div>
+      <div class="quadrant danger">
+        <h4>↑ Inflation + ↑ Unemployment</h4>
+        <p><strong>STAGFLATION — 1974–75 U.S.</strong> Cures for one problem worsen the other. No good options. Caused severe political crisis. Required years of painful policy under Volcker to escape.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-text">
+    <p>The U.S. didn't fully escape stagflation until Federal Reserve Chairman <strong>Paul Volcker</strong> raised interest rates to a shocking <strong>20%</strong> in 1980–81 — essentially choking the economy on purpose to kill inflation. It worked, but triggered the worst recession since the Great Depression, with unemployment hitting 10.8%.</p>
+    <p>The lesson: <strong>cost-push inflation caused by a supply shock is far more dangerous and harder to treat than ordinary demand-pull inflation.</strong> It exposed the limits of the economic tools governments thought they had mastered.</p>
+  </div>
+
+  <div class="cfu-box">
+    <div class="cfu-label">Check for Understanding</div>
+    <h3>Stagflation &amp; Economic Policy</h3>
+    <ul class="cfu-questions">
+      <li>In your own words: what is stagflation, and why was it considered an "impossible" combination before 1973?</li>
+      <li>Explain the policy trap: why couldn't the Federal Reserve simply fight inflation <em>and</em> unemployment at the same time?</li>
+      <li>The oil shock was a supply-side event, not a spending increase. Why does the <em>source</em> of inflation matter for how governments try to respond to it?</li>
+      <li><strong>Extension:</strong> In 2021–2022, the U.S. experienced high inflation again. Was it more like cost-push or demand-pull? What evidence supports your answer?</li>
+    </ul>
+  </div>
+
+  <!-- KEY VOCAB SUMMARY -->
+  <div class="section-header">
+    <div class="section-num">Glossary</div>
+    <h2>Key Terms Summary</h2>
+    <div class="rule-line"></div>
+  </div>
+  <hr class="section-rule">
+
+  <div class="vocab-strip">
+    <div class="vocab-label">Vocabulary for This Case Study</div>
+    <div class="vocab-item">
+      <span class="vocab-term">Cartel</span>
+      <span class="vocab-def">A group of producers who collude to fix prices or control supply, acting collectively as a price maker.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Price Taker</span>
+      <span class="vocab-def">A producer in a competitive market who must accept the prevailing market price with no individual power to influence it.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Price Maker</span>
+      <span class="vocab-def">A producer with enough market power to set or significantly influence the price of their good or service.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Demand-Pull Inflation</span>
+      <span class="vocab-def">Inflation caused by excessive demand — consumers have more money and bid up prices. Usually occurs during strong economic growth.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Cost-Push Inflation</span>
+      <span class="vocab-def">Inflation caused by rising input costs (like oil) that force producers to charge more. Can occur even when the economy is weak.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Supply Shock</span>
+      <span class="vocab-def">A sudden, unexpected disruption to the supply of a critical commodity, causing rapid price changes throughout the economy.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Stagflation</span>
+      <span class="vocab-def">A simultaneous combination of economic stagnation (high unemployment, slow/negative growth) and high inflation. Considered nearly impossible before 1973.</span>
+    </div>
+    <div class="vocab-item">
+      <span class="vocab-term">Phillips Curve</span>
+      <span class="vocab-def">The pre-1973 economic model suggesting a predictable trade-off between inflation and unemployment. The oil crisis revealed its limitations.</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="lesson-footer">
+    <div class="footer-meta">Case Study Series · Economics · Case No. 1 of N</div>
+    <div>
+      <span class="badge">Cost-Push Inflation</span>&nbsp;
+      <span class="badge">Cartels</span>&nbsp;
+      <span class="badge">Stagflation</span>
+    </div>
+  </div>
