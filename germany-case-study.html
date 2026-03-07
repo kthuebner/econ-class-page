@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study: Two Germanys — One Economic Experiment</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --east-bg: #1a1a2e;
+    --east-red: #c0392b;
+    --east-gold: #f0c040;
+    --east-text: #e8e0d0;
+    --west-bg: #f2ede4;
+    --west-blue: #1a3a6b;
+    --west-silver: #4a6fa5;
+    --west-text: #1a1a1a;
+    --divider: #c0392b;
+    --mono: 'DM Mono', monospace;
+    --display: 'Bebas Neue', sans-serif;
+    --serif: 'DM Serif Display', serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    color: var(--west-text);
+    font-family: var(--mono);
+    overflow-x: hidden;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: #111;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead-inner {
+    display: grid;
+    grid-template-columns: 1fr 4px 1fr;
+    min-height: 180px;
+  }
+
+  .mast-east {
+    background: var(--east-bg);
+    padding: 28px 32px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .mast-west {
+    background: var(--west-bg);
+    padding: 28px 32px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .mast-divider {
+    background: var(--divider);
+    position: relative;
+  }
+
+  .mast-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .mast-east .mast-label { color: var(--east-gold); }
+  .mast-west .mast-label { color: var(--west-blue); }
+
+  .mast-east h1 {
+    font-family: var(--display);
+    font-size: clamp(32px, 5vw, 58px);
+    color: var(--east-text);
+    line-height: 0.95;
+    letter-spacing: 2px;
+  }
+
+  .mast-west h1 {
+    font-family: var(--display);
+    font-size: clamp(32px, 5vw, 58px);
+    color: var(--west-blue);
+    line-height: 0.95;
+    letter-spacing: 2px;
+  }
+
+  .mast-east .mast-sub {
+    font-size: 11px;
+    color: rgba(232,224,208,0.5);
+    letter-spacing: 1px;
+    margin-top: 10px;
+  }
+
+  .mast-west .mast-sub {
+    font-size: 11px;
+    color: rgba(26,26,26,0.4);
+    letter-spacing: 1px;
+    margin-top: 10px;
+  }
+
+  /* CENTER TITLE BAR */
+  .center-title {
+    background: var(--divider);
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    position: relative;
+  }
+
+  .center-title .series-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+
+  .center-title h2 {
+    font-family: var(--display);
+    font-size: clamp(20px, 4vw, 36px);
+    letter-spacing: 3px;
+    line-height: 1.1;
+  }
+
+  .center-title .dateline {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-top: 6px;
+  }
+
+  /* LEARNING TARGETS */
+  .targets-bar {
+    background: var(--east-bg);
+    border-bottom: 3px solid var(--east-gold);
+    padding: 14px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .targets-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--east-gold);
+    margin-right: 6px;
+  }
+
+  .target-pill {
+    background: rgba(240,192,64,0.15);
+    border: 1px solid var(--east-gold);
+    color: var(--east-gold);
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* MAIN LAYOUT */
+  .page {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 0 80px;
+    background: white;
+  }
+
+  /* ── SPLIT SECTIONS ── */
+  .split-section {
+    display: grid;
+    grid-template-columns: 1fr 4px 1fr;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .split-east {
+    background: var(--east-bg);
+    padding: 32px 36px;
+    color: var(--east-text);
+  }
+
+  .split-west {
+    background: var(--west-bg);
+    padding: 32px 36px;
+    color: var(--west-text);
+  }
+
+  .split-divider-bar {
+    background: var(--divider);
+  }
+
+  /* FULL-WIDTH SECTIONS */
+  .full-section {
+    background: white;
+    padding: 40px 48px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .full-section.dark {
+    background: #1a1a1a;
+    color: #e8e0d0;
+  }
+
+  /* SECTION LABELS */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .east-label { color: var(--east-gold); }
+  .west-label { color: var(--west-blue); }
+  .neutral-label { color: #888; }
+  .red-label { color: var(--east-red); }
+
+  .section-heading {
+    font-family: var(--serif);
+    font-size: clamp(18px, 2.5vw, 26px);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .east-heading { color: var(--east-gold); }
+  .west-heading { color: var(--west-blue); }
+  .neutral-heading { color: #1a1a1a; }
+  .dark-heading { color: #f0f0f0; }
+
+  .body-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.8;
+    font-weight: 400;
+  }
+
+  .body-text p + p { margin-top: 0.9em; }
+
+  /* INTRO STRIP */
+  .intro-strip {
+    background: #1a1a1a;
+    color: #e8e0d0;
+    padding: 32px 48px;
+    border-bottom: 4px solid var(--divider);
+  }
+
+  .intro-strip .big-question {
+    font-family: var(--serif);
+    font-size: clamp(20px, 3vw, 32px);
+    font-style: italic;
+    color: white;
+    line-height: 1.3;
+    max-width: 800px;
+    margin-bottom: 16px;
+  }
+
+  .intro-strip p {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.8;
+    color: rgba(232,224,208,0.8);
+    max-width: 720px;
+  }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    font-family: var(--serif);
+    font-size: clamp(16px, 2vw, 22px);
+    font-style: italic;
+    line-height: 1.4;
+    padding: 20px 0;
+    margin: 20px 0;
+  }
+
+  .east-quote {
+    border-left: 3px solid var(--east-gold);
+    padding-left: 20px;
+    color: var(--east-gold);
+  }
+
+  .west-quote {
+    border-left: 3px solid var(--west-blue);
+    padding-left: 20px;
+    color: var(--west-blue);
+  }
+
+  .quote-attr {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    margin-top: 8px;
+    font-style: normal;
+  }
+
+  /* PHOTO FRAMES */
+  .photo-frame {
+    border: 1px solid rgba(255,255,255,0.15);
+    margin: 20px 0;
+  }
+
+  .photo-frame.light-frame {
+    border: 1px solid #ccc;
+  }
+
+  .photo-placeholder {
+    background: rgba(255,255,255,0.05);
+    border: 2px dashed rgba(255,255,255,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px 16px;
+    min-height: 180px;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .photo-frame.light-frame .photo-placeholder {
+    background: rgba(0,0,0,0.03);
+    border-color: #bbb;
+  }
+
+  .photo-placeholder:hover { background: rgba(255,255,255,0.08); }
+  .photo-frame.light-frame .photo-placeholder:hover { background: rgba(0,0,0,0.06); }
+
+  .photo-placeholder input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo-placeholder img.loaded-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .upload-icon { font-size: 28px; opacity: 0.4; }
+
+  .upload-text {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    line-height: 1.6;
+    opacity: 0.7;
+  }
+
+  .upload-source {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-align: center;
+    opacity: 0.45;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .east-source { color: var(--east-gold); }
+  .west-source { color: var(--west-blue); }
+
+  .photo-caption {
+    padding: 8px 12px 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.5;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .light-caption {
+    border-top: 1px solid #ddd;
+    color: #555;
+  }
+
+  /* COMPARISON TABLE */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+    margin: 20px 0;
+  }
+
+  .comparison-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .th-concept { background: #1a1a1a; color: #888; }
+  .th-east { background: var(--east-bg); color: var(--east-gold); }
+  .th-west { background: var(--west-blue); color: white; }
+
+  .comparison-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  .comparison-table tr:nth-child(even) td { background: #fafafa; }
+  .comparison-table tr:last-child td { border-bottom: none; }
+
+  .td-concept { font-weight: 500; color: #333; }
+  .td-east { color: #444; border-left: 3px solid var(--east-red); padding-left: 12px; }
+  .td-west { color: #444; border-left: 3px solid var(--west-blue); padding-left: 12px; }
+
+  /* GOALS SCORECARD */
+  .scorecard {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid #ddd;
+    margin: 24px 0;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .sc-header {
+    padding: 8px 14px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .sc-goal { background: #1a1a1a; color: #aaa; }
+  .sc-east-h { background: var(--east-bg); color: var(--east-gold); text-align: center; }
+  .sc-west-h { background: var(--west-blue); color: white; text-align: center; }
+
+  .sc-row {
+    display: contents;
+  }
+
+  .sc-cell {
+    padding: 9px 14px;
+    border-top: 1px solid #eee;
+    line-height: 1.4;
+  }
+
+  .sc-name { color: #222; }
+  .sc-score { text-align: center; font-size: 16px; }
+
+  .strong { color: #1a6b3c; }
+  .weak { color: #c0392b; }
+  .mixed { color: #c97d00; }
+
+  /* TRABANT DIAGRAM */
+  .trabant-section {
+    background: #f7f4ee;
+    padding: 32px 48px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .stat-box {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-box.east-stat {
+    background: var(--east-bg);
+    border-top: 3px solid var(--east-gold);
+  }
+
+  .stat-box.west-stat {
+    background: var(--west-bg);
+    border-top: 3px solid var(--west-blue);
+    border: 1px solid #ccc;
+    border-top: 3px solid var(--west-blue);
+  }
+
+  .stat-num {
+    font-family: var(--display);
+    font-size: 42px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .east-stat .stat-num { color: var(--east-gold); }
+  .west-stat .stat-num { color: var(--west-blue); }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    line-height: 1.4;
+  }
+
+  .east-stat .stat-label { color: rgba(232,224,208,0.7); }
+  .west-stat .stat-label { color: #666; }
+
+  /* TIMELINE */
+  .timeline {
+    border-left: 3px solid var(--divider);
+    padding-left: 28px;
+    margin: 20px 0;
+  }
+
+  .tl-event {
+    margin-bottom: 24px;
+    opacity: 0;
+    transform: translateX(-8px);
+    animation: fadeIn 0.4s forwards;
+  }
+
+  .tl-event:nth-child(1) { animation-delay: 0.05s; }
+  .tl-event:nth-child(2) { animation-delay: 0.15s; }
+  .tl-event:nth-child(3) { animation-delay: 0.25s; }
+  .tl-event:nth-child(4) { animation-delay: 0.35s; }
+  .tl-event:nth-child(5) { animation-delay: 0.45s; }
+  .tl-event:nth-child(6) { animation-delay: 0.55s; }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .tl-date {
+    font-family: var(--display);
+    font-size: 18px;
+    color: var(--divider);
+    letter-spacing: 1px;
+  }
+
+  .tl-title {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: #1a1a1a;
+    margin: 2px 0;
+  }
+
+  .tl-body {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  /* CFU BOX */
+  .cfu-box {
+    background: #1a1a1a;
+    color: #e8e0d0;
+    padding: 36px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cfu-box::after {
+    content: '?';
+    position: absolute;
+    right: -20px;
+    top: -30px;
+    font-family: var(--display);
+    font-size: 240px;
+    color: rgba(255,255,255,0.03);
+    pointer-events: none;
+  }
+
+  .cfu-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--east-gold);
+    margin-bottom: 12px;
+  }
+
+  .cfu-heading {
+    font-family: var(--serif);
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-style: italic;
+    color: white;
+    margin-bottom: 20px;
+  }
+
+  .cfu-list {
+    list-style: none;
+    counter-reset: cfu;
+  }
+
+  .cfu-list li {
+    counter-increment: cfu;
+    padding: 12px 0 12px 36px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(232,224,208,0.85);
+    position: relative;
+  }
+
+  .cfu-list li:last-child { border-bottom: none; }
+
+  .cfu-list li::before {
+    content: counter(cfu);
+    position: absolute;
+    left: 0;
+    top: 12px;
+    font-family: var(--display);
+    font-size: 18px;
+    color: var(--east-gold);
+    width: 24px;
+    text-align: center;
+  }
+
+  /* SCORECARD ACTIVITY */
+  .activity-box {
+    background: #fff9e8;
+    border: 2px solid var(--east-gold);
+    padding: 28px 36px;
+    margin: 28px 0;
+  }
+
+  .activity-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--east-gold);
+    margin-bottom: 10px;
+  }
+
+  .activity-heading {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+  }
+
+  .activity-body {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: #333;
+  }
+
+  /* VOCAB */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    margin: 20px 0;
+  }
+
+  .vocab-item {
+    background: white;
+    padding: 16px 20px;
+  }
+
+  .vocab-term {
+    font-family: var(--display);
+    font-size: 18px;
+    color: var(--west-blue);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .vocab-def {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #444;
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .lesson-footer {
+    background: #111;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #555;
+    letter-spacing: 1px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid #444;
+    color: #888;
+    margin-left: 6px;
+  }
+
+  strong { font-weight: 500; }
+
+  @media (max-width: 680px) {
+    .split-section { grid-template-columns: 1fr; }
+    .split-divider-bar { height: 4px; width: 100%; }
+    .masthead-inner { grid-template-columns: 1fr; }
+    .mast-divider { height: 4px; width: 100%; }
+    .full-section, .cfu-box, .trabant-section { padding: 28px 20px; }
+    .split-east, .split-west { padding: 24px 20px; }
+    .scorecard { grid-template-columns: 1fr; }
+    .lesson-footer { padding: 20px; }
+    .targets-bar { padding: 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD: SPLIT DESIGN -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="mast-east">
+      <div>
+        <div class="mast-label">Deutsche Demokratische Republik</div>
+        <h1>GERMAN<br>DEMOCRATIC<br>REPUBLIC</h1>
+      </div>
+      <div class="mast-sub">Est. 1949 · Command Economy · Soviet Bloc</div>
+    </div>
+    <div class="mast-divider"></div>
+    <div class="mast-west">
+      <div>
+        <div class="mast-label">Bundesrepublik Deutschland</div>
+        <h1>FEDERAL<br>REPUBLIC<br>OF GERMANY</h1>
+      </div>
+      <div class="mast-sub">Est. 1949 · Social Market Economy · Western Bloc</div>
+    </div>
+  </div>
+</header>
+
+<!-- CENTER TITLE -->
+<div class="center-title">
+  <div class="series-tag">Economics Case Study Series · No. 2</div>
+  <h2>ONE NATION, TWO SYSTEMS, FORTY YEARS</h2>
+  <div class="dateline">1949 – 1989 · The Greatest Economic Experiment of the 20th Century</div>
+</div>
+
+<!-- LEARNING TARGETS -->
+<div class="targets-bar">
+  <span class="targets-label">Learning Targets:</span>
+  <span class="target-pill">The 3 Key Questions</span>
+  <span class="target-pill">Factors of Production</span>
+  <span class="target-pill">Command vs. Free Market</span>
+  <span class="target-pill">Economic Goals & Trade-offs</span>
+  <span class="target-pill">Price Makers vs. Price Takers</span>
+  <span class="target-pill">Mixed Economy</span>
+</div>
+
+<main class="page">
+
+  <!-- INTRO -->
+  <div class="intro-strip">
+    <div class="big-question">"What if you could run the same country as two completely different economic experiments — at the same time?"</div>
+    <p>In 1945, Germany lay in ruins. The Allied powers divided it into occupation zones, and by 1949 two separate nations had formed from the rubble. West Germany became a capitalist democracy aligned with the United States. East Germany became a communist state aligned with the Soviet Union. Same language. Same culture. Same history. Same people — many with family on the other side of the border. For 40 years, the two Germanys answered the three key questions of economics in almost perfectly opposite ways. The results were dramatic, measurable, and impossible to ignore.</p>
+  </div>
+
+  <!-- SECTION 1: THE SETUP -->
+  <div class="full-section">
+    <div class="section-label neutral-label">Section 01</div>
+    <div class="section-heading neutral-heading" style="font-family: var(--serif);">The Setup: Why This Is the Perfect Economic Experiment</div>
+
+    <div style="max-width:720px;">
+      <p class="body-text">Most of the time when economists compare economic systems, they're comparing different countries — but those countries have different cultures, different resources, different histories, different languages. It's hard to isolate the effect of the economic system itself.</p>
+      <p class="body-text" style="margin-top:1em;">Germany is different. The division of Germany in 1949 was essentially a controlled experiment: take one nation, split it down the middle, and run two opposing economic systems simultaneously. The starting conditions were as close to identical as history ever produces. By 1989, the differences were staggering.</p>
+    </div>
+
+    <!-- Timeline -->
+    <div style="margin-top:28px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start;">
+      <div>
+        <div class="section-label neutral-label" style="margin-bottom:12px;">Key Events — Timeline</div>
+        <div class="timeline">
+          <div class="tl-event">
+            <div class="tl-date">1945</div>
+            <div class="tl-title">Germany Defeated & Divided</div>
+            <div class="tl-body">Four Allied powers divide Germany into occupation zones. Berlin, deep inside the Soviet zone, is split four ways.</div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-date">1949</div>
+            <div class="tl-title">Two Nations Are Born</div>
+            <div class="tl-body">West Germany (FRG) launches as a parliamentary democracy with a market economy. East Germany (GDR) launches as a communist state under Soviet influence.</div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-date">1961</div>
+            <div class="tl-title">The Wall Goes Up</div>
+            <div class="tl-body">East Germany builds the Berlin Wall to stop mass emigration. Over 3.5 million East Germans had fled West since 1949 — the Wall was an admission that people were choosing with their feet.</div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-date">1989</div>
+            <div class="tl-title">The Wall Falls</div>
+            <div class="tl-body">East Germans flood checkpoints after the GDR announces it will open the border. Within hours, crowds are tearing down the Wall with hammers. The experiment ends.</div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-date">1990</div>
+            <div class="tl-title">Reunification</div>
+            <div class="tl-body">Germany officially reunites. Western economists arriving in the East discover factories using 1950s technology, a currency worth nearly nothing, and an economy that will take decades to rebuild.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo placeholder: divided Berlin map/aerial -->
+      <div>
+        <div class="section-label neutral-label" style="margin-bottom:12px;">Suggested Photo</div>
+        <div class="photo-frame light-frame">
+          <div class="photo-placeholder" id="photo-berlin">
+            <input type="file" accept="image/*" title="Upload photo">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">SUGGESTED PHOTO<br><strong>Berlin Wall / divided city, 1961–89</strong><br>Click to upload</div>
+            <div class="upload-source west-source">Bundesarchiv · commons.wikimedia.org<br>Search: "Berlin Wall construction 1961"</div>
+          </div>
+          <div class="photo-caption light-caption"><strong>Fig. 1</strong> — The Berlin Wall, built in 1961, stretched 96 miles through the city. Over 140 people were killed trying to cross it. Its fall in November 1989 became one of the defining images of the 20th century.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: THE 3 KEY QUESTIONS — SPLIT -->
+  <div class="split-section">
+    <div class="split-east">
+      <div class="section-label east-label">East Germany · Section 02</div>
+      <div class="section-heading east-heading">How the Command Economy Answered the 3 Questions</div>
+
+      <div class="body-text" style="color: var(--east-text);">
+        <p>In East Germany, the government — through a central planning agency called <strong style="color:var(--east-gold);">Gosplan</strong> — answered all three key questions for the entire economy.</p>
+        <p style="margin-top:0.9em;"><strong style="color:var(--east-gold);">What to make?</strong> Central planners set production targets for every factory. They decided how many apartments to build, how many pairs of shoes to produce, how many cars. Their goal was to meet the basic needs of all citizens equally.</p>
+        <p style="margin-top:0.9em;"><strong style="color:var(--east-gold);">How to make it?</strong> The state owned all the factories, land, and major equipment — the <em>factors of production</em>. Workers were assigned to jobs. Factory managers had quotas to meet, not profits to chase.</p>
+        <p style="margin-top:0.9em;"><strong style="color:var(--east-gold);">Who gets it?</strong> The state distributed goods based on need and political priorities. Housing, healthcare, and education were provided to all. Wages were relatively equal across professions.</p>
+      </div>
+
+      <div class="pull-quote east-quote">
+        "We will overtake West Germany within ten years."
+        <div class="quote-attr">— Walter Ulbricht, East German Leader, 1958</div>
+      </div>
+
+      <div class="photo-frame" style="margin-top:8px;">
+        <div class="photo-placeholder" id="photo-east-factory">
+          <input type="file" accept="image/*" title="Upload photo">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text" style="color:var(--east-text);">SUGGESTED PHOTO<br><strong>East German factory / workers, 1960s–70s</strong><br>Click to upload</div>
+          <div class="upload-source east-source">Bundesarchiv · commons.wikimedia.org<br>Search: "DDR Fabrik Arbeiter"</div>
+        </div>
+        <div class="photo-caption" style="color:rgba(232,224,208,0.6);"><strong style="color:var(--east-gold);">Fig. 2</strong> — East German factory workers. Employment was guaranteed — the state was the employer for virtually the entire workforce. Unemployment was officially zero.</div>
+      </div>
+    </div>
+
+    <div class="split-divider-bar"></div>
+
+    <div class="split-west">
+      <div class="section-label west-label">West Germany · Section 02</div>
+      <div class="section-heading west-heading">How the Market Economy Answered the 3 Questions</div>
+
+      <div class="body-text">
+        <p>West Germany adopted what its architects called the <strong style="color:var(--west-blue);">Soziale Marktwirtschaft</strong> — the "Social Market Economy." It was capitalism with a strong welfare state: free markets answer most questions, but the government provides a safety net.</p>
+        <p style="margin-top:0.9em;"><strong style="color:var(--west-blue);">What to make?</strong> Individual businesses and entrepreneurs decided what to produce based on consumer demand and the profit motive. If consumers wanted it and someone could make money selling it, it got made.</p>
+        <p style="margin-top:0.9em;"><strong style="color:var(--west-blue);">How to make it?</strong> Private firms owned the factories and equipment. Competition forced them to find efficient, innovative methods. Automakers like Volkswagen, BMW, and Mercedes-Benz competed aggressively for customers.</p>
+        <p style="margin-top:0.9em;"><strong style="color:var(--west-blue);">Who gets it?</strong> Consumers buy what they can afford. The government provides a safety net — unemployment insurance, healthcare, pensions — but doesn't control distribution of most goods.</p>
+      </div>
+
+      <div class="pull-quote west-quote">
+        "Prosperity for all."
+        <div class="quote-attr">— Ludwig Erhard, West Germany's first Economics Minister, 1957</div>
+      </div>
+
+      <div class="photo-frame light-frame" style="margin-top:8px;">
+        <div class="photo-placeholder" id="photo-west-wirtschaft">
+          <input type="file" accept="image/*" title="Upload photo">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">SUGGESTED PHOTO<br><strong>West German economic boom / Wirtschaftswunder, 1950s–60s</strong><br>Click to upload</div>
+          <div class="upload-source west-source">Bundesarchiv · commons.wikimedia.org<br>Search: "Wirtschaftswunder West Germany"</div>
+        </div>
+        <div class="photo-caption light-caption"><strong>Fig. 3</strong> — The West German "Wirtschaftswunder" (economic miracle) of the 1950s saw the economy grow at nearly 8% per year. By the 1960s, West Germany was one of the wealthiest nations on Earth.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: THE TRABANT STORY -->
+  <div class="trabant-section">
+    <div class="section-label red-label">Section 03 · The Trabant vs. The Volkswagen</div>
+    <div class="section-heading neutral-heading" style="font-family:var(--serif);">One Car Tells the Whole Story</div>
+
+    <div style="max-width:720px; margin-bottom:28px;">
+      <p class="body-text">Nothing illustrates the difference between the two systems more vividly than their cars. East Germany produced one car — the <strong>Trabant</strong>. West Germany let its car industry compete freely. The results speak for themselves.</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box east-stat">
+        <div class="stat-num">1</div>
+        <div class="stat-label">Car model available<br>in East Germany<br>(the Trabant)</div>
+      </div>
+      <div class="stat-box east-stat">
+        <div class="stat-num">11</div>
+        <div class="stat-label">Years average wait<br>to buy a Trabant<br>after ordering</div>
+      </div>
+      <div class="stat-box east-stat">
+        <div class="stat-num">30</div>
+        <div class="stat-label">Years the Trabant<br>went without a<br>major redesign</div>
+      </div>
+      <div class="stat-box west-stat">
+        <div class="stat-num">3×</div>
+        <div class="stat-label">West German GDP<br>per capita vs.<br>East Germany, 1989</div>
+      </div>
+      <div class="stat-box west-stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Trabants kept by<br>East Germans after<br>the Wall fell</div>
+      </div>
+      <div class="stat-box west-stat">
+        <div class="stat-num">8%</div>
+        <div class="stat-label">Annual GDP growth<br>in West Germany<br>during the 1950s</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:8px;">
+      <div>
+        <p class="body-text" style="font-size:12px; color:#444;"><strong>The Trabant</strong> was designed by state engineers in the late 1950s. Because there was no competition and no profit motive, there was no incentive to improve it. Factory managers hit their production quotas — that was success. The Trabant still used a two-stroke engine and a plastic body made from compressed wool fiber and resin when production ended in 1991. When the Wall fell and East Germans could finally access Western cars, they abandoned their Trabants in parking lots by the thousands. The cars were worthless on the open market.</p>
+      </div>
+      <div>
+        <p class="body-text" style="font-size:12px; color:#444;"><strong>Meanwhile in the West,</strong> Volkswagen, BMW, Mercedes-Benz, Porsche, and Audi competed furiously for every customer. Each year brought new features, better fuel economy, improved safety. Price competition kept costs relatively accessible. This is what happens when businesses are <strong>price takers</strong> competing for survival rather than <strong>price makers</strong> with captive customers and no rivals. Innovation isn't a nice-to-have — it's the difference between staying in business and going under.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: THE GOALS COMPARISON -->
+  <div class="full-section">
+    <div class="section-label neutral-label">Section 04</div>
+    <div class="section-heading neutral-heading" style="font-family:var(--serif);">Evaluating Both Systems Against Our Economic Goals</div>
+
+    <p class="body-text" style="max-width:720px; margin-bottom:24px;">Here's where it gets complicated — and honest. East Germany wasn't a complete failure at everything. West Germany wasn't perfect. Using our eight economic goals framework, let's score each system:</p>
+
+    <!-- Goals Scorecard -->
+    <div class="scorecard">
+      <div class="sc-header sc-goal">Economic Goal</div>
+      <div class="sc-header sc-east-h">East Germany</div>
+      <div class="sc-header sc-west-h">West Germany</div>
+
+      <div class="sc-cell sc-name">Growth & GDP</div>
+      <div class="sc-cell sc-score weak">✗ Weak</div>
+      <div class="sc-cell sc-score strong">✓ Strong</div>
+
+      <div class="sc-cell sc-name">Efficiency & Innovation</div>
+      <div class="sc-cell sc-score weak">✗ Weak<br><span style="font-size:10px;color:#999;">(Trabant)</span></div>
+      <div class="sc-cell sc-score strong">✓ Strong<br><span style="font-size:10px;color:#999;">(VW, BMW, etc.)</span></div>
+
+      <div class="sc-cell sc-name">Economic Freedom</div>
+      <div class="sc-cell sc-score weak">✗ Very Low</div>
+      <div class="sc-cell sc-score strong">✓ High</div>
+
+      <div class="sc-cell sc-name">Stable Prices</div>
+      <div class="sc-cell sc-score mixed">~ Mixed<br><span style="font-size:10px;color:#999;">(prices controlled, but shortages)</span></div>
+      <div class="sc-cell sc-score strong">✓ Moderate</div>
+
+      <div class="sc-cell sc-name">Full Employment</div>
+      <div class="sc-cell sc-score strong">✓ Strong<br><span style="font-size:10px;color:#999;">(state guaranteed jobs)</span></div>
+      <div class="sc-cell sc-score mixed">~ Moderate</div>
+
+      <div class="sc-cell sc-name">Equity (equal distribution)</div>
+      <div class="sc-cell sc-score strong">✓ High<br><span style="font-size:10px;color:#999;">(wages relatively equal)</span></div>
+      <div class="sc-cell sc-score mixed">~ Mixed</div>
+
+      <div class="sc-cell sc-name">Social Welfare & Security</div>
+      <div class="sc-cell sc-score strong">✓ Strong<br><span style="font-size:10px;color:#999;">(free healthcare, housing)</span></div>
+      <div class="sc-cell sc-score mixed">~ Strong safety net</div>
+
+      <div class="sc-cell sc-name">Environmental Sustainability</div>
+      <div class="sc-cell sc-score weak">✗ Very Weak<br><span style="font-size:10px;color:#999;">(massive industrial pollution)</span></div>
+      <div class="sc-cell sc-score mixed">~ Mixed</div>
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-label">★ Class Activity</div>
+      <div class="activity-heading">The Trade-offs Are Real — Don't Let Anyone Tell You Otherwise</div>
+      <div class="activity-body">
+        <p>Look at the scorecard above. East Germany scores <em>better</em> than West Germany on employment, equity, and welfare. West Germany wins on growth, efficiency, and freedom. This is the core trade-off of your Unit 1 framework playing out in real life.</p>
+        <p style="margin-top:0.8em;"><strong>Discussion questions:</strong> If you had to live in one of these two countries in 1975 — not knowing anything about their future — which would you choose, and why? What if you were a factory worker? A doctor? A single parent? Does your answer change? What does that tell you about the relationship between economic goals and the people they serve?</p>
+        <p style="margin-top:0.8em;"><strong>Extension:</strong> West Germany's system is called a "social market economy" — it's not pure free market capitalism. Where did West Germany keep the government involved? Why? Does that change how you think about the "free market vs. government" framing?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: COMPARISON TABLE -->
+  <div class="full-section" style="padding-top:32px;">
+    <div class="section-label neutral-label">Section 05</div>
+    <div class="section-heading neutral-heading" style="font-family:var(--serif);">Side-by-Side: The Two Systems Compared</div>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th class="th-concept">Concept</th>
+          <th class="th-east">East Germany (Command)</th>
+          <th class="th-west">West Germany (Market)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-concept">Who answers the 3 Key Questions?</td>
+          <td class="td-east">Central government planners set all production targets</td>
+          <td class="td-west">Individual firms and consumers through supply & demand</td>
+        </tr>
+        <tr>
+          <td class="td-concept">Who owns the Factors of Production?</td>
+          <td class="td-east">The state owns land, capital, and factories</td>
+          <td class="td-west">Private individuals and companies</td>
+        </tr>
+        <tr>
+          <td class="td-concept">Price Takers or Price Makers?</td>
+          <td class="td-east">State sets all prices — firms are neither; they follow quotas</td>
+          <td class="td-west">Competitive firms are price takers; monopolies can become price makers</td>
+        </tr>
+        <tr>
+          <td class="td-concept">Incentive to innovate?</td>
+          <td class="td-east">Very low — no competition, no profit motive</td>
+          <td class="td-west">High — survival depends on beating rivals</td>
+        </tr>
+        <tr>
+          <td class="td-concept">What happens to bad products?</td>
+          <td class="td-east">They keep getting made (see: Trabant, 1957–1991)</td>
+          <td class="td-west">They get dropped or improved — consumers stop buying them</td>
+        </tr>
+        <tr>
+          <td class="td-concept">Job security</td>
+          <td class="td-east">Guaranteed — the state employs everyone</td>
+          <td class="td-west">Not guaranteed — depends on business health and individual performance</td>
+        </tr>
+        <tr>
+          <td class="td-concept">Income equality</td>
+          <td class="td-east">High — wages compressed, most people earned similarly</td>
+          <td class="td-west">Lower — large gaps between high and low earners</td>
+        </tr>
+        <tr>
+          <td class="td-concept">Consumer choice</td>
+          <td class="td-east">Very limited — one car, assigned housing, limited goods</td>
+          <td class="td-west">Extensive — competitive market produces wide variety</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CFU -->
+  <div class="cfu-box">
+    <div class="cfu-label">Check for Understanding</div>
+    <div class="cfu-heading">Two Germanys, One Framework — Apply What You Know</div>
+    <ul class="cfu-list">
+      <li>In East Germany, who answered the three key questions of economics — and what did they use to make those decisions? In West Germany, who answered them — and what drove their decisions?</li>
+      <li>The Trabant went virtually unchanged for 30 years. Use the concepts of <em>price makers, price takers,</em> and <em>competition</em> to explain why. What would have had to change for East Germany to produce a better car?</li>
+      <li>East Germany had essentially zero unemployment. Is that automatically a good thing? What does it tell us about the trade-offs between economic goals?</li>
+      <li>West Germany's system is called a "social market economy" — not a pure free market. What does that suggest about whether the real choice is ever truly "government vs. free market" — or something more complicated?</li>
+      <li><strong>Synthesis:</strong> When the Wall fell, East Germans flooded West Germany — and abandoned their Trabants. In economic terms, what were they revealing about which goals <em>they</em> personally prioritized? Does a population "voting with their feet" tell us something markets and ballots can't?</li>
+    </ul>
+  </div>
+
+  <!-- VOCAB -->
+  <div class="full-section">
+    <div class="section-label neutral-label">Glossary</div>
+    <div class="section-heading neutral-heading" style="font-family:var(--serif);">Key Terms for This Case Study</div>
+
+    <div class="vocab-grid">
+      <div class="vocab-item">
+        <div class="vocab-term">Command Economy</div>
+        <div class="vocab-def">A system where the government or central planners answer the three key questions — deciding what gets produced, how, and who receives it. Also called a planned economy.</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-term">Free Market Economy</div>
+        <div class="vocab-def">A system where individuals and businesses make production and consumption decisions through voluntary exchange, guided by supply and demand rather than government direction.</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-term">Mixed Economy</div>
+        <div class="vocab-def">A system combining free market and government elements. Both Germanys were mixed — the West had welfare programs; the East had some small private commerce. No pure system exists in practice.</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-term">Factors of Production</div>
+        <div class="vocab-def">Land, Labor, Capital, and Entrepreneurship — the inputs needed to produce goods and services. A key question of economic systems: who owns and controls these?</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-term">Price Taker</div>
+        <div class="vocab-def">A firm in a competitive market that must accept market price — it has no power to set its own. Forced to compete on quality and efficiency to survive.</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-term">Price Maker</div>
+        <div class="vocab-def">A firm with enough market power to set its own price. In East Germany, the state set all prices. In monopolistic markets, a single firm can set prices without competitive pressure.</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-term">Economic Trade-offs</div>
+        <div class="vocab-def">Gains in one economic goal often come at the cost of another. East Germany achieved equity but sacrificed efficiency. West Germany achieved growth but accepted inequality. There is no free lunch.</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-term">Profit Motive</div>
+        <div class="vocab-def">The incentive to earn profit drives firms in market economies to innovate, cut costs, and respond to consumers. Its absence in command economies is a key reason for stagnation and the Trabant problem.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="lesson-footer">
+    <div class="footer-meta">Case Study Series · Economics · Case No. 2 · Unit 1: What Is Economics?</div>
+    <div>
+      <span class="badge">Command Economy</span>
+      <span class="badge">Free Market</span>
+      <span class="badge">3 Key Questions</span>
+      <span class="badge">Trade-offs</span>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  function initPhotoFrame(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const input = el.querySelector('input[type="file"]');
+    input.addEventListener('change', function() {
+      if (!this.files || !this.files[0]) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        el.querySelectorAll('.upload-icon, .upload-text, .upload-source').forEach(n => n.style.display = 'none');
+        let img = el.querySelector('img.loaded-img');
+        if (!img) { img = document.createElement('img'); img.className = 'loaded-img'; el.appendChild(img); }
+        img.src = e.target.result;
+        el.style.minHeight = '0';
+      };
+      reader.readAsDataURL(this.files[0]);
+    });
+  }
+  ['photo-berlin','photo-east-factory','photo-west-wirtschaft'].forEach(initPhotoFrame);
+</script>
+
+</body>
+</html>
