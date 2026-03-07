@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Did Lumber Prices Quadruple? — Unit 2 Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wood:    #8B4513;
+    --pine:    #2D6A2D;
+    --sky:     #1a6fa8;
+    --stim:    #27ae60;
+    --danger:  #e74c3c;
+    --gold:    #f39c12;
+    --bg:      #f7f4ef;
+    --ink:     #1c1a17;
+    --muted:   #6b6560;
+    --card:    #ffffff;
+    --supply-color: #2D6A2D;
+    --demand-color: #c0392b;
+    --eq-color: #1a6fa8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--ink);
+    color: white;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 36px 24px 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Wood grain lines in bg */
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      92deg,
+      transparent,
+      transparent 18px,
+      rgba(139,69,19,0.12) 18px,
+      rgba(139,69,19,0.12) 19px
+    );
+  }
+
+  .unit-tag {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    margin-bottom: 14px;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 9vw, 82px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .header h1 .accent { color: var(--gold); }
+
+  .header .sub {
+    font-size: 16px;
+    color: #bbb;
+    max-width: 560px;
+    font-weight: 300;
+  }
+
+  /* ── LEARNING TARGETS ── */
+  .targets {
+    background: var(--gold);
+    padding: 14px 24px;
+  }
+
+  .targets-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .targets-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 500;
+    margin-right: 4px;
+  }
+
+  .pill {
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  /* ── HOOK ── */
+  .hook {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+    align-items: center;
+  }
+
+  .hook-text p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #333;
+  }
+
+  .hook-text p + p { margin-top: 12px; }
+
+  .price-jump {
+    background: var(--ink);
+    color: white;
+    padding: 28px;
+    border-radius: 4px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .price-jump::before {
+    content: '$';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 180px;
+    color: rgba(255,255,255,0.04);
+    top: -30px;
+    left: -10px;
+    line-height: 1;
+  }
+
+  .price-jump .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .price-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 8px 0;
+  }
+
+  .price-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+  }
+
+  .price-val.old { color: #666; }
+  .price-val.new { color: var(--gold); }
+
+  .arrow-big {
+    font-size: 28px;
+    color: var(--danger);
+  }
+
+  .price-caption {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #888;
+    margin-top: 10px;
+  }
+
+  .badge-400 {
+    display: inline-block;
+    background: var(--danger);
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    padding: 4px 14px;
+    border-radius: 3px;
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+  }
+
+  /* ── INFOGRAPHIC ── */
+  .infographic {
+    background: var(--ink);
+    border-radius: 8px;
+    padding: 32px 28px;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .infographic-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: white;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  .flow-side {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .flow-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    padding-top: 60px;
+  }
+
+  .covid-badge {
+    background: #c0392b;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    color: white;
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 0 0 6px rgba(192,57,43,0.2);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 6px rgba(192,57,43,0.2); }
+    50% { box-shadow: 0 0 0 14px rgba(192,57,43,0.08); }
+  }
+
+  .covid-arrow {
+    font-size: 28px;
+    color: var(--gold);
+    margin: 8px 0;
+  }
+
+  /* Event cards */
+  .event-card {
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 6px 0;
+    position: relative;
+  }
+
+  .event-card.supply { background: rgba(45,106,45,0.15); border-left: 3px solid var(--supply-color); }
+  .event-card.demand { background: rgba(192,57,43,0.12); border-left: 3px solid var(--demand-color); }
+
+  .event-card .ev-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .event-card.supply .ev-tag { color: #6abf6a; }
+  .event-card.demand .ev-tag { color: #e87c73; }
+
+  .event-card .ev-text {
+    font-size: 13px;
+    color: #ddd;
+    line-height: 1.4;
+  }
+
+  .event-card .ev-econ {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  /* Result box */
+  .result-box {
+    background: var(--gold);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .result-box .res-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 6px;
+  }
+
+  .result-box .res-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--ink);
+    letter-spacing: 1px;
+    line-height: 1.1;
+  }
+
+  .result-box .res-sub {
+    font-size: 13px;
+    color: rgba(0,0,0,0.6);
+    margin-top: 4px;
+  }
+
+  /* ── CONCEPT CARDS ── */
+  .concepts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .concept-card {
+    border-radius: 6px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .concept-card.supply-card {
+    background: #f0f8f0;
+    border: 2px solid var(--supply-color);
+  }
+
+  .concept-card.demand-card {
+    background: #fff5f5;
+    border: 2px solid var(--demand-color);
+  }
+
+  .concept-card .cc-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .concept-card .cc-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .concept-card.supply-card .cc-title { color: var(--supply-color); }
+  .concept-card.demand-card .cc-title { color: var(--demand-color); }
+
+  .concept-card .cc-body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+  }
+
+  .concept-card .cc-lumber {
+    margin-top: 10px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .concept-card.supply-card .cc-lumber {
+    background: rgba(45,106,45,0.1);
+    color: var(--supply-color);
+  }
+
+  .concept-card.demand-card .cc-lumber {
+    background: rgba(192,57,43,0.1);
+    color: var(--demand-color);
+  }
+
+  .concept-card .cc-lumber strong { font-weight: 600; }
+
+  /* Determinants list */
+  .det-list {
+    list-style: none;
+    margin-top: 10px;
+  }
+
+  .det-list li {
+    font-size: 13px;
+    color: #555;
+    padding: 4px 0;
+    padding-left: 16px;
+    position: relative;
+    border-bottom: 1px dashed #e0e0e0;
+  }
+
+  .det-list li:last-child { border-bottom: none; }
+
+  .det-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    font-weight: 600;
+  }
+
+  .concept-card.supply-card .det-list li::before { color: var(--supply-color); }
+  .concept-card.demand-card .det-list li::before { color: var(--demand-color); }
+
+  .det-list li .hit {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+
+  .supply-card .hit { background: rgba(45,106,45,0.12); color: var(--supply-color); }
+  .demand-card .hit { background: rgba(192,57,43,0.12); color: var(--demand-color); }
+
+  /* ── GRAPH ── */
+  .graph-section {
+    margin-bottom: 36px;
+  }
+
+  .graph-wrap {
+    background: white;
+    border: 1px solid #e0ddd8;
+    border-radius: 6px;
+    padding: 24px;
+  }
+
+  .graph-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .sd-graph {
+    position: relative;
+    height: 260px;
+    border-left: 2px solid #333;
+    border-bottom: 2px solid #333;
+    margin: 0 40px 30px 50px;
+  }
+
+  /* Axis labels */
+  .y-label {
+    position: absolute;
+    left: -48px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #555;
+    white-space: nowrap;
+  }
+
+  .x-label {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  /* Supply / Demand SVG curves */
+  .sd-graph svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .graph-legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .leg-line {
+    width: 24px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .leg-line.dashed {
+    background: repeating-linear-gradient(90deg, currentColor 0, currentColor 4px, transparent 4px, transparent 8px);
+  }
+
+  /* ── INFLATION BOX ── */
+  .inflation-box {
+    background: linear-gradient(135deg, #1c1a17 0%, #2d2820 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 36px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .inflation-box .ib-header {
+    grid-column: 1 / -1;
+  }
+
+  .ib-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .ib-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    color: white;
+    margin-bottom: 4px;
+  }
+
+  .ib-sub {
+    font-size: 14px;
+    color: #aaa;
+  }
+
+  .inf-card {
+    border-radius: 6px;
+    padding: 16px;
+  }
+
+  .inf-card.cp { background: rgba(45,106,45,0.15); border: 1px solid rgba(45,106,45,0.3); }
+  .inf-card.dp { background: rgba(26,111,168,0.15); border: 1px solid rgba(26,111,168,0.3); }
+
+  .inf-card .ic-type {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .inf-card.cp .ic-type { color: #6abf6a; }
+  .inf-card.dp .ic-type { color: #5aabdb; }
+
+  .inf-card .ic-def {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .inf-card .ic-lumber {
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    line-height: 1.5;
+  }
+
+  .inf-card.cp .ic-lumber { background: rgba(45,106,45,0.2); color: #90d890; }
+  .inf-card.dp .ic-lumber { background: rgba(26,111,168,0.2); color: #80c5e8; }
+
+  .inf-card .ic-lumber strong { font-weight: 600; }
+
+  /* ── CHECK FOR UNDERSTANDING ── */
+  .cfu {
+    background: var(--gold);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+
+  .cfu .cfu-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 10px;
+  }
+
+  .cfu .cfu-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .cfu-qs {
+    list-style: none;
+    counter-reset: cq;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .cfu-qs li {
+    counter-increment: cq;
+    background: white;
+    border-radius: 6px;
+    padding: 12px 14px 12px 36px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
+    position: relative;
+  }
+
+  .cfu-qs li::before {
+    content: counter(cq);
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--gold);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+  }
+
+  /* ── WHAT HAPPENED NEXT BOX ── */
+  .next-box {
+    background: linear-gradient(135deg, #0f2d4a 0%, #1a4a6b 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 36px;
+  }
+
+  .next-box .nb-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #5aabdb;
+    margin-bottom: 6px;
+  }
+
+  .next-box .nb-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .next-box .nb-sub {
+    font-size: 14px;
+    color: #aac8dd;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .next-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .next-step {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 14px;
+    position: relative;
+  }
+
+  .next-step .ns-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: rgba(255,255,255,0.12);
+    line-height: 1;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+  }
+
+  .next-step .ns-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .next-step.qd-step .ns-tag { color: #e87c73; }
+  .next-step.qs-step .ns-tag { color: #6abf6a; }
+  .next-step.norm-step .ns-tag { color: #f39c12; }
+
+  .next-step .ns-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    color: white;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .next-step .ns-body {
+    font-size: 12px;
+    color: #ccc;
+    line-height: 1.5;
+  }
+
+  .next-step .ns-vocab {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  .next-step.qd-step .ns-vocab { background: rgba(192,57,43,0.2); color: #e87c73; }
+  .next-step.qs-step .ns-vocab { background: rgba(45,106,45,0.2); color: #6abf6a; }
+  .next-step.norm-step .ns-vocab { background: rgba(243,156,18,0.2); color: #f39c12; }
+
+  .next-result {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(90,171,219,0.3);
+    border-radius: 6px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .next-result .nr-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #5aabdb;
+    flex-shrink: 0;
+  }
+
+  .next-result .nr-text {
+    font-size: 14px;
+    color: #ddd;
+    line-height: 1.5;
+  }
+
+  .next-result .nr-text strong { color: white; font-weight: 600; }
+
+  /* ── ELASTICITY CALLOUT ── */
+  .elasticity-callout {
+    background: #fff8e8;
+    border: 2px solid var(--gold);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 36px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .elasticity-callout .ec-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .elasticity-callout .ec-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .elasticity-callout .ec-text {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .elasticity-callout .ec-text strong { font-weight: 600; }
+
+  @media (max-width: 620px) {
+    .next-steps { grid-template-columns: 1fr; }
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #bbb;
+    letter-spacing: 2px;
+    padding: 16px 0 0;
+    border-top: 1px solid #e0ddd8;
+  }
+
+  @media (max-width: 620px) {
+    .hook { grid-template-columns: 1fr; }
+    .concepts { grid-template-columns: 1fr; }
+    .inflation-box { grid-template-columns: 1fr; }
+    .cfu-qs { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: 1fr; }
+    .flow-center { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="unit-tag">Unit 2 Case Study · Supply &amp; Demand</div>
+    <h1>Why Did<br><span class="accent">Lumber</span><br>Quadruple?</h1>
+    <p class="sub">The pandemic lumber price spike is one of the clearest real-world examples of supply and demand in action — ever.</p>
+  </div>
+</header>
+
+<!-- LEARNING TARGETS -->
+<div class="targets">
+  <div class="targets-inner">
+    <span class="targets-label">Key Concepts:</span>
+    <span class="pill">Supply Shifts</span>
+    <span class="pill">Demand Shifts</span>
+    <span class="pill">Determinants of Supply</span>
+    <span class="pill">Determinants of Demand</span>
+    <span class="pill">Equilibrium Price</span>
+    <span class="pill">Qty Demanded & Supplied</span>
+    <span class="pill">Elasticity (preview)</span>
+    <span class="pill">Cost-Push Inflation</span>
+    <span class="pill">Demand-Pull Inflation</span>
+  </div>
+</div>
+
+<main class="main">
+
+  <!-- HOOK -->
+  <div class="hook">
+    <div class="hook-text">
+      <p>In early 2020, a 1,000-board-foot package of lumber cost around <strong>$350</strong>. By May 2021 — just 14 months later — that same package cost <strong>$1,700</strong>. Homebuilders were stunned. Deck projects became unaffordable overnight. Sawmills couldn't keep up.</p>
+      <p>This wasn't magic. It wasn't price gouging. It was supply and demand doing exactly what supply and demand does — just faster and more dramatically than usual. Two things hit at once: <strong>supply collapsed</strong> and <strong>demand exploded.</strong></p>
+    </div>
+    <div class="price-jump">
+      <div class="label">Price per 1,000 board feet</div>
+      <div class="price-row">
+        <div>
+          <div class="price-val old">$350</div>
+          <div style="font-size:11px;color:#666;font-family:'DM Mono',monospace;margin-top:2px;">Jan 2020</div>
+        </div>
+        <div class="arrow-big">→</div>
+        <div>
+          <div class="price-val new">$1,700</div>
+          <div style="font-size:11px;color:#888;font-family:'DM Mono',monospace;margin-top:2px;">May 2021</div>
+        </div>
+      </div>
+      <div class="badge-400">+400%</div>
+      <div class="price-caption">in 14 months</div>
+    </div>
+  </div>
+
+  <!-- INFOGRAPHIC -->
+  <div class="section-label">What Happened — The Full Picture</div>
+  <div class="infographic">
+    <div class="infographic-title">COVID-19 HIT LUMBER FROM BOTH SIDES AT ONCE</div>
+
+    <div class="flow">
+      <!-- LEFT: Supply side -->
+      <div class="flow-side">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#6abf6a;letter-spacing:2px;margin-bottom:10px;text-align:center;">📉 SUPPLY SIDE</div>
+
+        <div class="event-card supply">
+          <div class="ev-tag">Cause 1 · Cost of Production</div>
+          <div class="ev-text">Sawmills shut down or cut hours. Panicked by early COVID forecasts, lumber companies <em>expected</em> a housing crash and pulled back hard.</div>
+          <div class="ev-econ">Determinant: Expectations of producers</div>
+        </div>
+
+        <div class="event-card supply">
+          <div class="ev-tag">Cause 2 · Number of Sellers</div>
+          <div class="ev-text">Some mills closed permanently. Workers stayed home. The number of active producers in the market shrank rapidly.</div>
+          <div class="ev-econ">Determinant: Number of sellers</div>
+        </div>
+
+        <div class="event-card supply">
+          <div class="ev-tag">Cause 3 · Input Costs</div>
+          <div class="ev-text">Trucking and transport costs spiked as supply chains broke down — making it more expensive to get lumber from mill to market.</div>
+          <div class="ev-econ">Determinant: Cost to produce / transport</div>
+        </div>
+
+        <div style="text-align:center;margin-top:14px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#e74c3c;letter-spacing:1px;">SUPPLY DECREASES ↙</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:#aaa;margin-top:4px;">Whole curve shifts LEFT</div>
+        </div>
+      </div>
+
+      <!-- CENTER: COVID -->
+      <div class="flow-center">
+        <div class="covid-badge">COVID<br>-19<br>HITS</div>
+        <div class="covid-arrow">↕</div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:#888;text-align:center;letter-spacing:1px;">HITS BOTH<br>SIDES</div>
+      </div>
+
+      <!-- RIGHT: Demand side -->
+      <div class="flow-side">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#e87c73;letter-spacing:2px;margin-bottom:10px;text-align:center;">📈 DEMAND SIDE</div>
+
+        <div class="event-card demand">
+          <div class="ev-tag">Cause 1 · Income</div>
+          <div class="ev-text">Stimulus checks and unemployment benefits put money in people's pockets when there wasn't much to spend it on.</div>
+          <div class="ev-econ">Determinant: Income (T.O.N.I.E.)</div>
+        </div>
+
+        <div class="event-card demand">
+          <div class="ev-tag">Cause 2 · Tastes &amp; Preferences</div>
+          <div class="ev-text">Stuck at home, Americans started home improvement projects — decks, fences, additions — at a historic rate.</div>
+          <div class="ev-econ">Determinant: Tastes (T.O.N.I.E.)</div>
+        </div>
+
+        <div class="event-card demand">
+          <div class="ev-tag">Cause 3 · Number of Buyers</div>
+          <div class="ev-text">Remote work triggered a suburban housing boom. More people wanted new homes, more contractors needed lumber.</div>
+          <div class="ev-econ">Determinant: Number of buyers (T.O.N.I.E.)</div>
+        </div>
+
+        <div style="text-align:center;margin-top:14px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#e74c3c;letter-spacing:1px;">DEMAND INCREASES ↗</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:#aaa;margin-top:4px;">Whole curve shifts RIGHT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="result-box">
+      <div class="res-label">The Result — New Equilibrium Price</div>
+      <div class="res-main">Supply ↓ + Demand ↑ = Price 🚀</div>
+      <div class="res-sub">When supply falls AND demand rises at the same time, prices don't just go up — they can explode. Both forces push price in the same direction.</div>
+    </div>
+  </div>
+
+  <!-- SUPPLY & DEMAND GRAPH -->
+  <div class="graph-section">
+    <div class="section-label">The Graph — What It Looks Like</div>
+    <div class="graph-wrap">
+      <div class="graph-title">Lumber Market · Before &amp; After COVID</div>
+      <div class="sd-graph">
+        <div class="y-label">Price</div>
+        <div class="x-label">Quantity of Lumber</div>
+        <svg viewBox="0 0 400 240" preserveAspectRatio="none">
+          <!-- Original Supply (S1) - solid green -->
+          <line x1="40" y1="220" x2="340" y2="20" stroke="#2D6A2D" stroke-width="2.5" />
+          <!-- New Supply (S2) - dashed green, shifted LEFT -->
+          <line x1="10" y1="220" x2="220" y2="20" stroke="#2D6A2D" stroke-width="2.5" stroke-dasharray="7,4" />
+          <!-- Original Demand (D1) - solid red -->
+          <line x1="40" y1="20" x2="340" y2="220" stroke="#c0392b" stroke-width="2.5" />
+          <!-- New Demand (D2) - dashed red, shifted RIGHT -->
+          <line x1="140" y1="20" x2="400" y2="200" stroke="#c0392b" stroke-width="2.5" stroke-dasharray="7,4" />
+
+          <!-- Old equilibrium point -->
+          <circle cx="190" cy="120" r="6" fill="#1a6fa8" />
+          <!-- New equilibrium point (higher price, roughly same or lower qty) -->
+          <circle cx="168" cy="68" r="7" fill="#f39c12" stroke="white" stroke-width="2"/>
+
+          <!-- EQ price lines -->
+          <line x1="0" y1="120" x2="190" y2="120" stroke="#1a6fa8" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+          <line x1="0" y1="68" x2="168" y2="68" stroke="#f39c12" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+
+          <!-- Labels -->
+          <text x="345" y="18" font-family="DM Mono, monospace" font-size="11" fill="#2D6A2D">S₁</text>
+          <text x="222" y="18" font-family="DM Mono, monospace" font-size="11" fill="#2D6A2D">S₂</text>
+          <text x="345" y="222" font-family="DM Mono, monospace" font-size="11" fill="#c0392b">D₁</text>
+          <text x="345" y="200" font-family="DM Mono, monospace" font-size="11" fill="#c0392b">D₂</text>
+
+          <!-- Price labels on Y axis -->
+          <text x="-2" y="124" text-anchor="end" font-family="DM Mono, monospace" font-size="9" fill="#1a6fa8">P₁</text>
+          <text x="-2" y="72" text-anchor="end" font-family="DM Mono, monospace" font-size="9" fill="#f39c12">P₂</text>
+
+          <!-- Arrows showing shift direction -->
+          <text x="50" y="100" font-family="DM Mono, monospace" font-size="9" fill="#2D6A2D">← shifts left</text>
+          <text x="260" y="165" font-family="DM Mono, monospace" font-size="9" fill="#c0392b">shifts right →</text>
+
+          <!-- New EQ label -->
+          <text x="178" y="58" font-family="DM Mono, monospace" font-size="9" fill="#f39c12">New EQ!</text>
+        </svg>
+      </div>
+      <div class="graph-legend">
+        <div class="leg-item"><div class="leg-line" style="background:#2D6A2D;"></div> S₁ Original Supply</div>
+        <div class="leg-item"><div class="leg-line dashed" style="color:#2D6A2D;"></div> S₂ Supply Decreases</div>
+        <div class="leg-item"><div class="leg-line" style="background:#c0392b;"></div> D₁ Original Demand</div>
+        <div class="leg-item"><div class="leg-line dashed" style="color:#c0392b;"></div> D₂ Demand Increases</div>
+        <div class="leg-item"><div style="width:10px;height:10px;border-radius:50%;background:#1a6fa8;"></div> Old EQ Price</div>
+        <div class="leg-item"><div style="width:10px;height:10px;border-radius:50%;background:#f39c12;border:2px solid white;box-shadow:0 0 0 1px #f39c12;"></div> New EQ Price</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT HAPPENED NEXT -->
+  <div class="section-label">What Happened Next — The Market Responds</div>
+  <div class="next-box">
+    <div class="nb-tag">Core Concept · How Markets Self-Correct</div>
+    <div class="nb-title">Sky-High Prices Triggered Their Own Cure</div>
+    <div class="nb-sub">Here's the thing about high prices in a free market: they send a signal. That signal starts a chain reaction that eventually brings prices back down. By late 2021 and into 2022, the lumber market started correcting — exactly the way economic theory predicts.</div>
+
+    <div class="next-steps">
+      <div class="next-step qd-step">
+        <div class="ns-num">1</div>
+        <div class="ns-tag">Quantity Demanded Falls</div>
+        <div class="ns-headline">Buyers Pull Back at $1,700</div>
+        <div class="ns-body">At the new sky-high price, many homeowners scrapped or delayed their deck projects. Contractors started substituting cheaper materials where possible. The <em>quantity demanded</em> dropped — not because people wanted lumber less, but because the price was now too high for many buyers to justify.</div>
+        <div class="ns-vocab">Law of Demand: QD ↓ as price ↑</div>
+      </div>
+
+      <div class="next-step qs-step">
+        <div class="ns-num">2</div>
+        <div class="ns-tag">Quantity Supplied Rises</div>
+        <div class="ns-headline">Producers Love High Prices — and Respond</div>
+        <div class="ns-body">$1,700 lumber was incredibly profitable. Sawmills that had shut down reopened. Existing mills ran extra shifts and ramped up output. New investment flowed into production. Producers responded to the high price signal by supplying a much higher <em>quantity</em> — exactly what the supply curve predicts.</div>
+        <div class="ns-vocab">Law of Supply: QS ↑ as price ↑</div>
+      </div>
+
+      <div class="next-step norm-step">
+        <div class="ns-num">3</div>
+        <div class="ns-tag">Supply Curve Shifts Back</div>
+        <div class="ns-headline">Conditions Normalize Over Time</div>
+        <div class="ns-body">As pandemic restrictions eased, supply chains recovered and transport costs fell. The COVID-era home improvement craze cooled as people returned to offices and restaurants. Stimulus money ran out. The whole supply curve gradually shifted back right — and the demand curve cooled — pushing the equilibrium price back toward normal.</div>
+        <div class="ns-vocab">Determinants normalize → curves shift</div>
+      </div>
+    </div>
+
+    <div class="next-result">
+      <div class="nr-label">Bottom Line</div>
+      <div class="nr-text">By mid-2022, lumber prices had fallen back below <strong>$600</strong> — still higher than pre-pandemic, but a massive drop from the peak. The market corrected itself. <strong>High prices attracted more supply and discouraged demand until a new, lower equilibrium was reached.</strong> This self-correcting mechanism is one of the free market's most powerful features.</div>
+    </div>
+  </div>
+
+  <!-- ELASTICITY CALLOUT -->
+  <div class="elasticity-callout">
+    <div class="ec-icon">💡</div>
+    <div>
+      <div class="ec-tag">Vocab Preview · Elasticity of Demand</div>
+      <div class="ec-text">Not everyone responded to high lumber prices the same way. A <strong>homeowner building a backyard deck</strong> could easily postpone or cancel — their demand was <strong>elastic</strong> (price-sensitive). A <strong>contractor mid-project</strong> had no choice but to keep buying regardless of price — their demand was <strong>inelastic</strong> (price-insensitive). Same product, very different responses to the same price increase. We'll dig into elasticity more in a later lesson.</div>
+    </div>
+  </div>
+
+  <!-- INFLATION EXPLAINER -->
+  <div class="section-label">Connecting to the Bigger Picture</div>
+  <div class="inflation-box">
+    <div class="ib-header">
+      <div class="ib-tag">Preview · Unit 5</div>
+      <div class="ib-title">Lumber Prices → Inflation</div>
+      <div class="ib-sub">When a major input like lumber gets more expensive, it ripples through the whole economy. There are two ways this creates inflation — and lumber did both.</div>
+    </div>
+
+    <div class="inf-card cp">
+      <div class="ic-type">Cost-Push Inflation</div>
+      <div class="ic-def">Rising <em>input costs</em> force producers to charge more. The supply shock pushes prices up from the production side.</div>
+      <div class="ic-lumber"><strong>🪵 Lumber version:</strong> Sawmills paid more for transport and labor → charged more → homebuilders passed costs to buyers → new home prices rose → construction inflation hit the whole economy.</div>
+    </div>
+
+    <div class="inf-card dp">
+      <div class="ic-type">Demand-Pull Inflation</div>
+      <div class="ic-def">Surging <em>consumer demand</em> bids prices up. Too many dollars chasing too little supply.</div>
+      <div class="ic-lumber"><strong>🪵 Lumber version:</strong> Stimulus money + home improvement boom = everyone wanted lumber at once → prices got bid up → contractors had to charge clients more → housing inflation spread.</div>
+    </div>
+  </div>
+
+  <!-- CHECK FOR UNDERSTANDING -->
+  <div class="section-label">Check for Understanding</div>
+  <div class="cfu">
+    <div class="cfu-tag">Questions</div>
+    <div class="cfu-title">Can You Explain the Lumber Spike?</div>
+    <ul class="cfu-qs">
+      <li>Name two things that caused the <em>supply</em> of lumber to decrease. Which determinant of supply does each one represent?</li>
+      <li>Name two things that caused the <em>demand</em> for lumber to increase. Which T.O.N.I.E. factor does each one represent?</li>
+      <li>When supply decreases AND demand increases at the same time, what happens to the equilibrium price? Draw it.</li>
+      <li>When lumber hit $1,700, what happened to the <em>quantity demanded</em>? What happened to the <em>quantity supplied</em>? Explain why each changed — without the whole curve shifting.</li>
+      <li><strong>Apply it:</strong> Think of another product that had a supply or demand shock during COVID. Explain the shift using economics vocabulary.</li>
+      <li><strong>Self-correction:</strong> By mid-2022 lumber was back near $600. Explain step-by-step how the market got there — use the terms quantity supplied, quantity demanded, and determinants of supply.</li>
+      <li><strong>Elasticity:</strong> Why did contractors keep buying lumber even at $1,700 while many homeowners stopped? What does that tell you about the difference between elastic and inelastic demand?</li>
+      <li><strong>Preview:</strong> If lumber prices rising caused new home prices to rise, what kind of inflation is that? What's the cause — supply or demand?</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    Unit 2 · Supply &amp; Demand · Economics Case Study Series
+  </div>
+
+</main>
+</body>
+</html>
