@@ -624,6 +624,142 @@
 
   strong { font-weight: 500; color: var(--crude); }
 
+  /* PHOTO FRAMES */
+  .photo-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 32px 0;
+  }
+
+  .photo-frame {
+    border: 1px solid var(--rule);
+    background: white;
+    padding: 10px 10px 0 10px;
+    box-shadow: 2px 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .photo-frame.single {
+    max-width: 560px;
+  }
+
+  .photo-placeholder {
+    background: var(--aged);
+    border: 2px dashed var(--rule);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 28px 20px;
+    min-height: 200px;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .photo-placeholder:hover {
+    background: #ddd8c4;
+  }
+
+  .photo-placeholder input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo-placeholder img.loaded-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  .photo-placeholder .upload-icon {
+    font-size: 32px;
+    opacity: 0.4;
+  }
+
+  .photo-placeholder .upload-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--oil);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .photo-placeholder .upload-source {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .photo-caption {
+    padding: 8px 4px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: #777;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+    border-top: 1px solid var(--aged);
+    margin-top: 8px;
+  }
+
+  .photo-caption strong {
+    color: var(--crude);
+    font-weight: 600;
+  }
+
+  /* SVG MAP */
+  .map-container {
+    margin: 32px 0;
+    border: 1px solid var(--rule);
+    background: white;
+    padding: 20px;
+  }
+
+  .map-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 12px;
+  }
+
+  .map-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--aged);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--oil);
+  }
+
+  .legend-swatch {
+    width: 16px;
+    height: 10px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
   @media (max-width: 600px) {
     .targets-bar { padding: 14px 16px; }
     .page { padding: 24px 16px 60px; }
@@ -632,6 +768,40 @@
     .pull-quote { font-size: 18px; padding: 16px 20px; }
   }
 </style>
+<script>
+  function initPhotoFrame(frameId) {
+    const placeholder = document.getElementById(frameId);
+    if (!placeholder) return;
+    const input = placeholder.querySelector('input[type="file"]');
+    const hint = placeholder.querySelector('.upload-text');
+    const source = placeholder.querySelector('.upload-source');
+    const icon = placeholder.querySelector('.upload-icon');
+    input.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          // Remove hint text
+          hint.style.display = 'none';
+          source.style.display = 'none';
+          icon.style.display = 'none';
+          // Show image
+          let img = placeholder.querySelector('img.loaded-img');
+          if (!img) {
+            img = document.createElement('img');
+            img.className = 'loaded-img';
+            placeholder.appendChild(img);
+          }
+          img.src = e.target.result;
+          placeholder.style.minHeight = '0';
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
+  window.addEventListener('DOMContentLoaded', function() {
+    ['photo-gasline1','photo-gasline2','photo-opec'].forEach(initPhotoFrame);
+  });
+</script>
 </head>
 <body>
 
@@ -708,6 +878,28 @@
     </div>
   </div>
 
+  <!-- PHOTO ROW: GAS LINES -->
+  <div class="photo-row">
+    <div class="photo-frame">
+      <div class="photo-placeholder" id="photo-gasline1">
+        <input type="file" accept="image/*" title="Upload photo">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">SUGGESTED PHOTO<br><strong>Gas station line, 1973–74</strong><br>Click to upload your image</div>
+        <div class="upload-source">Source: National Archives · loc.gov/pictures<br>Search: "oil embargo gas lines 1973"</div>
+      </div>
+      <div class="photo-caption"><strong>Fig. 1</strong> — American motorists queue for hours at a gas station during the height of the embargo, 1973–74. Some stations ran out of fuel entirely; others limited purchases to a few gallons per car.</div>
+    </div>
+    <div class="photo-frame">
+      <div class="photo-placeholder" id="photo-gasline2">
+        <input type="file" accept="image/*" title="Upload photo">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">SUGGESTED PHOTO<br><strong>"Sorry, No Gas" sign, 1973</strong><br>Click to upload your image</div>
+        <div class="upload-source">Source: National Archives · loc.gov/pictures<br>Search: "no gas sign 1973 oil crisis"</div>
+      </div>
+      <div class="photo-caption"><strong>Fig. 2</strong> — "Sorry, No Gas" signs became a common sight across America. Odd-even license plate rationing was introduced in many states to manage shortages.</div>
+    </div>
+  </div>
+
   <!-- SECTION 2: CARTELS -->
   <div class="section-header">
     <div class="section-num">Section 02</div>
@@ -733,6 +925,60 @@
     <div class="concept-box" data-label="Core Concept">
       <h3>Cartel</h3>
       <p>A group of producers who agree to coordinate output and pricing — essentially colluding to act as one. OPEC members agreed to cut production together so no single member lost market share. The goal: <strong>keep prices artificially high</strong> and share the profits.</p>
+    </div>
+  </div>
+
+  <!-- OPEC MEETING PHOTO + SVG MAP -->
+  <div class="photo-row" style="grid-template-columns: 1fr 1.6fr; align-items:start;">
+    <div class="photo-frame">
+      <div class="photo-placeholder" id="photo-opec">
+        <input type="file" accept="image/*" title="Upload photo">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">SUGGESTED PHOTO<br><strong>OPEC ministers meeting,<br>1973–74</strong><br>Click to upload your image</div>
+        <div class="upload-source">Source: Getty / AP Archive<br>Search: "OPEC oil ministers 1973"</div>
+      </div>
+      <div class="photo-caption"><strong>Fig. 3</strong> — Arab oil ministers at an OPEC session, 1973. The coordinated production cuts demonstrated unprecedented cartel power, reshaping global geopolitics.</div>
+    </div>
+
+    <!-- MAP PLACEHOLDER -->
+    <div class="map-container" style="display:flex; flex-direction:column; justify-content:center;">
+      <div class="map-title">OPEC Founding &amp; 1973 Arab Embargo Members</div>
+      <div style="
+        background: var(--aged);
+        border: 2px dashed var(--rule);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 48px 24px;
+        min-height: 260px;
+        text-align: center;
+      ">
+        <div style="font-size: 36px; opacity: 0.3;">🗺️</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--oil); font-weight:600;">Map Placeholder</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--amber); line-height:1.6; max-width:280px;">
+          Suggested: Embed a map of OPEC member nations<br>
+          highlighting Arab embargo participants (1973)
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#aaa; margin-top:4px;">
+          Source suggestion: National Geographic / CIA World Factbook
+        </div>
+      </div>
+      <div class="map-legend">
+        <div class="legend-item">
+          <div class="legend-swatch" style="background:var(--amber);"></div>
+          Arab OPEC Members (Embargo nations)
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="background:var(--crude);"></div>
+          Non-Arab OPEC Members
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="background:var(--aged); border:1px solid var(--rule);"></div>
+          Non-OPEC nations
+        </div>
+      </div>
     </div>
   </div>
 
@@ -787,26 +1033,190 @@
     </div>
   </div>
 
-  <!-- CSS Bar Chart -->
+  <!-- Interactive Chart.js Chart -->
   <div class="chart-container">
-    <div class="chart-title">U.S. Annual Inflation Rate (CPI) · 1970–1982</div>
-    <div class="bar-chart" id="inflChart">
-      <div class="bar-group"><div class="bar" style="height:27%" id="b1970"><span class="bar-val">5.8%</span></div><div class="bar-label">'70</div></div>
-      <div class="bar-group"><div class="bar" style="height:20%"><span class="bar-val">4.3%</span></div><div class="bar-label">'71</div></div>
-      <div class="bar-group"><div class="bar" style="height:16%"><span class="bar-val">3.3%</span></div><div class="bar-label">'72</div></div>
-      <div class="bar-group"><div class="bar" style="height:39%" title="Oil crisis begins"><span class="bar-val">6.2%</span></div><div class="bar-label">'73</div></div>
-      <div class="bar-group"><div class="bar" style="height:55%; background:var(--flame)"><span class="bar-val">11.0%</span></div><div class="bar-label">'74</div></div>
-      <div class="bar-group"><div class="bar" style="height:43%"><span class="bar-val">9.1%</span></div><div class="bar-label">'75</div></div>
-      <div class="bar-group"><div class="bar" style="height:26%"><span class="bar-val">5.8%</span></div><div class="bar-label">'76</div></div>
-      <div class="bar-group"><div class="bar" style="height:31%"><span class="bar-val">6.5%</span></div><div class="bar-label">'77</div></div>
-      <div class="bar-group"><div class="bar" style="height:42%"><span class="bar-val">7.6%</span></div><div class="bar-label">'78</div></div>
-      <div class="bar-group"><div class="bar" style="height:53%; background:var(--flame)"><span class="bar-val">11.3%</span></div><div class="bar-label">'79</div></div>
-      <div class="bar-group"><div class="bar" style="height:61%; background:var(--flame)"><span class="bar-val">13.5%</span></div><div class="bar-label">'80</div></div>
-      <div class="bar-group"><div class="bar" style="height:48%"><span class="bar-val">10.3%</span></div><div class="bar-label">'81</div></div>
-      <div class="bar-group"><div class="bar" style="height:28%"><span class="bar-val">6.1%</span></div><div class="bar-label">'82</div></div>
+    <div class="chart-title">U.S. Economic Indicators · 1970–1982</div>
+    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px;">
+      <button onclick="setChartView('inflation')" id="btn-inflation" style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border:1px solid var(--amber); background:var(--amber); color:var(--crude); cursor:pointer; border-radius:2px; font-weight:600;">Inflation Rate</button>
+      <button onclick="setChartView('oil')" id="btn-oil" style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border:1px solid #4a3000; background:transparent; color:var(--paper); cursor:pointer; border-radius:2px;">Oil Price</button>
+      <button onclick="setChartView('unemployment')" id="btn-unemployment" style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border:1px solid #4a3000; background:transparent; color:var(--paper); cursor:pointer; border-radius:2px;">Unemployment</button>
+      <button onclick="setChartView('all')" id="btn-all" style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border:1px solid #4a3000; background:transparent; color:var(--paper); cursor:pointer; border-radius:2px;">All Three</button>
     </div>
-    <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8a7a5a; margin-top:12px;">Note: Orange bars = spike years tied to oil shocks (1974, 1979–80). Data: U.S. Bureau of Labor Statistics.</p>
+    <div style="position:relative; height:280px;">
+      <canvas id="inflationChart"></canvas>
+    </div>
+    <div id="chart-annotation" style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8a7a5a; margin-top:14px; min-height:18px; transition: opacity 0.3s;">
+      Hover over a bar to see details. Orange = oil shock years. Data: U.S. Bureau of Labor Statistics.
+    </div>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script>
+  (function() {
+    const years = ['1970','1971','1972','1973','1974','1975','1976','1977','1978','1979','1980','1981','1982'];
+    const inflation  = [5.8, 4.3, 3.3, 6.2, 11.0, 9.1, 5.8, 6.5, 7.6, 11.3, 13.5, 10.3, 6.1];
+    const oilPrice   = [3.18, 3.28, 3.39, 4.31, 12.52, 12.21, 13.10, 14.40, 14.85, 31.61, 37.42, 37.13, 35.93];
+    const unemploy   = [4.9, 5.9, 5.6, 4.9, 5.6, 8.5, 7.7, 7.1, 6.1, 5.8, 7.1, 7.6, 9.7];
+
+    const oilShockYears = [3, 4, 5, 9, 10, 11]; // indices
+
+    const events = {
+      3:  '🛢 Oct 1973: OPEC announces embargo. Oil price begins to spike.',
+      4:  '📈 1974: Full impact felt — inflation hits 11%, GDP turns negative.',
+      5:  '📉 1975: Embargo ends but damage lingers. Unemployment peaks at 8.5%.',
+      9:  '🇮🇷 1979: Iranian Revolution triggers second oil shock.',
+      10: '📈 1980: Inflation peaks at 13.5%. Fed Chair Volcker takes drastic action.',
+      11: '💊 1981: Volcker raises rates to 20%. Painful cure begins.',
+      12: '📉 1982: Inflation finally breaks. Unemployment hits 9.7% — recession bites.'
+    };
+
+    const inflColors = inflation.map((_, i) =>
+      oilShockYears.includes(i) ? '#e85c00' : '#c97d00'
+    );
+
+    let chart;
+    let currentView = 'inflation';
+
+    function getDatasets(view) {
+      if (view === 'inflation') return [{
+        label: 'Inflation Rate (%)',
+        data: inflation,
+        backgroundColor: inflColors,
+        borderColor: inflColors,
+        borderWidth: 0,
+        borderRadius: 2,
+        type: 'bar'
+      }];
+      if (view === 'oil') return [{
+        label: 'Oil Price ($/barrel)',
+        data: oilPrice,
+        backgroundColor: 'rgba(201,125,0,0.15)',
+        borderColor: '#c97d00',
+        borderWidth: 2,
+        pointBackgroundColor: oilPrice.map((_, i) => oilShockYears.includes(i) ? '#e85c00' : '#c97d00'),
+        pointRadius: 5,
+        tension: 0.3,
+        type: 'line',
+        fill: true
+      }];
+      if (view === 'unemployment') return [{
+        label: 'Unemployment Rate (%)',
+        data: unemploy,
+        backgroundColor: 'rgba(192,57,43,0.15)',
+        borderColor: '#c0392b',
+        borderWidth: 2,
+        pointBackgroundColor: '#c0392b',
+        pointRadius: 5,
+        tension: 0.3,
+        type: 'line',
+        fill: true
+      }];
+      // All three
+      return [
+        { label: 'Inflation (%)', data: inflation, borderColor: '#e85c00', backgroundColor: 'rgba(232,92,0,0.08)', borderWidth: 2, pointRadius: 4, tension: 0.3, type: 'line', fill: false, yAxisID: 'y' },
+        { label: 'Unemployment (%)', data: unemploy, borderColor: '#c0392b', backgroundColor: 'rgba(192,57,43,0.08)', borderWidth: 2, pointRadius: 4, tension: 0.3, type: 'line', fill: false, yAxisID: 'y' },
+        { label: 'Oil Price ($/barrel)', data: oilPrice, borderColor: '#c97d00', backgroundColor: 'rgba(201,125,0,0.08)', borderWidth: 2, pointRadius: 4, tension: 0.3, type: 'line', fill: false, yAxisID: 'y2', borderDash: [4,3] }
+      ];
+    }
+
+    function buildChart(view) {
+      const ctx = document.getElementById('inflationChart').getContext('2d');
+      if (chart) chart.destroy();
+
+      const isAll = view === 'all';
+      chart = new Chart(ctx, {
+        type: view === 'inflation' ? 'bar' : 'line',
+        data: { labels: years, datasets: getDatasets(view) },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 700, easing: 'easeOutQuart' },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              display: isAll,
+              labels: { color: '#c4b89a', font: { family: "'IBM Plex Mono'", size: 10 } }
+            },
+            tooltip: {
+              backgroundColor: '#1a1208',
+              titleColor: '#c97d00',
+              bodyColor: '#f5f0e8',
+              borderColor: '#4a3000',
+              borderWidth: 1,
+              titleFont: { family: "'IBM Plex Mono'", size: 11 },
+              bodyFont: { family: "'IBM Plex Sans'", size: 12 },
+              callbacks: {
+                afterBody: function(items) {
+                  const idx = items[0]?.dataIndex;
+                  if (events[idx]) return ['\n' + events[idx]];
+                  return [];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#8a7a5a', font: { family: "'IBM Plex Mono'", size: 10 } },
+              grid: { color: 'rgba(74,48,0,0.3)' }
+            },
+            y: {
+              ticks: {
+                color: '#8a7a5a',
+                font: { family: "'IBM Plex Mono'", size: 10 },
+                callback: v => v + (view === 'oil' ? ' $' : '%')
+              },
+              grid: { color: 'rgba(74,48,0,0.3)' }
+            },
+            ...(isAll ? {
+              y2: {
+                position: 'right',
+                ticks: { color: '#c97d00', font: { family: "'IBM Plex Mono'", size: 10 }, callback: v => '$' + v },
+                grid: { drawOnChartArea: false }
+              }
+            } : {})
+          },
+          onHover: (event, elements) => {
+            if (elements.length > 0) {
+              const idx = elements[0].index;
+              const anno = document.getElementById('chart-annotation');
+              if (events[idx]) {
+                anno.textContent = events[idx];
+                anno.style.color = '#c97d00';
+              } else {
+                anno.textContent = years[idx] + ' — No major oil-related event this year.';
+                anno.style.color = '#8a7a5a';
+              }
+            }
+          }
+        }
+      });
+    }
+
+    window.setChartView = function(view) {
+      currentView = view;
+      const btns = ['inflation','oil','unemployment','all'];
+      btns.forEach(b => {
+        const el = document.getElementById('btn-' + b);
+        if (b === view) {
+          el.style.background = 'var(--amber)';
+          el.style.color = 'var(--crude)';
+          el.style.borderColor = 'var(--amber)';
+          el.style.fontWeight = '600';
+        } else {
+          el.style.background = 'transparent';
+          el.style.color = 'var(--paper)';
+          el.style.borderColor = '#4a3000';
+          el.style.fontWeight = '400';
+        }
+      });
+      buildChart(view);
+    };
+
+    window.addEventListener('DOMContentLoaded', function() {
+      buildChart('inflation');
+    });
+  })();
+  </script>
 
   <!-- Economic data table -->
   <table class="data-table">
@@ -865,28 +1275,71 @@
     <p>Why was this so hard to fight? The usual cures were self-defeating. <strong>To fight inflation:</strong> raise interest rates → but that makes unemployment worse. <strong>To fight unemployment:</strong> lower rates, increase spending → but that makes inflation worse. The Federal Reserve was essentially trying to fight a fire with gasoline.</p>
   </div>
 
-  <!-- Stagflation quadrant diagram -->
+  <!-- Interactive Stagflation Quadrant -->
   <div style="margin: 28px 0;">
-    <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--amber); margin-bottom:12px;">The Policymaker's Dilemma — 2×2 Economic States</p>
+    <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--amber); margin-bottom:4px;">The Policymaker's Dilemma — 2×2 Economic States</p>
+    <p style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#8a7a5a; margin-bottom:14px; letter-spacing:1px;">↓ Click any quadrant to expand</p>
+
     <div class="stagflation-grid">
-      <div class="quadrant safe">
-        <h4>↓ Inflation + ↓ Unemployment</h4>
-        <p><strong>The Goldilocks Economy.</strong> Low prices, people working. Every government's dream. Hard to achieve, hard to sustain. U.S. experienced this in the mid-1990s.</p>
+
+      <div class="quadrant safe" onclick="toggleQuadrant(this)" style="cursor:pointer;">
+        <h4>↓ Inflation &nbsp;+&nbsp; ↓ Unemployment</h4>
+        <p><strong>The Goldilocks Economy.</strong> Low prices, people working. Every government's dream.</p>
+        <div class="q-expand" style="display:none; margin-top:14px; border-top:1px solid rgba(26,107,60,0.2); padding-top:12px;">
+          <p style="margin-bottom:8px;">The Fed's ideal state. Prices are stable, jobs are plentiful, and the economy is growing at a sustainable pace. Governments rarely have to make hard trade-offs.</p>
+          <p style="font-size:12px; color: var(--green);"><strong>📅 Real example:</strong> U.S. mid-1990s "Great Moderation" — inflation ~2.5%, unemployment fell to 4%. The longest peacetime expansion in U.S. history.</p>
+          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Maintain current course. Minor adjustments to keep the balance. The Fed's dream scenario.</p>
+        </div>
       </div>
-      <div class="quadrant warning">
-        <h4>↑ Inflation + ↓ Unemployment</h4>
-        <p><strong>Classic demand-pull overheating.</strong> Economy growing too fast. Fix: raise interest rates to cool spending. Painful but manageable.</p>
+
+      <div class="quadrant warning" onclick="toggleQuadrant(this)" style="cursor:pointer;">
+        <h4>↑ Inflation &nbsp;+&nbsp; ↓ Unemployment</h4>
+        <p><strong>Classic demand-pull overheating.</strong> Economy growing too fast — manageable.</p>
+        <div class="q-expand" style="display:none; margin-top:14px; border-top:1px solid rgba(201,125,0,0.2); padding-top:12px;">
+          <p style="margin-bottom:8px;">Too much money chasing too few goods. Consumers are flush, businesses can't keep up. Prices rise, but people are working — a "good problem" compared to the alternatives.</p>
+          <p style="font-size:12px; color: var(--amber);"><strong>📅 Real example:</strong> U.S. post-COVID reopening 2021–22. Strong demand, labor shortages, supply chain issues drove inflation to 9.1% — but unemployment was low.</p>
+          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Raise interest rates. Makes borrowing more expensive → cools consumer spending. Painful but the mechanism is well understood.</p>
+        </div>
       </div>
-      <div class="quadrant warning">
-        <h4>↓ Inflation + ↑ Unemployment</h4>
-        <p><strong>Recession with deflation risk.</strong> Fix: cut rates, stimulus spending. Standard Keynesian response. Also manageable.</p>
+
+      <div class="quadrant warning" onclick="toggleQuadrant(this)" style="cursor:pointer;">
+        <h4>↓ Inflation &nbsp;+&nbsp; ↑ Unemployment</h4>
+        <p><strong>Recession with deflation risk.</strong> Fix: cut rates, stimulus. Standard Keynesian response.</p>
+        <div class="q-expand" style="display:none; margin-top:14px; border-top:1px solid rgba(201,125,0,0.2); padding-top:12px;">
+          <p style="margin-bottom:8px;">The economy is contracting. People are losing jobs, spending falls, prices may drop (deflation). Frightening, but the policy toolkit is clear: inject money into the economy.</p>
+          <p style="font-size:12px; color: var(--amber);"><strong>📅 Real example:</strong> U.S. 2008–09 Financial Crisis. Unemployment hit 10%, inflation was near zero. The Fed cut rates to near zero and launched stimulus programs (QE).</p>
+          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Cut interest rates + fiscal stimulus (government spending). The standard Keynesian response. Slow but it works.</p>
+        </div>
       </div>
-      <div class="quadrant danger">
-        <h4>↑ Inflation + ↑ Unemployment</h4>
-        <p><strong>STAGFLATION — 1974–75 U.S.</strong> Cures for one problem worsen the other. No good options. Caused severe political crisis. Required years of painful policy under Volcker to escape.</p>
+
+      <div class="quadrant danger" onclick="toggleQuadrant(this)" style="cursor:pointer; position:relative;">
+        <div style="position:absolute; top:10px; right:12px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--red); border:1px solid var(--red); padding:2px 6px; text-transform:uppercase;">1974–75 U.S.</div>
+        <h4>↑ Inflation &nbsp;+&nbsp; ↑ Unemployment</h4>
+        <p><strong>STAGFLATION.</strong> Cures for one problem worsen the other. No good options.</p>
+        <div class="q-expand" style="display:none; margin-top:14px; border-top:1px solid rgba(192,57,43,0.3); padding-top:12px;">
+          <p style="margin-bottom:8px;">The nightmare. Every tool in the playbook backfires. Raise rates to fight inflation? Unemployment gets worse. Cut rates to fight unemployment? Inflation explodes. The Fed is trapped.</p>
+          <p style="font-size:12px; color: var(--red);"><strong>📅 Real example:</strong> U.S. 1974–75 — inflation 11%, unemployment 8.5%. Then again 1979–81: inflation 13.5%, unemployment 7–10%. Nixon, Ford, and Carter all failed to fix it.</p>
+          <p style="font-size:12px; margin-top:8px;"><strong>🔧 "Policy":</strong> Paul Volcker (Fed Chair 1979) chose to kill inflation first — raised rates to 20%, deliberately triggering a deep recession. It worked, but unemployment hit 10.8%. A brutal, painful cure.</p>
+          <p style="font-size:12px; margin-top:8px; font-style:italic; color:#888;"><strong>Key lesson:</strong> Stagflation proves the Phillips Curve is not a reliable policy menu — a supply shock breaks the normal inflation/unemployment trade-off entirely.</p>
+        </div>
       </div>
+
     </div>
   </div>
+
+  <script>
+  window.toggleQuadrant = function(el) {
+    const panel = el.querySelector('.q-expand');
+    const isOpen = panel.style.display !== 'none';
+    // Close all
+    document.querySelectorAll('.q-expand').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.quadrant').forEach(q => q.style.outline = 'none');
+    if (!isOpen) {
+      panel.style.display = 'block';
+      el.style.outline = '2px solid currentColor';
+    }
+  };
+  </script>
 
   <div class="body-text">
     <p>The U.S. didn't fully escape stagflation until Federal Reserve Chairman <strong>Paul Volcker</strong> raised interest rates to a shocking <strong>20%</strong> in 1980–81 — essentially choking the economy on purpose to kill inflation. It worked, but triggered the worst recession since the Great Depression, with unemployment hitting 10.8%.</p>
@@ -957,3 +1410,8 @@
       <span class="badge">Stagflation</span>
     </div>
   </div>
+
+</main>
+
+</body>
+</html>
