@@ -27,20 +27,18 @@
       overflow-x: hidden;
     }
 
-    /* ── HERO ── */
     .hero {
       position: relative;
-      min-height: 100vh;
+      min-height: 50vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       overflow: hidden;
-      padding: 40px 20px 60px;
+      padding: 40px 20px 40px;
     }
 
-    /* dot-grid background like the slides */
     .hero::before {
       content: '';
       position: absolute;
@@ -53,7 +51,6 @@
       z-index: 0;
     }
 
-    /* dot grid overlay */
     .hero::after {
       content: '';
       position: absolute;
@@ -101,7 +98,6 @@
       color: white;
     }
 
-    /* Blue banner strip — matches slides exactly */
     .title-banner {
       background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 50%, var(--blue-light) 100%);
       padding: 18px 50px;
@@ -164,12 +160,10 @@
       animation: fadeInUp 0.7s ease 0.45s both;
     }
 
-    /* ── SECTION LABEL ── */
     .section-label {
       font-family: 'Permanent Marker', cursive;
     }
 
-    /* ── CASE STUDIES GRID ── */
     .case-studies {
       padding: 70px 20px 80px;
       max-width: 1100px;
@@ -227,9 +221,6 @@
       gap: 14px;
     }
 
-    /* ── UNIT COLOR SCHEMES ── */
-
-    /* Unit 1: Intro to Economics & Economic Systems — main dark blue */
     .unit-1 { border-top-color: #2e6db4; }
     .unit-1 .card-header { background: linear-gradient(135deg, #1e4d8c, #2e6db4); }
     .unit-1 .card-btn { background: linear-gradient(135deg, #1e4d8c, #2e6db4); }
@@ -237,7 +228,6 @@
     .unit-1:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(46,109,180,0.4); }
     .unit-1 .topic-tag { background: rgba(46,109,180,0.2); border-color: rgba(46,109,180,0.45); color: #5ba3e0; }
 
-    /* Unit 2: Supply & Demand — dark purple & bright orange */
     .unit-2 { border-top-color: #e07b20; }
     .unit-2 .card-header { background: linear-gradient(135deg, #3a1a6e, #5c2d9e); }
     .unit-2 .card-btn { background: linear-gradient(135deg, #3a1a6e, #e07b20); }
@@ -245,7 +235,6 @@
     .unit-2:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(224,123,32,0.4); }
     .unit-2 .topic-tag { background: rgba(224,123,32,0.15); border-color: rgba(224,123,32,0.4); color: #f0a050; }
 
-    /* Unit 3: What is Money? — muted sage green */
     .unit-3 { border-top-color: #7a9e7e; }
     .unit-3 .card-header { background: linear-gradient(135deg, #2e4d32, #4a7a50); }
     .unit-3 .card-btn { background: linear-gradient(135deg, #2e4d32, #5a8e60); }
@@ -253,7 +242,6 @@
     .unit-3:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(122,158,126,0.4); }
     .unit-3 .topic-tag { background: rgba(122,158,126,0.15); border-color: rgba(122,158,126,0.4); color: #9dc4a0; }
 
-    /* Unit 4: Market Failures — orange & black */
     .unit-4 { border-top-color: #d4621a; }
     .unit-4 .card-header { background: linear-gradient(135deg, #1a1a1a, #4a2000); }
     .unit-4 .card-btn { background: linear-gradient(135deg, #2a1000, #d4621a); }
@@ -261,7 +249,6 @@
     .unit-4:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,98,26,0.45); }
     .unit-4 .topic-tag { background: rgba(212,98,26,0.15); border-color: rgba(212,98,26,0.4); color: #e8905a; }
 
-    /* Unit 5: Government & the Economy — blue-green teal */
     .unit-5 { border-top-color: #2a9d8f; }
     .unit-5 .card-header { background: linear-gradient(135deg, #0d3d38, #1a7a70); }
     .unit-5 .card-btn { background: linear-gradient(135deg, #0d3d38, #2a9d8f); }
@@ -269,7 +256,6 @@
     .unit-5:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(42,157,143,0.4); }
     .unit-5 .topic-tag { background: rgba(42,157,143,0.15); border-color: rgba(42,157,143,0.4); color: #4ccfc0; }
 
-    /* Unit 6: Socialism, Communism & Marxism — tan & red */
     .unit-6 { border-top-color: #c0392b; }
     .unit-6 .card-header { background: linear-gradient(135deg, #4a2e1a, #8b4513); }
     .unit-6 .card-btn { background: linear-gradient(135deg, #6b2a1e, #c0392b); }
@@ -315,6 +301,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      justify-content: center;
     }
 
     .topic-tag {
@@ -359,14 +346,12 @@
       transform: translateX(4px);
     }
 
-    /* ── DIVIDER ── */
     .blue-divider {
       height: 6px;
       background: linear-gradient(90deg, transparent, var(--blue), var(--blue-light), var(--blue), transparent);
       opacity: 0.6;
     }
 
-    /* ── FOOTER ── */
     footer {
       background: #0e1218;
       border-top: 3px solid var(--blue);
@@ -392,16 +377,13 @@
       color: white;
     }
 
-    .footer-logo span {
-      color: var(--accent);
-    }
+    .footer-logo span { color: var(--accent); }
 
     footer p {
       font-size: 0.82rem;
       color: rgba(255,255,255,0.4);
     }
 
-    /* ── ANIMATIONS ── */
     @keyframes fadeInDown {
       from { opacity: 0; transform: translateY(-20px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -411,7 +393,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* stagger cards */
     .card:nth-child(1) { animation: fadeInUp 0.6s ease 0.1s both; }
     .card:nth-child(2) { animation: fadeInUp 0.6s ease 0.2s both; }
     .card:nth-child(3) { animation: fadeInUp 0.6s ease 0.3s both; }
@@ -419,7 +400,6 @@
     .card:nth-child(5) { animation: fadeInUp 0.6s ease 0.5s both; }
     .card:nth-child(6) { animation: fadeInUp 0.6s ease 0.6s both; }
 
-    /* bottom strip like slide footer */
     .bottom-bar {
       background: #111;
       border-top: 2px solid rgba(255,255,255,0.08);
@@ -460,31 +440,23 @@
 </head>
 <body>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
       <div class="bva-badge">
         <div class="bva-logo">BVA</div>
         Blue Valley Academy &nbsp;·&nbsp; Economics
       </div>
-
       <div class="title-banner">
         <h1>Intro to Economics</h1>
       </div>
-
       <div class="subtitle-strip">
-        <p>The Study of Choices — Select a Unit Below</p>
+        <p>Mr. Huebner's Intro to Economics — Select a Unit Below</p>
       </div>
-
-      <p class="hero-desc">
-        Economics isn't just about money — it's about how individuals, businesses, and governments make decisions in a world of limited resources and unlimited wants. Choose a case study to get started.
-      </p>
     </div>
   </section>
 
   <div class="blue-divider"></div>
 
-  <!-- CASE STUDIES -->
   <section class="case-studies">
     <div class="section-header">
       <p class="section-label">Course Materials</p>
@@ -494,7 +466,6 @@
 
     <div class="grid">
 
-      <!-- CARD 1: Intro to Economics & Economic Systems — dark blue -->
       <div class="card unit-1">
         <div class="card-header">
           <div class="card-number">01</div>
@@ -512,14 +483,13 @@
         <a href="unit-1.html" class="card-btn">Open Unit 1</a>
       </div>
 
-      <!-- CARD 2: Supply & Demand — dark purple & bright orange -->
       <div class="card unit-2">
         <div class="card-header">
           <div class="card-number">02</div>
           <div class="card-title">Supply & Demand</div>
         </div>
         <div class="card-body">
-          <p class="card-desc">Microeconomics, Supply & Demand, Elasticity What shifts the Curves?</p>
+          <p class="card-desc">Microeconomics, Supply & Demand, Elasticity. What shifts the Curves?</p>
           <div class="card-topics">
             <span class="topic-tag">Supply Curve</span>
             <span class="topic-tag">Demand Curve</span>
@@ -530,14 +500,13 @@
         <a href="unit-2.html" class="card-btn">Open Unit 2</a>
       </div>
 
-      <!-- CARD 3: What is Money? — muted sage green -->
       <div class="card unit-3">
         <div class="card-header">
           <div class="card-number">03</div>
           <div class="card-title">What is Money?</div>
         </div>
         <div class="card-body">
-          <p class="card-desc">Mini Unit- What is Money? Inflation, Deflation The Role of Bnaks.</p>
+          <p class="card-desc">Mini Unit — What is Money? Inflation, Deflation, The Role of Banks.</p>
           <div class="card-topics">
             <span class="topic-tag">Currency</span>
             <span class="topic-tag">Banking</span>
@@ -548,14 +517,13 @@
         <a href="unit-3.html" class="card-btn">Open Unit 3</a>
       </div>
 
-      <!-- CARD 4: Market Failures — orange & black -->
       <div class="card unit-4">
         <div class="card-header">
           <div class="card-number">04</div>
           <div class="card-title">What Are Market Failures?</div>
         </div>
         <div class="card-body">
-          <p class="card-desc">What Happens When Free Markets Break? Externalities, Monopolies, Public Goods, Information Asymetry.</p>
+          <p class="card-desc">What Happens When Free Markets Break? Externalities, Monopolies, Public Goods, Information Asymmetry.</p>
           <div class="card-topics">
             <span class="topic-tag">Externalities</span>
             <span class="topic-tag">Public Goods</span>
@@ -566,7 +534,6 @@
         <a href="unit-4.html" class="card-btn">Open Unit 4</a>
       </div>
 
-      <!-- CARD 5: Government & the Economy — blue-green teal -->
       <div class="card unit-5">
         <div class="card-header">
           <div class="card-number">05</div>
@@ -584,7 +551,6 @@
         <a href="unit-5.html" class="card-btn">Open Unit 5</a>
       </div>
 
-      <!-- CARD 6: Socialism, Communism & Marxism — tan & red -->
       <div class="card unit-6">
         <div class="card-header">
           <div class="card-number">06</div>
@@ -605,9 +571,8 @@
     </div>
   </section>
 
-  <!-- BOTTOM BAR (matches slide footer) -->
   <div class="bottom-bar">
-    <span>Intro to Economics</span>
+    <span>Mr. Huebner's Intro to Economics</span>
     <div class="bva-bottom">
       <span>Blue Valley Academy</span>
       <div class="bva-box">BVA</div>
@@ -616,7 +581,7 @@
 
   <footer>
     <div class="footer-inner">
-      <div class="footer-logo">Blue Valley Academy &nbsp;<span>·</span>&nbsp; Economics</div>
+      <div class="footer-logo">Mr. Huebner's Intro to Economics &nbsp;<span>·</span>&nbsp; Blue Valley Academy</div>
       <p>Select a case study above to begin. Links will activate as units are published.</p>
     </div>
   </footer>
