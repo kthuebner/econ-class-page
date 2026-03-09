@@ -35,7 +35,6 @@
     position: relative;
     overflow: hidden;
   }
-
   .header-inner {
     max-width: 900px;
     margin: 0 auto;
@@ -43,7 +42,6 @@
     position: relative;
     z-index: 2;
   }
-
   .header::before {
     content: '';
     position: absolute;
@@ -53,7 +51,6 @@
       rgba(45,106,45,0.1) 22px, rgba(45,106,45,0.1) 23px
     );
   }
-
   .unit-tag {
     display: inline-block;
     background: var(--green);
@@ -66,7 +63,6 @@
     padding: 4px 12px;
     margin-bottom: 14px;
   }
-
   .header h1 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(38px, 8vw, 76px);
@@ -74,13 +70,11 @@
     letter-spacing: 1px;
     margin-bottom: 12px;
   }
-
   .header h1 .accent { color: var(--ltgreen); }
   .header .sub { font-size: 16px; color: #bbb; max-width: 580px; font-weight: 300; }
 
   /* ── TARGETS ── */
   .targets { background: var(--green); padding: 14px 24px; }
-
   .targets-inner {
     max-width: 900px;
     margin: 0 auto;
@@ -89,7 +83,6 @@
     gap: 8px;
     align-items: center;
   }
-
   .targets-label {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
@@ -99,7 +92,6 @@
     font-weight: 500;
     margin-right: 4px;
   }
-
   .pill {
     background: rgba(255,255,255,0.15);
     color: white;
@@ -125,7 +117,6 @@
     align-items: center;
     gap: 10px;
   }
-
   .section-label::after { content: ''; flex: 1; height: 1px; background: #ddd; }
 
   /* ── CONTEXT PARA ── */
@@ -139,7 +130,6 @@
     line-height: 1.75;
     color: #333;
   }
-
   .context-para strong { font-weight: 600; color: var(--ink); }
 
   /* ── HOOK: text left, two images right ── */
@@ -150,19 +140,12 @@
     margin-bottom: 32px;
     align-items: start;
   }
-
-  .hook-text p { font-size: 16px; line-height: 1.75; color: #333; }
-  .hook-text p + p { margin-top: 12px; }
-
-  /* Two images stacked on the right */
   .hook-images {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
-
   .hook-img-wrap { display: flex; flex-direction: column; gap: 6px; }
-
   .hook-img-wrap img {
     width: 100%;
     height: 160px;
@@ -170,7 +153,6 @@
     border-radius: 6px;
     display: block;
   }
-
   .img-caption {
     font-family: 'DM Mono', monospace;
     font-size: 9px;
@@ -186,9 +168,8 @@
     color: white;
     border-radius: 6px;
     padding: 24px 28px;
-    margin-bottom: 36px;
+    margin-bottom: 16px;
   }
-
   .pc-label {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
@@ -198,9 +179,7 @@
     margin-bottom: 16px;
     text-align: center;
   }
-
   .price-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
-
   .pr-year {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
@@ -209,7 +188,6 @@
     text-align: right;
     flex-shrink: 0;
   }
-
   .pr-bar-wrap {
     flex: 1;
     background: rgba(255,255,255,0.05);
@@ -217,7 +195,6 @@
     overflow: hidden;
     height: 30px;
   }
-
   .pr-bar {
     height: 100%;
     border-radius: 2px;
@@ -226,16 +203,13 @@
     padding-left: 10px;
     min-width: 30px;
   }
-
   .pr-bar span { font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; font-weight: 500; }
-
   .bar-1 { background: #3a3530; width: 2%; }
   .bar-1 span { color: #aaa; }
   .bar-2 { background: #5a4020; width: 6%; }
   .bar-2 span { color: #c8a060; }
   .bar-3 { background: var(--danger); width: 100%; }
   .bar-3 span { color: white; }
-
   .pc-footer {
     display: flex;
     justify-content: center;
@@ -244,7 +218,6 @@
     margin-top: 16px;
     flex-wrap: wrap;
   }
-
   .badge-big {
     display: inline-block;
     background: var(--danger);
@@ -255,10 +228,22 @@
     border-radius: 3px;
     letter-spacing: 1px;
   }
-
   .pc-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: #666; }
 
-  /* ── CONCEPT CARDS ── */
+  /* ── BREAD PARA (below chart) ── */
+  .bread-para {
+    background: white;
+    border-left: 4px solid var(--danger);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin-bottom: 36px;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #333;
+  }
+  .bread-para strong { font-weight: 600; color: var(--ink); }
+
+  /* ── INTERACTIVE CONCEPT CARDS ── */
   .concepts {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -266,35 +251,92 @@
     margin-bottom: 36px;
   }
 
-  .concept-card { border-radius: 6px; padding: 20px; overflow: hidden; }
+  .concept-card {
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+  }
+  .concept-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
   .concept-card.cc-green { background: #f0f8f0; border: 2px solid var(--green); }
   .concept-card.cc-red   { background: #fff4f4; border: 2px solid var(--danger); }
+  .concept-card.cc-green.open { border-color: var(--green); }
+  .concept-card.cc-red.open   { border-color: var(--danger); }
+
+  /* Always-visible top section */
+  .card-top { padding: 20px 20px 14px; }
 
   .concept-card .cc-icon { font-size: 26px; margin-bottom: 8px; display: block; }
-
   .concept-card .cc-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 22px;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
   }
-
   .cc-green .cc-title { color: var(--green); }
   .cc-red   .cc-title { color: var(--danger); }
+  .concept-card .cc-summary { font-size: 14px; line-height: 1.6; color: #444; }
 
-  .concept-card .cc-body { font-size: 14px; line-height: 1.65; color: #444; }
+  /* Click-to-expand trigger row */
+  .card-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-top: 1px dashed;
+    transition: background 0.15s;
+  }
+  .cc-green .card-trigger { color: var(--green); border-color: rgba(45,106,45,0.25); }
+  .cc-red   .card-trigger { color: var(--danger); border-color: rgba(185,43,39,0.2); }
+  .cc-green:hover .card-trigger { background: rgba(45,106,45,0.05); }
+  .cc-red:hover   .card-trigger { background: rgba(185,43,39,0.04); }
 
-  .concept-card .cc-highlight {
+  .card-trigger .ct-chevron {
+    font-size: 14px;
+    transition: transform 0.25s ease;
+    display: inline-block;
+  }
+  .concept-card.open .ct-chevron { transform: rotate(180deg); }
+
+  /* Expandable detail section */
+  .card-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+  }
+  .concept-card.open .card-detail { max-height: 600px; }
+
+  .card-detail-inner { padding: 16px 20px 20px; border-top: 1px solid; }
+  .cc-green .card-detail-inner { border-color: rgba(45,106,45,0.2); }
+  .cc-red   .card-detail-inner { border-color: rgba(185,43,39,0.15); }
+
+  .detail-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .cc-green .detail-label { color: var(--green); }
+  .cc-red   .detail-label { color: var(--danger); }
+
+  .detail-body { font-size: 14px; line-height: 1.65; color: #444; }
+  .detail-body strong { font-weight: 600; color: var(--ink); }
+
+  .detail-highlight {
     margin-top: 12px;
-    padding: 9px 11px;
+    padding: 10px 12px;
     border-radius: 4px;
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.55;
   }
-
-  .cc-green .cc-highlight { background: rgba(45,106,45,0.1); color: #1a4a1a; }
-  .cc-red   .cc-highlight { background: rgba(185,43,39,0.08); color: var(--darkred); }
-  .cc-highlight strong { font-weight: 600; }
+  .cc-green .detail-highlight { background: rgba(45,106,45,0.1); color: #1a4a1a; }
+  .cc-red   .detail-highlight { background: rgba(185,43,39,0.08); color: var(--darkred); }
+  .detail-highlight strong { font-weight: 600; }
 
   .formula-box {
     background: #fff0f0;
@@ -303,28 +345,33 @@
     margin: 10px 0;
     text-align: center;
   }
-
   .formula { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 500; color: var(--danger); letter-spacing: 2px; }
   .formula-key { font-size: 11px; color: #999; margin-top: 3px; font-family: 'DM Mono', monospace; }
 
-  /* ── DOOM LOOP ── */
+  /* ── INTERACTIVE DOOM LOOP ── */
   .doom-section { margin-bottom: 36px; }
-
   .doom-wrap {
     background: white;
     border: 1px solid #e0ddd8;
     border-radius: 6px;
-    padding: 28px 24px 20px;
+    padding: 28px 24px 24px;
   }
-
   .doom-title {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 24px;
+    margin-bottom: 8px;
     text-align: center;
+  }
+  .doom-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #bbb;
+    text-align: center;
+    margin-bottom: 22px;
+    letter-spacing: 1px;
   }
 
   .doom-loop {
@@ -332,12 +379,21 @@
     grid-template-columns: 1fr 56px 1fr;
     grid-template-rows: auto 52px auto;
     max-width: 660px;
-    margin: 0 auto 16px;
+    margin: 0 auto 20px;
     align-items: center;
     justify-items: center;
   }
 
-  .loop-box { border-radius: 6px; padding: 14px 16px; width: 100%; }
+  .loop-box {
+    border-radius: 6px;
+    padding: 14px 16px;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+  }
+  .loop-box:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .loop-box.active { transform: translateY(-2px); }
 
   .loop-box .lb-tag {
     font-family: 'DM Mono', monospace;
@@ -346,7 +402,6 @@
     text-transform: uppercase;
     margin-bottom: 4px;
   }
-
   .loop-box .lb-head {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 17px;
@@ -354,9 +409,7 @@
     margin-bottom: 4px;
     line-height: 1.1;
   }
-
   .loop-box .lb-body { font-size: 12px; line-height: 1.45; color: #555; }
-
   .loop-box .lb-note {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
@@ -370,21 +423,25 @@
   .loop-box.lb1 .lb-tag  { color: var(--green); }
   .loop-box.lb1 .lb-head { color: var(--green); }
   .loop-box.lb1 .lb-note { background: rgba(45,106,45,0.12); color: #1a4a1a; }
+  .loop-box.lb1.active   { background: rgba(45,106,45,0.22); box-shadow: 0 0 0 3px rgba(45,106,45,0.3); }
 
   .loop-box.lb2 { background: rgba(185,43,39,0.07); border: 2px solid var(--danger); grid-column:3; grid-row:1; }
   .loop-box.lb2 .lb-tag  { color: var(--danger); }
   .loop-box.lb2 .lb-head { color: var(--danger); }
   .loop-box.lb2 .lb-note { background: rgba(185,43,39,0.1); color: var(--darkred); }
+  .loop-box.lb2.active   { background: rgba(185,43,39,0.17); box-shadow: 0 0 0 3px rgba(185,43,39,0.3); }
 
   .loop-box.lb3 { background: rgba(123,26,26,0.07); border: 2px solid var(--loop-3); grid-column:3; grid-row:3; }
   .loop-box.lb3 .lb-tag  { color: var(--loop-3); }
   .loop-box.lb3 .lb-head { color: var(--loop-3); }
   .loop-box.lb3 .lb-note { background: rgba(123,26,26,0.1); color: var(--loop-3); }
+  .loop-box.lb3.active   { background: rgba(123,26,26,0.17); box-shadow: 0 0 0 3px rgba(123,26,26,0.3); }
 
   .loop-box.lb4 { background: rgba(61,43,26,0.07); border: 2px solid var(--loop-4); grid-column:1; grid-row:3; }
   .loop-box.lb4 .lb-tag  { color: #7a6040; }
   .loop-box.lb4 .lb-head { color: var(--loop-4); }
   .loop-box.lb4 .lb-note { background: rgba(61,43,26,0.1); color: #5a4020; }
+  .loop-box.lb4.active   { background: rgba(61,43,26,0.17); box-shadow: 0 0 0 3px rgba(61,43,26,0.3); }
 
   .loop-arrow { font-size: 26px; color: var(--danger); text-align: center; }
   .la-top   { grid-column:2; grid-row:1; animation: ap 1.6s ease-in-out infinite; }
@@ -413,15 +470,69 @@
     line-height: 1.2;
     animation: cp 2s ease-in-out infinite;
   }
-
   @keyframes cp {
     0%,100% { box-shadow: 0 0 0 5px rgba(185,43,39,.15); }
     50%      { box-shadow: 0 0 0 12px rgba(185,43,39,.06); }
   }
 
-  .doom-caption { text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+  /* MV=PQ panel that appears on click */
+  .formula-panel {
+    background: #1c1a17;
+    border-radius: 6px;
+    padding: 18px 22px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+  .formula-panel.visible {
+    max-height: 200px;
+    opacity: 1;
+    padding: 18px 22px;
+  }
 
-  /* ── RESOLUTION — lean version ── */
+  .fp-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  /* The formula display — variables highlighted when active */
+  .fp-formula {
+    font-family: 'DM Mono', monospace;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: #555;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .fp-formula .fv {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .fp-formula .fv.hi-green  { background: rgba(45,106,45,0.4);  color: #6abf6a; }
+  .fp-formula .fv.hi-red    { background: rgba(185,43,39,0.4);  color: #e87070; }
+  .fp-formula .fv.hi-orange { background: rgba(180,100,0,0.4);  color: #f0a040; }
+  .fp-formula .fv.hi-brown  { background: rgba(80,50,20,0.5);   color: #c89060; }
+
+  .fp-explain {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.55;
+    text-align: center;
+  }
+  .fp-explain strong { font-weight: 600; color: white; }
+
+  .doom-caption { text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-top: 14px; }
+
+  /* ── RESOLUTION ── */
   .resolution-box {
     background: linear-gradient(135deg, #0f1d0f 0%, #1a2e1a 100%);
     color: white;
@@ -429,35 +540,18 @@
     padding: 28px;
     margin-bottom: 20px;
   }
-
   .res-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ltgreen); margin-bottom: 6px; }
   .res-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; color: white; margin-bottom: 14px; }
-
-  .res-two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 18px;
-  }
-
+  .res-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
   .res-card {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(106,191,106,0.2);
     border-radius: 6px;
     padding: 14px 16px;
   }
-
-  .res-card .rc-head {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 16px;
-    color: var(--ltgreen);
-    letter-spacing: 0.5px;
-    margin-bottom: 6px;
-  }
-
+  .res-card .rc-head { font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--ltgreen); letter-spacing: 0.5px; margin-bottom: 6px; }
   .res-card .rc-body { font-size: 13px; color: #ccc; line-height: 1.55; }
   .res-card .rc-body strong { color: white; font-weight: 600; }
-
   .res-result {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(106,191,106,0.3);
@@ -468,7 +562,6 @@
     gap: 14px;
     flex-wrap: wrap;
   }
-
   .rr-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--ltgreen); flex-shrink: 0; padding-top: 2px; }
   .rr-text { font-size: 14px; color: #ddd; line-height: 1.55; }
   .rr-text strong { color: white; font-weight: 600; }
@@ -483,7 +576,6 @@
     position: relative;
     overflow: hidden;
   }
-
   .usa-box::before {
     content: '';
     position: absolute;
@@ -493,38 +585,18 @@
       rgba(45,106,45,0.07) 22px, rgba(45,106,45,0.07) 23px
     );
   }
-
   .usa-box > * { position: relative; z-index: 1; }
-
   .usa-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ltgreen); margin-bottom: 6px; }
-
-  .usa-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 1px;
-    color: white;
-    margin-bottom: 14px;
-  }
-
+  .usa-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1px; color: white; margin-bottom: 14px; }
   .usa-title .ut-accent { color: var(--ltgreen); }
-
-  .usa-body {
-    font-size: 15px;
-    color: #ccc;
-    line-height: 1.75;
-    max-width: 780px;
-  }
-
+  .usa-body { font-size: 15px; color: #ccc; line-height: 1.75; max-width: 780px; }
   .usa-body strong { color: white; font-weight: 600; }
 
   /* ── CFU ── */
   .cfu { background: var(--green); border-radius: 8px; padding: 24px 28px; margin-bottom: 20px; }
-
   .cfu .cfu-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
   .cfu .cfu-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: white; margin-bottom: 14px; letter-spacing: 0.5px; }
-
   .cfu-qs { list-style: none; counter-reset: cq; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
   .cfu-qs li {
     counter-increment: cq;
     background: white;
@@ -535,7 +607,6 @@
     color: var(--ink);
     position: relative;
   }
-
   .cfu-qs li::before {
     content: counter(cq);
     position: absolute;
@@ -557,19 +628,17 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 620px) {
-    .hook          { grid-template-columns: 1fr; }
-    .concepts      { grid-template-columns: 1fr; }
-    .res-two-col   { grid-template-columns: 1fr; }
-    .cfu-qs        { grid-template-columns: 1fr; }
-    .next-steps    { grid-template-columns: 1fr; }
-    .doom-loop     { grid-template-columns: 1fr 44px 1fr; }
-    .hook-images   { grid-template-columns: 1fr; }
+    .hook        { grid-template-columns: 1fr; }
+    .concepts    { grid-template-columns: 1fr; }
+    .res-two-col { grid-template-columns: 1fr; }
+    .cfu-qs      { grid-template-columns: 1fr; }
+    .doom-loop   { grid-template-columns: 1fr 44px 1fr; }
+    .hook-images { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <div class="header-inner">
     <div class="unit-tag">Unit 3 Case Study · What Is Money?</div>
@@ -578,7 +647,6 @@
   </div>
 </header>
 
-<!-- LEARNING TARGETS -->
 <div class="targets">
   <div class="targets-inner">
     <span class="targets-label">Key Concepts:</span>
@@ -595,11 +663,8 @@
 
   <!-- CONTEXT + IMAGES -->
   <div class="hook">
-    <div class="hook-text">
-      <div class="context-para" style="margin-bottom:16px;">
-        After losing World War I, Germany was forced to pay enormous war reparations to France and Britain. The government didn't have the money, so it did something that seemed like a shortcut: it printed more of it. At first this sort of worked. But as more marks flooded the economy, prices started rising. So the government printed more to keep up. Prices rose faster. So they printed even more. By 1923, the spiral had become one of the most catastrophic economic collapses in history.
-      </div>
-      <p style="font-size:16px;line-height:1.75;color:#333;">In January 1922, a loaf of bread cost <strong>250 marks</strong>. A year later, <strong>700 marks</strong>. By November 1923, the same loaf cost <strong>200 billion marks</strong>. Workers were paid twice a day so they could spend their wages before prices rose again. People burned banknotes for heat because it was cheaper than firewood.</p>
+    <div class="context-para">
+      <strong>Background —</strong> After losing World War I, Germany was forced to pay enormous war reparations to France and Britain. The government didn't have the money, so it did something that seemed like a shortcut: it printed more of it. At first this sort of worked. But as more marks flooded the economy, prices started rising. So the government printed more to keep up. Prices rose faster. So they printed even more. By 1923, the spiral had become one of the most catastrophic economic collapses in history.
     </div>
 
     <div class="hook-images">
@@ -609,7 +674,7 @@
       </div>
       <div class="hook-img-wrap">
         <img src="mark1.jpg" alt="A 50 billion mark German banknote from 1923">
-        <div class="img-caption">A 50,000,000,000 mark note. Worth almost nothing by the time it was printed.</div>
+        <div class="img-caption">A 50,000,000,000 mark note — worth almost nothing by the time it was printed</div>
       </div>
     </div>
   </div>
@@ -635,88 +700,143 @@
     </div>
   </div>
 
-  <!-- CONCEPT CARDS -->
-  <div class="section-label">Two Core Concepts</div>
+  <!-- BREAD PARA — below chart -->
+  <div class="bread-para">
+    In January 1922, a loaf of bread cost <strong>250 marks</strong>. A year later, <strong>700 marks</strong>. By November 1923, the same loaf cost <strong>200 billion marks</strong>. Workers were paid twice a day so they could spend their wages before prices rose again. People burned banknotes for heat because it was cheaper than firewood.
+  </div>
+
+  <!-- INTERACTIVE CONCEPT CARDS -->
+  <div class="section-label">Two Core Concepts — Click to Expand</div>
   <div class="concepts">
 
-    <div class="concept-card cc-green">
-      <span class="cc-icon">📈</span>
-      <div class="cc-title">Inflation vs. Hyperinflation</div>
-      <div class="cc-body">Regular inflation means prices rising slowly, around 2–4% per year. The Fed actually <em>targets</em> mild inflation because it keeps money moving and encourages investment.<br><br>Hyperinflation is a different animal entirely: by definition, prices rising more than <strong>50% per month.</strong></div>
-      <div class="cc-highlight">
-        <strong>🇩🇪 Weimar:</strong> At the peak in 1923, prices were <strong>doubling every 3–4 days.</strong> Workers demanded morning pay because by afternoon their wages bought less. Money had stopped working as a store of value entirely.
+    <div class="concept-card cc-green" id="card-inflation" onclick="toggleCard('card-inflation')">
+      <div class="card-top">
+        <span class="cc-icon">📈</span>
+        <div class="cc-title">Inflation vs. Hyperinflation</div>
+        <div class="cc-summary">Regular inflation is 2–4% per year. Hyperinflation is 50%+ per month. Same word, completely different animal.</div>
+      </div>
+      <div class="card-trigger">
+        <span>Dig deeper</span>
+        <span class="ct-chevron">▼</span>
+      </div>
+      <div class="card-detail">
+        <div class="card-detail-inner">
+          <div class="detail-label">The Full Picture</div>
+          <div class="detail-body">
+            Regular inflation means prices rising slowly over time. The Fed actually <em>targets</em> mild inflation of around 2% per year because it keeps money moving and encourages spending and investment. A little inflation means people have incentive to spend and invest now rather than hold cash forever.<br><br>
+            Hyperinflation is a different animal entirely. The technical definition is prices rising more than <strong>50% per month.</strong> At that rate, something that costs $1.00 today costs $1.50 next month, $2.25 the month after, and over $130 a year from now. The math compounds fast.
+          </div>
+          <div class="detail-highlight">
+            <strong>🇩🇪 Weimar at the peak:</strong> Prices were doubling every 3–4 days. Workers demanded morning pay because by afternoon their wages bought less than at noon. Money had completely stopped working as a store of value. People would rather have a wheelbarrow full of bread than a wheelbarrow full of cash.
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="concept-card cc-red">
-      <span class="cc-icon">🖨️</span>
-      <div class="cc-title">Why You Can't Print Your Way Out</div>
-      <div class="cc-body">Germany printed marks to pay its reparations. More bills sounds like more money, but it isn't more <em>real</em> wealth. Same bread, same factories, just more pieces of paper chasing them.</div>
-      <div class="formula-box">
-        <div class="formula">M × V = P × Q</div>
-        <div class="formula-key">M = money supply &nbsp;·&nbsp; V = velocity &nbsp;·&nbsp; P = prices &nbsp;·&nbsp; Q = real output</div>
+    <div class="concept-card cc-red" id="card-printing" onclick="toggleCard('card-printing')">
+      <div class="card-top">
+        <span class="cc-icon">🖨️</span>
+        <div class="cc-title">Why You Can't Print Your Way Out</div>
+        <div class="cc-summary">More bills in circulation doesn't mean more real wealth. It just means the same wealth is split across more pieces of paper.</div>
       </div>
-      <div class="cc-highlight">
-        <strong>The math:</strong> If you double M but Q (real goods) stays the same, P (prices) must double. You haven't made anyone richer. You've just made every mark worth half as much... and then people figure that out.
+      <div class="card-trigger">
+        <span>Dig deeper</span>
+        <span class="ct-chevron">▼</span>
+      </div>
+      <div class="card-detail">
+        <div class="card-detail-inner">
+          <div class="detail-label">The Equation of Exchange</div>
+          <div class="detail-body">
+            Economists use a simple equation to show why printing money causes inflation:
+          </div>
+          <div class="formula-box">
+            <div class="formula">M × V = P × Q</div>
+            <div class="formula-key">M = money supply &nbsp;·&nbsp; V = velocity &nbsp;·&nbsp; P = price level &nbsp;·&nbsp; Q = real output</div>
+          </div>
+          <div class="detail-body">
+            Think of the right side (P × Q) as the total value of everything produced and sold in the economy. The left side (M × V) is the total money circulating to buy those things. The two sides must stay equal.<br><br>
+            If the government doubles M (prints more money) but Q (real goods produced) stays the same, then P (prices) must double. You haven't created more stuff. You've just created more paper to buy the same stuff.
+          </div>
+          <div class="detail-highlight">
+            <strong>🇩🇪 Weimar version:</strong> Germany's factories weren't suddenly more productive. The same loaves of bread were being baked. But there were trillions more marks chasing them. So the price of bread didn't just go up, it went up by a factor of 800 million.
+          </div>
+        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- DOOM LOOP -->
+  <!-- INTERACTIVE DOOM LOOP -->
   <div class="doom-section">
     <div class="section-label">The Mechanism — The Expectations Doom Loop</div>
     <div class="doom-wrap">
       <div class="doom-title">How Expectations Turn Inflation Into Hyperinflation</div>
+      <div class="doom-hint">↓ Click any step to see its effect on MV = PQ ↓</div>
 
       <div class="doom-loop">
-        <div class="loop-box lb1">
+
+        <div class="loop-box lb1" onclick="activateStep(1)">
           <div class="lb-tag">Step 1 · Government</div>
           <div class="lb-head">Prints More Money</div>
           <div class="lb-body">To pay reparations, the government cranks the printing presses. More marks enter circulation.</div>
-          <div class="lb-note">M ↑ in MV = PQ</div>
+          <div class="lb-note">Click to see the equation</div>
         </div>
 
         <div class="loop-arrow la-top">→</div>
 
-        <div class="loop-box lb2">
+        <div class="loop-box lb2" onclick="activateStep(2)">
           <div class="lb-tag">Step 2 · Prices</div>
           <div class="lb-head">Start to Rise</div>
           <div class="lb-body">More marks chasing the same goods. Sellers raise prices. Inflation is now visible and real.</div>
-          <div class="lb-note">P ↑ as M ↑</div>
+          <div class="lb-note">Click to see the equation</div>
         </div>
 
         <div class="loop-arrow la-left">↑</div>
         <div class="loop-center">DOOM<br>LOOP</div>
         <div class="loop-arrow la-right">↓</div>
 
-        <div class="loop-box lb4">
+        <div class="loop-box lb4" onclick="activateStep(4)">
           <div class="lb-tag">Step 4 · Velocity Spikes</div>
           <div class="lb-head">Everyone Spends Immediately</div>
-          <div class="lb-body">Panic spending drives V sky-high. In MV=PQ, higher V means even higher P, another accelerant on the fire.</div>
-          <div class="lb-note">V ↑ → P ↑ even faster</div>
+          <div class="lb-body">Panic spending drives V sky-high. In MV=PQ, higher V means even higher P, another accelerant.</div>
+          <div class="lb-note">Click to see the equation</div>
         </div>
 
         <div class="loop-arrow la-bot">←</div>
 
-        <div class="loop-box lb3">
+        <div class="loop-box lb3" onclick="activateStep(3)">
           <div class="lb-tag">Step 3 · Expectations</div>
           <div class="lb-head">People Expect More Rises</div>
           <div class="lb-body">If everyone believes prices will be higher tomorrow, they spend <em>today</em> even if they don't need to. That spending itself pushes prices higher.</div>
-          <div class="lb-note">Expectations → self-fulfilling</div>
+          <div class="lb-note">Click to see the equation</div>
         </div>
+
+      </div>
+
+      <!-- Formula panel — revealed on step click -->
+      <div class="formula-panel" id="formula-panel">
+        <div class="fp-label" id="fp-label">MV = PQ — What's Happening</div>
+        <div class="fp-formula" id="fp-formula">
+          <span class="fv" id="fv-M">M</span>
+          <span style="color:#555;"> × </span>
+          <span class="fv" id="fv-V">V</span>
+          <span style="color:#555;"> = </span>
+          <span class="fv" id="fv-P">P</span>
+          <span style="color:#555;"> × </span>
+          <span class="fv" id="fv-Q">Q</span>
+        </div>
+        <div class="fp-explain" id="fp-explain"></div>
       </div>
 
       <div class="doom-caption">Each loop makes the next one worse, until the currency collapses entirely</div>
     </div>
   </div>
 
-  <!-- RESOLUTION — lean -->
+  <!-- RESOLUTION -->
   <div class="section-label">What Happened Next — Breaking the Spiral</div>
   <div class="resolution-box">
     <div class="res-tag">How Hyperinflation Ends</div>
     <div class="res-title">Germany Killed the Mark and Started Over</div>
-
     <div class="res-two-col">
       <div class="res-card">
         <div class="rc-head">The Rentenmark Fix</div>
@@ -727,7 +847,6 @@
         <div class="rc-body">The Rentenmark wasn't backed by gold. It was backed by a <strong>credible promise</strong> not to keep printing. People believed it would hold its value, expectations flipped, panic spending stopped, and velocity fell back to normal. The doom loop ran in reverse.</div>
       </div>
     </div>
-
     <div class="res-result">
       <div class="rr-label">Key Takeaway</div>
       <div class="rr-text">The Rentenmark worked not because of what it was made of, but because people <strong>believed in it.</strong> This is the whole foundation of fiat money: <strong>money has value because we collectively agree it does.</strong> Destroy that agreement and no amount of printing can save it.</div>
@@ -744,7 +863,7 @@
     </div>
   </div>
 
-  <!-- CHECK FOR UNDERSTANDING -->
+  <!-- CFU -->
   <div class="section-label">Check for Understanding</div>
   <div class="cfu">
     <div class="cfu-tag">Questions</div>
@@ -764,5 +883,74 @@
   <div class="footer">Unit 3 · What Is Money? · Economics Case Study Series</div>
 
 </main>
+
+<script>
+  // ── Expandable concept cards ──
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+
+  // ── Interactive doom loop ──
+  const stepData = {
+    1: {
+      label: 'Step 1 — Government prints more money',
+      highlights: { M: 'hi-green', V: '', P: '', Q: '' },
+      explain: '<strong>M ↑</strong> — The money supply increases as the government prints more marks. With the same amount of real goods (Q stays fixed), the equation forces P upward. More marks, same bread.'
+    },
+    2: {
+      label: 'Step 2 — Prices start to rise',
+      highlights: { M: 'hi-green', V: '', P: 'hi-red', Q: '' },
+      explain: '<strong>P ↑</strong> — Because M increased but Q didn\'t change, prices must rise to keep the equation balanced. This is inflation becoming visible and real to everyday people.'
+    },
+    3: {
+      label: 'Step 3 — Expectations take over',
+      highlights: { M: '', V: 'hi-orange', P: 'hi-red', Q: '' },
+      explain: '<strong>V ↑ begins</strong> — When people expect prices to rise tomorrow, they spend today. This starts pushing velocity (V) upward. Higher V means P must rise even further, even without printing more money.'
+    },
+    4: {
+      label: 'Step 4 — Velocity spikes, prices explode',
+      highlights: { M: 'hi-green', V: 'hi-orange', P: 'hi-red', Q: 'hi-brown' },
+      explain: '<strong>M ↑ and V ↑ simultaneously</strong> — Now both sides of the left are rising at once, while Q (real output) stays the same or even falls as the economy breaks down. P has to absorb all of it. This is how 250 marks becomes 200 billion marks.'
+    }
+  };
+
+  let activeStep = null;
+
+  function activateStep(step) {
+    // Toggle off if clicking same step
+    if (activeStep === step) {
+      activeStep = null;
+      document.querySelectorAll('.loop-box').forEach(b => b.classList.remove('active'));
+      document.getElementById('formula-panel').classList.remove('visible');
+      return;
+    }
+
+    activeStep = step;
+
+    // Highlight the correct box
+    document.querySelectorAll('.loop-box').forEach(b => b.classList.remove('active'));
+    const boxMap = { 1: 'lb1', 2: 'lb2', 3: 'lb3', 4: 'lb4' };
+    document.querySelector('.' + boxMap[step]).classList.add('active');
+
+    // Update formula panel
+    const data = stepData[step];
+    document.getElementById('fp-label').textContent = data.label;
+    document.getElementById('fp-explain').innerHTML = data.explain;
+
+    // Reset all variable highlights
+    ['M','V','P','Q'].forEach(v => {
+      const el = document.getElementById('fv-' + v);
+      el.className = 'fv';
+      if (data.highlights[v]) {
+        el.classList.add(data.highlights[v]);
+      }
+    });
+
+    // Show panel
+    document.getElementById('formula-panel').classList.add('visible');
+  }
+</script>
+
 </body>
 </html>
