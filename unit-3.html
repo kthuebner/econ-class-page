@@ -8,8 +8,7 @@
 <style>
   :root {
     --green:   #2D6A2D;
-    --ltgreen: #3d8c3d;
-    --gold:    #4a9e4a;
+    --ltgreen: #6abf6a;
     --danger:  #b92b27;
     --darkred: #7B1A1A;
     --bg:      #f5f0e8;
@@ -29,7 +28,7 @@
     line-height: 1.6;
   }
 
-  /* HEADER */
+  /* ── HEADER ── */
   .header {
     background: var(--ink);
     color: white;
@@ -76,10 +75,10 @@
     margin-bottom: 12px;
   }
 
-  .header h1 .accent { color: #6abf6a; }
+  .header h1 .accent { color: var(--ltgreen); }
   .header .sub { font-size: 16px; color: #bbb; max-width: 580px; font-weight: 300; }
 
-  /* LEARNING TARGETS */
+  /* ── TARGETS ── */
   .targets { background: var(--green); padding: 14px 24px; }
 
   .targets-inner {
@@ -112,7 +111,7 @@
     border: 1px solid rgba(255,255,255,0.25);
   }
 
-  /* MAIN */
+  /* ── MAIN ── */
   .main { max-width: 900px; margin: 0 auto; padding: 40px 24px 60px; }
 
   .section-label {
@@ -129,13 +128,13 @@
 
   .section-label::after { content: ''; flex: 1; height: 1px; background: #ddd; }
 
-  /* CONTEXT PARAGRAPH */
+  /* ── CONTEXT PARA ── */
   .context-para {
     background: white;
     border-left: 4px solid var(--green);
     border-radius: 0 6px 6px 0;
     padding: 16px 20px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     font-size: 15px;
     line-height: 1.75;
     color: #333;
@@ -143,7 +142,7 @@
 
   .context-para strong { font-weight: 600; color: var(--ink); }
 
-  /* HOOK */
+  /* ── HOOK: text left, two images right ── */
   .hook {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -155,30 +154,33 @@
   .hook-text p { font-size: 16px; line-height: 1.75; color: #333; }
   .hook-text p + p { margin-top: 12px; }
 
-  .hook-image {
-    border-radius: 6px;
-    overflow: hidden;
-    position: relative;
+  /* Two images stacked on the right */
+  .hook-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
-  .hook-image img {
+  .hook-img-wrap { display: flex; flex-direction: column; gap: 6px; }
+
+  .hook-img-wrap img {
     width: 100%;
-    height: 240px;
+    height: 160px;
     object-fit: cover;
-    display: block;
     border-radius: 6px;
+    display: block;
   }
 
-  .hook-image .img-caption {
+  .img-caption {
     font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-size: 9px;
     color: var(--muted);
-    letter-spacing: 1px;
-    margin-top: 7px;
+    letter-spacing: 0.5px;
     text-align: center;
+    line-height: 1.4;
   }
 
-  /* PRICE CHART — below hook, full width */
+  /* ── PRICE CHART ── */
   .price-chart {
     background: var(--ink);
     color: white;
@@ -256,16 +258,13 @@
 
   .pc-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: #666; }
 
-  /* CONCEPT CARDS */
-  .concepts-wrap {
+  /* ── CONCEPT CARDS ── */
+  .concepts {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 16px;
     margin-bottom: 36px;
-    align-items: start;
   }
-
-  .concepts-col { display: flex; flex-direction: column; gap: 16px; }
 
   .concept-card { border-radius: 6px; padding: 20px; overflow: hidden; }
   .concept-card.cc-green { background: #f0f8f0; border: 2px solid var(--green); }
@@ -308,31 +307,7 @@
   .formula { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 500; color: var(--danger); letter-spacing: 2px; }
   .formula-key { font-size: 11px; color: #999; margin-top: 3px; font-family: 'DM Mono', monospace; }
 
-  /* Banknote image */
-  .note-image {
-    border-radius: 6px;
-    overflow: hidden;
-    border: 2px solid #e0ddd8;
-  }
-
-  .note-image img {
-    width: 100%;
-    display: block;
-    border-radius: 4px;
-  }
-
-  .note-image .img-caption {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    padding: 8px 12px;
-    background: #f9f7f4;
-    text-align: center;
-    border-top: 1px solid #e0ddd8;
-  }
-
-  /* DOOM LOOP */
+  /* ── DOOM LOOP ── */
   .doom-section { margin-bottom: 36px; }
 
   .doom-wrap {
@@ -446,101 +421,103 @@
 
   .doom-caption { text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; }
 
-  /* RESOLUTION BOX */
-  .next-box {
+  /* ── RESOLUTION — lean version ── */
+  .resolution-box {
     background: linear-gradient(135deg, #0f1d0f 0%, #1a2e1a 100%);
     color: white;
     border-radius: 8px;
     padding: 28px;
-    margin-bottom: 36px;
+    margin-bottom: 20px;
   }
 
-  .nb-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #6abf6a; margin-bottom: 6px; }
-  .nb-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; color: white; margin-bottom: 6px; }
-  .nb-sub { font-size: 14px; color: #a8c8a8; margin-bottom: 20px; line-height: 1.6; }
+  .res-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ltgreen); margin-bottom: 6px; }
+  .res-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; color: white; margin-bottom: 14px; }
 
-  .next-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .res-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
 
-  .next-step {
+  .res-card {
     background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(106,191,106,0.2);
     border-radius: 6px;
-    padding: 14px;
-    position: relative;
+    padding: 14px 16px;
   }
 
-  .next-step .ns-num {
+  .res-card .rc-head {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    color: rgba(255,255,255,0.1);
-    line-height: 1;
-    position: absolute;
-    top: 8px; right: 12px;
+    font-size: 16px;
+    color: var(--ltgreen);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
   }
 
-  .next-step .ns-tag { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
-  .ns1 .ns-tag { color: #6abf6a; }
-  .ns2 .ns-tag { color: #80c5e8; }
-  .ns3 .ns-tag { color: #a0d0a0; }
+  .res-card .rc-body { font-size: 13px; color: #ccc; line-height: 1.55; }
+  .res-card .rc-body strong { color: white; font-weight: 600; }
 
-  .next-step .ns-headline { font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 0.5px; color: white; margin-bottom: 6px; line-height: 1.2; }
-  .next-step .ns-body { font-size: 12px; color: #ccc; line-height: 1.5; }
-
-  .next-step .ns-vocab { font-family: 'DM Mono', monospace; font-size: 10px; margin-top: 8px; padding: 4px 8px; border-radius: 3px; display: inline-block; }
-  .ns1 .ns-vocab { background: rgba(45,106,45,0.25); color: #6abf6a; }
-  .ns2 .ns-vocab { background: rgba(26,111,168,0.2); color: #80c5e8; }
-  .ns3 .ns-vocab { background: rgba(45,106,45,0.2);  color: #a0d0a0; }
-
-  .next-result {
+  .res-result {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(106,191,106,0.3);
     border-radius: 6px;
     padding: 14px 18px;
     display: flex;
     align-items: flex-start;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
-    margin-bottom: 20px;
   }
 
-  .nr-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #6abf6a; flex-shrink: 0; padding-top: 2px; }
-  .nr-text { font-size: 14px; color: #ddd; line-height: 1.55; }
-  .nr-text strong { color: white; font-weight: 600; }
+  .rr-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--ltgreen); flex-shrink: 0; padding-top: 2px; }
+  .rr-text { font-size: 14px; color: #ddd; line-height: 1.55; }
+  .rr-text strong { color: white; font-weight: 600; }
 
-  /* USA block */
-  .usa-block {
-    background: rgba(45,106,45,0.15);
-    border: 1px solid rgba(106,191,106,0.3);
-    border-radius: 6px;
-    padding: 18px 20px;
-  }
-
-  .usa-block .ub-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #6abf6a;
-    margin-bottom: 6px;
-  }
-
-  .usa-block .ub-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
+  /* ── USA CLOSER ── */
+  .usa-box {
+    background: var(--ink);
     color: white;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
   }
 
-  .usa-block .ub-body {
-    font-size: 13px;
-    color: #bbb;
-    line-height: 1.6;
+  .usa-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      88deg, transparent, transparent 22px,
+      rgba(45,106,45,0.07) 22px, rgba(45,106,45,0.07) 23px
+    );
   }
 
-  .usa-block .ub-body strong { color: white; font-weight: 600; }
+  .usa-box > * { position: relative; z-index: 1; }
 
-  /* CFU */
+  .usa-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ltgreen); margin-bottom: 6px; }
+
+  .usa-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: white;
+    margin-bottom: 14px;
+  }
+
+  .usa-title .ut-accent { color: var(--ltgreen); }
+
+  .usa-body {
+    font-size: 15px;
+    color: #ccc;
+    line-height: 1.75;
+    max-width: 780px;
+  }
+
+  .usa-body strong { color: white; font-weight: 600; }
+
+  /* ── CFU ── */
   .cfu { background: var(--green); border-radius: 8px; padding: 24px 28px; margin-bottom: 20px; }
 
   .cfu .cfu-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
@@ -566,7 +543,7 @@
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     font-weight: 500;
-    background: #6abf6a;
+    background: var(--ltgreen);
     width: 18px; height: 18px;
     border-radius: 50%;
     display: flex;
@@ -575,14 +552,18 @@
     color: white;
   }
 
+  /* ── FOOTER ── */
   .footer { text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: #bbb; letter-spacing: 2px; padding: 16px 0 0; border-top: 1px solid #e0ddd8; }
 
+  /* ── RESPONSIVE ── */
   @media (max-width: 620px) {
     .hook          { grid-template-columns: 1fr; }
-    .concepts-wrap { grid-template-columns: 1fr; }
+    .concepts      { grid-template-columns: 1fr; }
+    .res-two-col   { grid-template-columns: 1fr; }
     .cfu-qs        { grid-template-columns: 1fr; }
     .next-steps    { grid-template-columns: 1fr; }
     .doom-loop     { grid-template-columns: 1fr 44px 1fr; }
+    .hook-images   { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -612,20 +593,24 @@
 
 <main class="main">
 
-  <!-- CONTEXT PARAGRAPH -->
-  <div class="context-para">
-    After losing World War I, Germany was forced to sign the Treaty of Versailles in 1919 and pay enormous war reparations to France and Britain. The German government didn't have the money, so it did something that seemed like a shortcut: it printed more of it. At first this worked, sort of. But as more marks flooded into the economy, prices started rising. So the government printed more to keep up. Prices rose faster. So they printed even more. By 1923, the spiral had become one of the most catastrophic economic collapses in history.
-  </div>
-
-  <!-- HOOK -->
+  <!-- CONTEXT + IMAGES -->
   <div class="hook">
     <div class="hook-text">
-      <p>In January 1922, a loaf of bread in Germany cost <strong>250 marks</strong>. A year later it was <strong>700 marks</strong>. By November 1923, ten months after that, the same loaf cost <strong>200 billion marks</strong>. Workers were paid twice a day so they could spend their wages before prices rose again. People burned banknotes for heat because it was cheaper than firewood.</p>
-      <p>This wasn't a supply chain problem. It was a government that had destroyed its own currency, mark by mark, until the money in people's pockets was worth less than the paper it was printed on.</p>
+      <div class="context-para" style="margin-bottom:16px;">
+        After losing World War I, Germany was forced to pay enormous war reparations to France and Britain. The government didn't have the money, so it did something that seemed like a shortcut: it printed more of it. At first this sort of worked. But as more marks flooded the economy, prices started rising. So the government printed more to keep up. Prices rose faster. So they printed even more. By 1923, the spiral had become one of the most catastrophic economic collapses in history.
+      </div>
+      <p style="font-size:16px;line-height:1.75;color:#333;">In January 1922, a loaf of bread cost <strong>250 marks</strong>. A year later, <strong>700 marks</strong>. By November 1923, the same loaf cost <strong>200 billion marks</strong>. Workers were paid twice a day so they could spend their wages before prices rose again. People burned banknotes for heat because it was cheaper than firewood.</p>
     </div>
-    <div class="hook-image">
-      <img src="playmarks.jpg" alt="Children playing with stacks of worthless German marks during the Weimar hyperinflation">
-      <div class="img-caption">Children playing with stacks of worthless marks, 1923</div>
+
+    <div class="hook-images">
+      <div class="hook-img-wrap">
+        <img src="playmarks.jpg" alt="Children playing with stacks of worthless German marks, 1923">
+        <div class="img-caption">Children playing with stacks of worthless marks, 1923</div>
+      </div>
+      <div class="hook-img-wrap">
+        <img src="mark1.jpg" alt="A 50 billion mark German banknote from 1923">
+        <div class="img-caption">A 50,000,000,000 mark note. Worth almost nothing by the time it was printed.</div>
+      </div>
     </div>
   </div>
 
@@ -650,40 +635,32 @@
     </div>
   </div>
 
-  <!-- CONCEPT CARDS + BANKNOTE IMAGE -->
+  <!-- CONCEPT CARDS -->
   <div class="section-label">Two Core Concepts</div>
-  <div class="concepts-wrap">
-    <div class="concepts-col">
+  <div class="concepts">
 
-      <div class="concept-card cc-green">
-        <span class="cc-icon">📈</span>
-        <div class="cc-title">Inflation vs. Hyperinflation</div>
-        <div class="cc-body">Regular inflation means prices rising slowly, around 2–4% per year. The Fed actually <em>targets</em> mild inflation because it keeps money moving and encourages spending and investment.<br><br>Hyperinflation is a different animal entirely: by definition, prices rising more than <strong>50% per month.</strong></div>
-        <div class="cc-highlight">
-          <strong>🇩🇪 Weimar:</strong> At the peak in 1923, prices were <strong>doubling every 3–4 days.</strong> Workers demanded to be paid in the morning, because by afternoon their wages bought less than at noon. Money had stopped functioning as a store of value entirely.
-        </div>
+    <div class="concept-card cc-green">
+      <span class="cc-icon">📈</span>
+      <div class="cc-title">Inflation vs. Hyperinflation</div>
+      <div class="cc-body">Regular inflation means prices rising slowly, around 2–4% per year. The Fed actually <em>targets</em> mild inflation because it keeps money moving and encourages investment.<br><br>Hyperinflation is a different animal entirely: by definition, prices rising more than <strong>50% per month.</strong></div>
+      <div class="cc-highlight">
+        <strong>🇩🇪 Weimar:</strong> At the peak in 1923, prices were <strong>doubling every 3–4 days.</strong> Workers demanded morning pay because by afternoon their wages bought less. Money had stopped working as a store of value entirely.
       </div>
-
-      <div class="concept-card cc-red">
-        <span class="cc-icon">🖨️</span>
-        <div class="cc-title">Why You Can't Print Your Way Out</div>
-        <div class="cc-body">Germany printed marks to pay its reparations. More bills sounds like more money, but it isn't more <em>real</em> wealth. Same amount of bread, same factories, just more pieces of paper chasing them.</div>
-        <div class="formula-box">
-          <div class="formula">M × V = P × Q</div>
-          <div class="formula-key">M = money supply &nbsp;·&nbsp; V = velocity &nbsp;·&nbsp; P = prices &nbsp;·&nbsp; Q = real output</div>
-        </div>
-        <div class="cc-highlight">
-          <strong>The math:</strong> If you double M but Q (real goods) stays the same, P (prices) must double. You haven't made anyone richer. You've just made every mark worth half as much... and then people figure that out.
-        </div>
-      </div>
-
     </div>
 
-    <!-- Banknote image alongside cards -->
-    <div class="note-image" style="align-self: start;">
-      <img src="mark1.jpg" alt="A 50 billion mark German banknote from 1923">
-      <div class="img-caption">50,000,000,000 mark note, issued 1923. Worth almost nothing by the time it was printed.</div>
+    <div class="concept-card cc-red">
+      <span class="cc-icon">🖨️</span>
+      <div class="cc-title">Why You Can't Print Your Way Out</div>
+      <div class="cc-body">Germany printed marks to pay its reparations. More bills sounds like more money, but it isn't more <em>real</em> wealth. Same bread, same factories, just more pieces of paper chasing them.</div>
+      <div class="formula-box">
+        <div class="formula">M × V = P × Q</div>
+        <div class="formula-key">M = money supply &nbsp;·&nbsp; V = velocity &nbsp;·&nbsp; P = prices &nbsp;·&nbsp; Q = real output</div>
+      </div>
+      <div class="cc-highlight">
+        <strong>The math:</strong> If you double M but Q (real goods) stays the same, P (prices) must double. You haven't made anyone richer. You've just made every mark worth half as much... and then people figure that out.
+      </div>
     </div>
+
   </div>
 
   <!-- DOOM LOOP -->
@@ -734,52 +711,36 @@
     </div>
   </div>
 
-  <!-- RESOLUTION -->
+  <!-- RESOLUTION — lean -->
   <div class="section-label">What Happened Next — Breaking the Spiral</div>
-  <div class="next-box">
-    <div class="nb-tag">How Hyperinflation Ends + Preview · Monetary Policy</div>
-    <div class="nb-title">Germany Killed the Mark and Started Over</div>
-    <div class="nb-sub">You can't fix hyperinflation by printing a little less. Trust in the currency is already gone. In November 1923, Germany replaced the mark with a brand-new currency: the Rentenmark. Here's why it worked when nothing else had.</div>
+  <div class="resolution-box">
+    <div class="res-tag">How Hyperinflation Ends</div>
+    <div class="res-title">Germany Killed the Mark and Started Over</div>
 
-    <div class="next-steps">
-      <div class="next-step ns1">
-        <div class="ns-num">1</div>
-        <div class="ns-tag">New Currency</div>
-        <div class="ns-headline">The Rentenmark Replaces the Mark</div>
-        <div class="ns-body">1 Rentenmark = 1 trillion old marks. The old currency was declared worthless. A hard cap was placed on how many Rentenmarks could ever be printed, no more open-ended money creation to pay bills.</div>
-        <div class="ns-vocab">Money supply strictly capped</div>
+    <div class="res-two-col">
+      <div class="res-card">
+        <div class="rc-head">The Rentenmark Fix</div>
+        <div class="rc-body">In November 1923, Germany replaced the mark entirely. <strong>1 Rentenmark = 1 trillion old marks.</strong> A hard cap was placed on how many could ever be printed, ending the open-ended money creation that had caused the crisis.</div>
       </div>
-
-      <div class="next-step ns2">
-        <div class="ns-num">2</div>
-        <div class="ns-tag">The Trust Fix</div>
-        <div class="ns-headline">Credibility, Not Gold, Stopped It</div>
-        <div class="ns-body">The Rentenmark wasn't backed by gold. It was backed by a credible promise that Germany would <em>not</em> keep printing. People believed it would hold its value. Expectations flipped from inflationary to stable, and the doom loop ran in reverse.</div>
-        <div class="ns-vocab">Expectations anchor → spiral breaks</div>
-      </div>
-
-      <div class="next-step ns3">
-        <div class="ns-num">3</div>
-        <div class="ns-tag">Stability Returns</div>
-        <div class="ns-headline">Velocity Dropped. Prices Stabilized.</div>
-        <div class="ns-body">Once people trusted prices would stop rising, they stopped panic-spending. Velocity fell. In MV=PQ, V ↓ meant P stabilized. Within months the crisis was over... until the Great Depression hit in 1929.</div>
-        <div class="ns-vocab">V ↓ → P stabilizes</div>
+      <div class="res-card">
+        <div class="rc-head">Why It Actually Worked</div>
+        <div class="rc-body">The Rentenmark wasn't backed by gold. It was backed by a <strong>credible promise</strong> not to keep printing. People believed it would hold its value, expectations flipped, panic spending stopped, and velocity fell back to normal. The doom loop ran in reverse.</div>
       </div>
     </div>
 
-    <div class="next-result">
-      <div class="nr-label">Key Takeaway</div>
-      <div class="nr-text">The Rentenmark worked not because of what it was made of, but because people <strong>believed in it.</strong> This is the whole foundation of fiat money: <strong>money has value because we collectively agree it does.</strong> Destroy that agreement and no amount of printing can save it.</div>
+    <div class="res-result">
+      <div class="rr-label">Key Takeaway</div>
+      <div class="rr-text">The Rentenmark worked not because of what it was made of, but because people <strong>believed in it.</strong> This is the whole foundation of fiat money: <strong>money has value because we collectively agree it does.</strong> Destroy that agreement and no amount of printing can save it.</div>
     </div>
+  </div>
 
-    <!-- USA block -->
-    <div style="margin-top: 4px;">
-      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px;">Preview · Monetary Policy</div>
-      <div class="usa-block">
-        <div class="ub-label">Why Doesn't This Happen in the USA?</div>
-        <div class="ub-title">Two Words: The Fed</div>
-        <div class="ub-body">The United States has an <strong>independent central bank</strong> called the Federal Reserve, whose whole job is to manage the money supply so we never end up in a Weimar situation. Germany in 1923 had no such institution. The government printed money whenever it needed to pay bills, with no one empowered to say no. The Fed can raise interest rates, slow down the money supply, and take politically unpopular actions even when the government doesn't want it to. More importantly, it has decades of credibility built up, so when it says it will keep inflation near 2%, people believe it. And as Weimar showed us, <strong>belief is literally everything.</strong></div>
-      </div>
+  <!-- USA CLOSER -->
+  <div class="section-label">Connecting to the Bigger Picture</div>
+  <div class="usa-box">
+    <div class="usa-tag">Preview · Monetary Policy</div>
+    <div class="usa-title">Why Doesn't This Happen in <span class="ut-accent">the USA?</span></div>
+    <div class="usa-body">
+      Two words: <strong>the Fed.</strong> The United States has an independent central bank whose whole job is to manage the money supply so we never end up in a Weimar situation. Germany in 1923 had no such institution. The government printed money whenever it needed to pay bills, with no one empowered to say no. The Federal Reserve can raise interest rates and slow the money supply even when the government doesn't want it to, and it has decades of credibility built up doing exactly that. When the Fed says it will keep inflation near 2%, people believe it, and as Weimar showed us, <strong>belief is literally everything.</strong> A central bank without credibility is just a printing press with a fancier name.
     </div>
   </div>
 
