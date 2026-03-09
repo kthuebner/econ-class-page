@@ -30,7 +30,6 @@
     line-height: 1.7;
   }
 
-  /* Newspaper texture overlay */
   body::before {
     content: '';
     position: fixed;
@@ -40,7 +39,6 @@
     z-index: 1000;
   }
 
-  /* MASTHEAD */
   .masthead {
     background: var(--crude);
     color: var(--paper);
@@ -79,7 +77,6 @@
     letter-spacing: 2px;
   }
 
-  /* TICKER BAR */
   .ticker {
     background: var(--amber);
     color: var(--crude);
@@ -102,7 +99,6 @@
     100% { transform: translateX(-100%); }
   }
 
-  /* LEARNING TARGETS BAR */
   .targets-bar {
     background: var(--aged);
     border-bottom: 2px solid var(--rule);
@@ -133,14 +129,12 @@
     letter-spacing: 0.5px;
   }
 
-  /* MAIN LAYOUT */
   .page {
     max-width: 960px;
     margin: 0 auto;
     padding: 40px 24px 80px;
   }
 
-  /* SECTION HEADERS */
   .section-header {
     display: flex;
     align-items: center;
@@ -173,7 +167,6 @@
     background: var(--rule);
   }
 
-  /* BODY TEXT */
   .body-text {
     font-size: 16px;
     line-height: 1.8;
@@ -185,7 +178,6 @@
     margin-top: 1em;
   }
 
-  /* PULL QUOTE */
   .pull-quote {
     border-left: 5px solid var(--amber);
     border-right: 5px solid var(--amber);
@@ -200,7 +192,6 @@
     text-align: center;
   }
 
-  /* CONCEPT BOXES */
   .concept-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -252,7 +243,6 @@
     background: var(--highlight);
   }
 
-  /* TIMELINE */
   .timeline {
     margin: 28px 0;
     border-left: 3px solid var(--amber);
@@ -312,7 +302,6 @@
     line-height: 1.6;
   }
 
-  /* PRICE CHART — pure CSS bar chart */
   .chart-container {
     background: var(--crude);
     border-radius: 4px;
@@ -331,59 +320,6 @@
     margin-bottom: 20px;
   }
 
-  .bar-chart {
-    display: flex;
-    align-items: flex-end;
-    gap: 8px;
-    height: 160px;
-    border-bottom: 1px solid #4a3000;
-    border-left: 1px solid #4a3000;
-    padding-bottom: 0;
-    position: relative;
-  }
-
-  .bar-group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    height: 100%;
-  }
-
-  .bar {
-    width: 100%;
-    max-width: 48px;
-    background: var(--amber);
-    transition: height 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
-    cursor: pointer;
-  }
-
-  .bar:hover {
-    background: var(--flame);
-  }
-
-  .bar-val {
-    position: absolute;
-    top: -22px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--paper);
-    white-space: nowrap;
-  }
-
-  .bar-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    color: #8a7a5a;
-    margin-top: 8px;
-    text-align: center;
-  }
-
-  /* INFLATION TABLE */
   .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -414,7 +350,6 @@
   .data-table .up { color: var(--red); font-weight: 500; font-family: 'IBM Plex Mono', monospace; }
   .data-table .ok { color: var(--green); font-family: 'IBM Plex Mono', monospace; }
 
-  /* STAGFLATION DIAGRAM */
   .stagflation-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -453,25 +388,6 @@
   .quadrant.neutral { background: var(--aged); }
   .quadrant.neutral h4 { color: var(--oil); }
 
-  .quadrant-label {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--rule);
-    padding: 0 24px;
-    margin-top: -1px;
-    background: white;
-    border: 1px solid var(--rule);
-    border-top: none;
-    border-bottom: none;
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
-
-  /* CHECK-FOR-UNDERSTANDING */
   .cfu-box {
     background: var(--crude);
     color: var(--paper);
@@ -546,7 +462,6 @@
     border-bottom: none;
   }
 
-  /* VOCAB SIDEBAR */
   .vocab-strip {
     background: var(--aged);
     border: 1px solid var(--rule);
@@ -587,7 +502,6 @@
     line-height: 1.5;
   }
 
-  /* LESSON NAVIGATION FOOTER */
   .lesson-footer {
     margin-top: 64px;
     border-top: 2px solid var(--rule);
@@ -595,7 +509,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: gap;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .footer-meta {
@@ -624,7 +539,6 @@
 
   strong { font-weight: 500; color: var(--crude); }
 
-  /* PHOTO FRAMES */
   .photo-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -637,10 +551,6 @@
     background: white;
     padding: 10px 10px 0 10px;
     box-shadow: 2px 4px 12px rgba(0,0,0,0.08);
-  }
-
-  .photo-frame.single {
-    max-width: 560px;
   }
 
   .photo-placeholder {
@@ -658,47 +568,9 @@
     position: relative;
   }
 
-  .photo-placeholder:hover {
-    background: #ddd8c4;
-  }
-
-  .photo-placeholder input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
+  .photo-placeholder img {
     width: 100%;
-    height: 100%;
-  }
-
-  .photo-placeholder img.loaded-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    inset: 0;
-  }
-
-  .photo-placeholder .upload-icon {
-    font-size: 32px;
-    opacity: 0.4;
-  }
-
-  .photo-placeholder .upload-text {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 1px;
-    color: var(--oil);
-    text-align: center;
-    line-height: 1.6;
-  }
-
-  .photo-placeholder .upload-source {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--amber);
-    text-align: center;
-    margin-top: 4px;
+    display: block;
   }
 
   .photo-caption {
@@ -717,9 +589,8 @@
     font-weight: 600;
   }
 
-  /* SVG MAP */
   .map-container {
-    margin: 32px 0;
+    margin: 0;
     border: 1px solid var(--rule);
     background: white;
     padding: 20px;
@@ -766,42 +637,9 @@
     .stagflation-grid { grid-template-columns: 1fr; }
     .concept-grid { grid-template-columns: 1fr; }
     .pull-quote { font-size: 18px; padding: 16px 20px; }
+    .photo-row { grid-template-columns: 1fr; }
   }
 </style>
-<script>
-  function initPhotoFrame(frameId) {
-    const placeholder = document.getElementById(frameId);
-    if (!placeholder) return;
-    const input = placeholder.querySelector('input[type="file"]');
-    const hint = placeholder.querySelector('.upload-text');
-    const source = placeholder.querySelector('.upload-source');
-    const icon = placeholder.querySelector('.upload-icon');
-    input.addEventListener('change', function() {
-      if (this.files && this.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          // Remove hint text
-          hint.style.display = 'none';
-          source.style.display = 'none';
-          icon.style.display = 'none';
-          // Show image
-          let img = placeholder.querySelector('img.loaded-img');
-          if (!img) {
-            img = document.createElement('img');
-            img.className = 'loaded-img';
-            placeholder.appendChild(img);
-          }
-          img.src = e.target.result;
-          placeholder.style.minHeight = '0';
-        };
-        reader.readAsDataURL(this.files[0]);
-      }
-    });
-  }
-  window.addEventListener('DOMContentLoaded', function() {
-    ['photo-gasline1','photo-gasline2','photo-opec'].forEach(initPhotoFrame);
-  });
-</script>
 </head>
 <body>
 
@@ -840,13 +678,13 @@
   <hr class="section-rule">
 
   <div class="body-text">
-    <p>In the early 1970s, oil was cheap, abundant, and taken for granted. The United States, Western Europe, and Japan had built entire economies — their suburbs, factories, and power grids — on the assumption that petroleum would cost roughly <strong>$3 a barrel</strong> forever. Cars were big. Highways were long. Nobody insulated their houses.</p>
-    <p>Then, in October 1973, everything changed. The Arab members of the Organization of Petroleum Exporting Countries (OPEC) announced they would <strong>stop selling oil</strong> to the United States and several other Western nations. Within months, the price of oil had quadrupled. The result was one of the most dramatic economic disruptions of the 20th century — and it introduced the world to a word that economists hoped they'd never have to use: <em>stagflation.</em></p>
+    <p>In the early 1970s, oil was cheap, abundant, and taken for granted. The United States, Western Europe, and Japan had built entire economies, their suburbs, factories, and power grids, on the assumption that petroleum would cost roughly <strong>$3 a barrel</strong> forever. Cars were big. Highways were long. Nobody insulated their houses.</p>
+    <p>Then, in October 1973, everything changed. The Arab members of the Organization of Petroleum Exporting Countries (OPEC) announced they would <strong>stop selling oil</strong> to the United States and several other Western nations. Within months, the price of oil had quadrupled. The result was one of the most dramatic economic disruptions of the 20th century, and it introduced the world to a word that economists hoped they'd never have to use: <em>stagflation.</em></p>
   </div>
 
   <div class="pull-quote">
     "The Arabs have oil. We have their money. They have us where they want us."<br>
-    <small style="font-size:14px; font-style:normal; font-family:'IBM Plex Mono', monospace; letter-spacing:1px;">— Overheard on a Washington trading floor, 1973</small>
+    <small style="font-size:14px; font-style:normal; font-family:'IBM Plex Mono', monospace; letter-spacing:1px;">... Overheard on a Washington trading floor, 1973</small>
   </div>
 
   <!-- TIMELINE -->
@@ -869,28 +707,28 @@
     <div class="timeline-event">
       <div class="timeline-date">Jan. 1974</div>
       <h4>Oil Hits $12 a Barrel</h4>
-      <p>From $3 in October to $12 by January — a 400% increase in three months. Inflation surges. Growth collapses.</p>
+      <p>From $3 in October to $12 by January, a 400% increase in three months. Inflation surges. Growth collapses.</p>
     </div>
     <div class="timeline-event">
       <div class="timeline-date">March 1974</div>
-      <h4>Embargo Lifted — Damage Done</h4>
+      <h4>Embargo Lifted, Damage Done</h4>
       <p>The embargo ends, but oil prices stay high. The era of cheap oil is over. The global economy is permanently changed.</p>
     </div>
   </div>
 
   <!-- PHOTO ROW: GAS LINES -->
-  <div class="photo-row">
+  <div class="photo-row" style="grid-template-columns: 1fr 1fr 1fr;">
     <div class="photo-frame">
-      <div class="photo-placeholder" id="photo-gasline1">
- <img src="pumpsclosed.jpg" style="width:100%; display:block;">
-      </div>
-      <div class="photo-caption"><strong>Fig. 1</strong> — American motorists queue for hours at a gas station during the height of the embargo, 1973–74. Some stations ran out of fuel entirely; others limited purchases to a few gallons per car.</div>
+      <img src="gasline.jpg" style="width:100%; display:block;">
+      <div class="photo-caption"><strong>Fig. 1</strong> A gas line forming due to shortages during the 1973 oil embargo.</div>
     </div>
     <div class="photo-frame">
-      <div class="photo-placeholder" id="photo-gasline2">
- <img src="nogas.jpg" style="width:100%; display:block;">
-      </div>
-      <div class="photo-caption"><strong>Fig. 2</strong> — "Sorry, No Gas" signs became a common sight across America. Odd-even license plate rationing was introduced in many states to manage shortages.</div>
+      <img src="pumpsclosed.jpg" style="width:100%; display:block;">
+      <div class="photo-caption"><strong>Fig. 2</strong> A gas station that had run out of gas during the 1973 oil crisis.</div>
+    </div>
+    <div class="photo-frame">
+      <img src="nogas.jpg" style="width:100%; display:block;">
+      <div class="photo-caption"><strong>Fig. 3</strong> Another gas station that had run out of gas, a common sight across America in 1973-74.</div>
     </div>
   </div>
 
@@ -903,8 +741,8 @@
   <hr class="section-rule">
 
   <div class="body-text">
-    <p>In a normal competitive market, if you raise your price, your customers just buy from someone else. You're a <strong>price taker</strong> — the market sets the price, and you accept it or lose business. This is how most markets work: wheat farmers, factory workers, small retailers.</p>
-    <p>But OPEC member nations figured out a way to beat this system. By <strong>coordinating</strong> with each other — agreeing to all produce less oil at the same time — they could force prices up and nobody could "shop around." This coordination is what makes a <strong>cartel</strong>.</p>
+    <p>In a normal competitive market, if you raise your price, your customers just buy from someone else. You're a <strong>price taker</strong>, the market sets the price, and you accept it or lose business. This is how most markets work: wheat farmers, factory workers, small retailers.</p>
+    <p>But OPEC member nations figured out a way to beat this system. By <strong>coordinating</strong> with each other, agreeing to all produce less oil at the same time, they could force prices up and nobody could "shop around." This coordination is what makes a <strong>cartel</strong>.</p>
   </div>
 
   <div class="concept-grid">
@@ -914,68 +752,50 @@
     </div>
     <div class="concept-box highlighted" data-label="Core Concept">
       <h3>Price Maker</h3>
-      <p>A producer who has enough market power to <em>set</em> (or heavily influence) price. Monopolies are the extreme case. A cartel creates price-maker power through coordination — acting like one giant monopolist even though many sellers exist.</p>
+      <p>A producer who has enough market power to <em>set</em> (or heavily influence) price. Monopolies are the extreme case. A cartel creates price-maker power through coordination, acting like one giant monopolist even though many sellers exist.</p>
     </div>
     <div class="concept-box" data-label="Core Concept">
       <h3>Cartel</h3>
-      <p>A group of producers who agree to coordinate output and pricing — essentially colluding to act as one. OPEC members agreed to cut production together so no single member lost market share. The goal: <strong>keep prices artificially high</strong> and share the profits.</p>
+      <p>A group of producers who agree to coordinate output and pricing, essentially colluding to act as one. OPEC members agreed to cut production together so no single member lost market share. The goal: <strong>keep prices artificially high</strong> and share the profits.</p>
     </div>
   </div>
 
-  <!-- OPEC MEETING PHOTO + SVG MAP -->
+  <!-- OPEC MEETING PHOTO + MAP -->
   <div class="photo-row" style="grid-template-columns: 1fr 1.6fr; align-items:start;">
     <div class="photo-frame">
-      <div class="photo-placeholder" id="photo-opec">
-        <input type="file" accept="image/*" title="Upload photo">
-        <div class="upload-icon">📷</div>
-        <div class="upload-text">SUGGESTED PHOTO<br><strong>OPEC ministers meeting,<br>1973–74</strong><br>Click to upload your image</div>
-        <div class="upload-source">Source: Getty / AP Archive<br>Search: "OPEC oil ministers 1973"</div>
-      </div>
-      <div class="photo-caption"><strong>Fig. 3</strong> — Arab oil ministers at an OPEC session, 1973. The coordinated production cuts demonstrated unprecedented cartel power, reshaping global geopolitics.</div>
+      <img src="opeccartoon.jpg" style="width:100%; display:block;">
+      <div class="photo-caption"><strong>Fig. 4</strong> , A political cartoon depicting OPEC's stranglehold on Western oil supplies, 1973.</div>
     </div>
 
-    <!-- MAP PLACEHOLDER -->
-    <div class="map-container" style="display:flex; flex-direction:column; justify-content:center;">
+    <!-- MAP -->
+    <div class="map-container">
       <div class="map-title">OPEC Founding &amp; 1973 Arab Embargo Members</div>
-      
-      <div class="map-legend">
-        <div class="legend-item">
-          <div class="legend-swatch" style="background:var(--amber);"></div>
-          Arab OPEC Members (Embargo nations)
-<img src="opecmap.jpg" style="width:100%; display:block;">
+      <img src="opecmap.jpg" style="width:100%; display:block;">
+    </div>
+  </div>
+
   <div class="vocab-strip">
     <div class="vocab-label">Why Do Producers Love High Prices?</div>
     <div class="vocab-item">
       <span class="vocab-term">More Revenue per Unit</span>
       <span class="vocab-def">If you pump 1 million barrels a day, the difference between $3/barrel and $12/barrel is $9 million <em>per day</em>. OPEC nations made far more money selling less oil at higher prices.</span>
     </div>
-       </div>
-        <div class="legend-item">
-          <div class="legend-swatch" style="background:var(--crude);"></div>
-          Non-Arab OPEC Members
-        </div>
-        <div class="legend-item">
-          <div class="legend-swatch" style="background:var(--aged); border:1px solid var(--rule);"></div>
-          Non-OPEC nations
-        </div>
-      </div>
-    </div>
-  </div>
     <div class="vocab-item">
       <span class="vocab-term">Inelastic Demand</span>
       <span class="vocab-def">Oil is hard to substitute quickly. Consumers and industries <em>need</em> it. Even at 4× the price, demand doesn't drop by 75%. This means raising prices dramatically increases total revenue.</span>
     </div>
     <div class="vocab-item">
       <span class="vocab-term">Political Leverage</span>
-      <span class="vocab-def">High prices also gave OPEC members geopolitical power — the ability to punish countries they disagreed with (like the U.S. supporting Israel) by threatening their energy supply.</span>
+      <span class="vocab-def">High prices also gave OPEC members geopolitical power, the ability to punish countries they disagreed with (like the U.S. supporting Israel) by threatening their energy supply.</span>
     </div>
   </div>
+
   <div class="cfu-box">
     <div class="cfu-label">Check for Understanding</div>
     <h3>Cartels &amp; Market Power</h3>
     <ul class="cfu-questions">
       <li>Explain why a single farmer can't raise wheat prices, but OPEC could raise oil prices. What's the key difference?</li>
-      <li>If OPEC produces 40% of the world's oil and decides to cut production by 25%, what happens to prices — and why?</li>
+      <li>If OPEC produces 40% of the world's oil and decides to cut production by 25%, what happens to prices, and why?</li>
       <li>What's the <em>biggest threat</em> to a cartel's power? Hint: think about what happens if one member secretly sells more than agreed.</li>
     </ul>
   </div>
@@ -989,13 +809,13 @@
   <hr class="section-rule">
 
   <div class="body-text">
-    <p>When oil quadrupled in price, it didn't just make driving more expensive. Oil is an <strong>input</strong> in almost everything — gasoline to move trucks, fuel to heat factories, petrochemicals to make plastics. When the cost of a critical input skyrockets, the cost of making <em>everything</em> rises. This creates a specific kind of inflation economists call <strong>cost-push inflation.</strong></p>
+    <p>When oil quadrupled in price, it didn't just make driving more expensive. Oil is an <strong>input</strong> in almost everything, gasoline to move trucks, fuel to heat factories, petrochemicals to make plastics. When the cost of a critical input skyrockets, the cost of making <em>everything</em> rises. This creates a specific kind of inflation economists call <strong>cost-push inflation.</strong></p>
   </div>
 
   <div class="concept-grid">
     <div class="concept-box" data-label="Inflation Type 1">
       <h3>Demand-Pull Inflation</h3>
-      <p>"Too much money chasing too few goods." The economy is overheating — consumers are spending freely, businesses can't keep up with demand, so prices rise. The economy is <strong>growing</strong>. This is inflation policymakers are used to managing: raise interest rates, cool spending.</p>
+      <p>"Too much money chasing too few goods." The economy is overheating, consumers are spending freely, businesses can't keep up with demand, so prices rise. The economy is <strong>growing</strong>. This is inflation policymakers are used to managing: raise interest rates, cool spending.</p>
       <p style="margin-top:10px; font-size:13px; color: var(--green);"><strong>Think:</strong> Post-WWII boom, tech bubble 1990s, COVID reopening 2021.</p>
     </div>
     <div class="concept-box highlighted" data-label="Inflation Type 2">
@@ -1029,61 +849,23 @@
     const inflation  = [5.8, 4.3, 3.3, 6.2, 11.0, 9.1, 5.8, 6.5, 7.6, 11.3, 13.5, 10.3, 6.1];
     const oilPrice   = [3.18, 3.28, 3.39, 4.31, 12.52, 12.21, 13.10, 14.40, 14.85, 31.61, 37.42, 37.13, 35.93];
     const unemploy   = [4.9, 5.9, 5.6, 4.9, 5.6, 8.5, 7.7, 7.1, 6.1, 5.8, 7.1, 7.6, 9.7];
-
-    const oilShockYears = [3, 4, 5, 9, 10, 11]; // indices
-
+    const oilShockYears = [3, 4, 5, 9, 10, 11];
     const events = {
       3:  '🛢 Oct 1973: OPEC announces embargo. Oil price begins to spike.',
-      4:  '📈 1974: Full impact felt — inflation hits 11%, GDP turns negative.',
+      4:  '📈 1974: Full impact felt, inflation hits 11%, GDP turns negative.',
       5:  '📉 1975: Embargo ends but damage lingers. Unemployment peaks at 8.5%.',
       9:  '🇮🇷 1979: Iranian Revolution triggers second oil shock.',
       10: '📈 1980: Inflation peaks at 13.5%. Fed Chair Volcker takes drastic action.',
       11: '💊 1981: Volcker raises rates to 20%. Painful cure begins.',
-      12: '📉 1982: Inflation finally breaks. Unemployment hits 9.7% — recession bites.'
+      12: '📉 1982: Inflation finally breaks. Unemployment hits 9.7%, recession bites.'
     };
-
-    const inflColors = inflation.map((_, i) =>
-      oilShockYears.includes(i) ? '#e85c00' : '#c97d00'
-    );
-
+    const inflColors = inflation.map((_, i) => oilShockYears.includes(i) ? '#e85c00' : '#c97d00');
     let chart;
-    let currentView = 'inflation';
 
     function getDatasets(view) {
-      if (view === 'inflation') return [{
-        label: 'Inflation Rate (%)',
-        data: inflation,
-        backgroundColor: inflColors,
-        borderColor: inflColors,
-        borderWidth: 0,
-        borderRadius: 2,
-        type: 'bar'
-      }];
-      if (view === 'oil') return [{
-        label: 'Oil Price ($/barrel)',
-        data: oilPrice,
-        backgroundColor: 'rgba(201,125,0,0.15)',
-        borderColor: '#c97d00',
-        borderWidth: 2,
-        pointBackgroundColor: oilPrice.map((_, i) => oilShockYears.includes(i) ? '#e85c00' : '#c97d00'),
-        pointRadius: 5,
-        tension: 0.3,
-        type: 'line',
-        fill: true
-      }];
-      if (view === 'unemployment') return [{
-        label: 'Unemployment Rate (%)',
-        data: unemploy,
-        backgroundColor: 'rgba(192,57,43,0.15)',
-        borderColor: '#c0392b',
-        borderWidth: 2,
-        pointBackgroundColor: '#c0392b',
-        pointRadius: 5,
-        tension: 0.3,
-        type: 'line',
-        fill: true
-      }];
-      // All three
+      if (view === 'inflation') return [{ label: 'Inflation Rate (%)', data: inflation, backgroundColor: inflColors, borderColor: inflColors, borderWidth: 0, borderRadius: 2, type: 'bar' }];
+      if (view === 'oil') return [{ label: 'Oil Price ($/barrel)', data: oilPrice, backgroundColor: 'rgba(201,125,0,0.15)', borderColor: '#c97d00', borderWidth: 2, pointBackgroundColor: oilPrice.map((_, i) => oilShockYears.includes(i) ? '#e85c00' : '#c97d00'), pointRadius: 5, tension: 0.3, type: 'line', fill: true }];
+      if (view === 'unemployment') return [{ label: 'Unemployment Rate (%)', data: unemploy, backgroundColor: 'rgba(192,57,43,0.15)', borderColor: '#c0392b', borderWidth: 2, pointBackgroundColor: '#c0392b', pointRadius: 5, tension: 0.3, type: 'line', fill: true }];
       return [
         { label: 'Inflation (%)', data: inflation, borderColor: '#e85c00', backgroundColor: 'rgba(232,92,0,0.08)', borderWidth: 2, pointRadius: 4, tension: 0.3, type: 'line', fill: false, yAxisID: 'y' },
         { label: 'Unemployment (%)', data: unemploy, borderColor: '#c0392b', backgroundColor: 'rgba(192,57,43,0.08)', borderWidth: 2, pointRadius: 4, tension: 0.3, type: 'line', fill: false, yAxisID: 'y' },
@@ -1094,70 +876,33 @@
     function buildChart(view) {
       const ctx = document.getElementById('inflationChart').getContext('2d');
       if (chart) chart.destroy();
-
       const isAll = view === 'all';
       chart = new Chart(ctx, {
         type: view === 'inflation' ? 'bar' : 'line',
         data: { labels: years, datasets: getDatasets(view) },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
+          responsive: true, maintainAspectRatio: false,
           animation: { duration: 700, easing: 'easeOutQuart' },
           interaction: { mode: 'index', intersect: false },
           plugins: {
-            legend: {
-              display: isAll,
-              labels: { color: '#c4b89a', font: { family: "'IBM Plex Mono'", size: 10 } }
-            },
+            legend: { display: isAll, labels: { color: '#c4b89a', font: { family: "'IBM Plex Mono'", size: 10 } } },
             tooltip: {
-              backgroundColor: '#1a1208',
-              titleColor: '#c97d00',
-              bodyColor: '#f5f0e8',
-              borderColor: '#4a3000',
-              borderWidth: 1,
-              titleFont: { family: "'IBM Plex Mono'", size: 11 },
-              bodyFont: { family: "'IBM Plex Sans'", size: 12 },
-              callbacks: {
-                afterBody: function(items) {
-                  const idx = items[0]?.dataIndex;
-                  if (events[idx]) return ['\n' + events[idx]];
-                  return [];
-                }
-              }
+              backgroundColor: '#1a1208', titleColor: '#c97d00', bodyColor: '#f5f0e8', borderColor: '#4a3000', borderWidth: 1,
+              titleFont: { family: "'IBM Plex Mono'", size: 11 }, bodyFont: { family: "'IBM Plex Sans'", size: 12 },
+              callbacks: { afterBody: function(items) { const idx = items[0]?.dataIndex; if (events[idx]) return ['\n' + events[idx]]; return []; } }
             }
           },
           scales: {
-            x: {
-              ticks: { color: '#8a7a5a', font: { family: "'IBM Plex Mono'", size: 10 } },
-              grid: { color: 'rgba(74,48,0,0.3)' }
-            },
-            y: {
-              ticks: {
-                color: '#8a7a5a',
-                font: { family: "'IBM Plex Mono'", size: 10 },
-                callback: v => v + (view === 'oil' ? ' $' : '%')
-              },
-              grid: { color: 'rgba(74,48,0,0.3)' }
-            },
-            ...(isAll ? {
-              y2: {
-                position: 'right',
-                ticks: { color: '#c97d00', font: { family: "'IBM Plex Mono'", size: 10 }, callback: v => '$' + v },
-                grid: { drawOnChartArea: false }
-              }
-            } : {})
+            x: { ticks: { color: '#8a7a5a', font: { family: "'IBM Plex Mono'", size: 10 } }, grid: { color: 'rgba(74,48,0,0.3)' } },
+            y: { ticks: { color: '#8a7a5a', font: { family: "'IBM Plex Mono'", size: 10 }, callback: v => v + (view === 'oil' ? ' $' : '%') }, grid: { color: 'rgba(74,48,0,0.3)' } },
+            ...(isAll ? { y2: { position: 'right', ticks: { color: '#c97d00', font: { family: "'IBM Plex Mono'", size: 10 }, callback: v => '$' + v }, grid: { drawOnChartArea: false } } } : {})
           },
           onHover: (event, elements) => {
             if (elements.length > 0) {
               const idx = elements[0].index;
               const anno = document.getElementById('chart-annotation');
-              if (events[idx]) {
-                anno.textContent = events[idx];
-                anno.style.color = '#c97d00';
-              } else {
-                anno.textContent = years[idx] + ' — No major oil-related event this year.';
-                anno.style.color = '#8a7a5a';
-              }
+              if (events[idx]) { anno.textContent = events[idx]; anno.style.color = '#c97d00'; }
+              else { anno.textContent = years[idx] + ', No major oil-related event this year.'; anno.style.color = '#8a7a5a'; }
             }
           }
         }
@@ -1165,28 +910,15 @@
     }
 
     window.setChartView = function(view) {
-      currentView = view;
-      const btns = ['inflation','oil','unemployment','all'];
-      btns.forEach(b => {
+      ['inflation','oil','unemployment','all'].forEach(b => {
         const el = document.getElementById('btn-' + b);
-        if (b === view) {
-          el.style.background = 'var(--amber)';
-          el.style.color = 'var(--crude)';
-          el.style.borderColor = 'var(--amber)';
-          el.style.fontWeight = '600';
-        } else {
-          el.style.background = 'transparent';
-          el.style.color = 'var(--paper)';
-          el.style.borderColor = '#4a3000';
-          el.style.fontWeight = '400';
-        }
+        if (b === view) { el.style.background = 'var(--amber)'; el.style.color = 'var(--crude)'; el.style.borderColor = 'var(--amber)'; el.style.fontWeight = '600'; }
+        else { el.style.background = 'transparent'; el.style.color = 'var(--paper)'; el.style.borderColor = '#4a3000'; el.style.fontWeight = '400'; }
       });
       buildChart(view);
     };
 
-    window.addEventListener('DOMContentLoaded', function() {
-      buildChart('inflation');
-    });
+    window.addEventListener('DOMContentLoaded', function() { buildChart('inflation'); });
   })();
   </script>
 
@@ -1202,34 +934,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1972</td>
-        <td>$3.00</td>
-        <td class="ok">3.3%</td>
-        <td class="ok">+5.3%</td>
-        <td>5.6%</td>
-      </tr>
-      <tr>
-        <td>1973</td>
-        <td>$3.00 → $12.00</td>
-        <td class="up">6.2% ↑</td>
-        <td class="ok">+5.6%</td>
-        <td>4.9%</td>
-      </tr>
-      <tr>
-        <td>1974</td>
-        <td>$12.00</td>
-        <td class="up">11.0% ↑↑</td>
-        <td class="up">−0.5% ↓</td>
-        <td class="up">5.6% ↑</td>
-      </tr>
-      <tr>
-        <td>1975</td>
-        <td>$12.00</td>
-        <td class="up">9.1% ↑</td>
-        <td class="up">−0.2% ↓</td>
-        <td class="up">8.5% ↑↑</td>
-      </tr>
+      <tr><td>1972</td><td>$3.00</td><td class="ok">3.3%</td><td class="ok">+5.3%</td><td>5.6%</td></tr>
+      <tr><td>1973</td><td>$3.00 → $12.00</td><td class="up">6.2% ↑</td><td class="ok">+5.6%</td><td>4.9%</td></tr>
+      <tr><td>1974</td><td>$12.00</td><td class="up">11.0% ↑↑</td><td class="up">−0.5% ↓</td><td class="up">5.6% ↑</td></tr>
+      <tr><td>1975</td><td>$12.00</td><td class="up">9.1% ↑</td><td class="up">−0.2% ↓</td><td class="up">8.5% ↑↑</td></tr>
     </tbody>
   </table>
 
@@ -1242,60 +950,54 @@
   <hr class="section-rule">
 
   <div class="body-text">
-    <p>Before 1973, economists largely believed inflation and unemployment were opposites — if one went up, the other went down. This relationship (called the <strong>Phillips Curve</strong>) gave policymakers a menu of choices: accept some inflation for lower unemployment, or vice versa.</p>
-    <p>The oil crisis broke this model completely. Suddenly, the economy had <strong>rising prices AND rising unemployment at the same time</strong>. The word economists invented for this impossible-seeming combination was <strong>stagflation</strong> — economic stagnation (slow growth, high unemployment) <em>plus</em> inflation.</p>
+    <p>Before 1973, economists largely believed inflation and unemployment were opposites, if one went up, the other went down. This relationship (called the <strong>Phillips Curve</strong>) gave policymakers a menu of choices: accept some inflation for lower unemployment, or vice versa.</p>
+    <p>The oil crisis broke this model completely. Suddenly, the economy had <strong>rising prices AND rising unemployment at the same time</strong>. The word economists invented for this impossible-seeming combination was <strong>stagflation</strong>, economic stagnation (slow growth, high unemployment) <em>plus</em> inflation.</p>
     <p>Why was this so hard to fight? The usual cures were self-defeating. <strong>To fight inflation:</strong> raise interest rates → but that makes unemployment worse. <strong>To fight unemployment:</strong> lower rates, increase spending → but that makes inflation worse. The Federal Reserve was essentially trying to fight a fire with gasoline.</p>
   </div>
 
   <!-- Interactive Stagflation Quadrant -->
   <div style="margin: 28px 0;">
-    <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--amber); margin-bottom:4px;">The Policymaker's Dilemma — 2×2 Economic States</p>
+    <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--amber); margin-bottom:4px;">The Policymaker's Dilemma, 2×2 Economic States</p>
     <p style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#8a7a5a; margin-bottom:14px; letter-spacing:1px;">↓ Click any quadrant to expand</p>
-
     <div class="stagflation-grid">
-
       <div class="quadrant safe" onclick="toggleQuadrant(this)" style="cursor:pointer;">
         <h4>↓ Inflation &nbsp;+&nbsp; ↓ Unemployment</h4>
         <p><strong>The Goldilocks Economy.</strong> Low prices, people working. Every government's dream.</p>
         <div class="q-expand" style="display:none; margin-top:14px; border-top:1px solid rgba(26,107,60,0.2); padding-top:12px;">
-          <p style="margin-bottom:8px;">The Fed's ideal state. Prices are stable, jobs are plentiful, and the economy is growing at a sustainable pace. Governments rarely have to make hard trade-offs.</p>
-          <p style="font-size:12px; color: var(--green);"><strong>📅 Real example:</strong> U.S. mid-1990s "Great Moderation" — inflation ~2.5%, unemployment fell to 4%. The longest peacetime expansion in U.S. history.</p>
-          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Maintain current course. Minor adjustments to keep the balance. The Fed's dream scenario.</p>
+          <p style="margin-bottom:8px;">The Fed's ideal state. Prices are stable, jobs are plentiful, and the economy is growing at a sustainable pace.</p>
+          <p style="font-size:12px; color: var(--green);"><strong>📅 Real example:</strong> U.S. mid-1990s "Great Moderation", inflation ~2.5%, unemployment fell to 4%.</p>
+          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Maintain current course. The Fed's dream scenario.</p>
         </div>
       </div>
-
       <div class="quadrant warning" onclick="toggleQuadrant(this)" style="cursor:pointer;">
         <h4>↑ Inflation &nbsp;+&nbsp; ↓ Unemployment</h4>
-        <p><strong>Classic demand-pull overheating.</strong> Economy growing too fast — manageable.</p>
+        <p><strong>Classic demand-pull overheating.</strong> Economy growing too fast, manageable.</p>
         <div class="q-expand" style="display:none; margin-top:14px; border-top:1px solid rgba(201,125,0,0.2); padding-top:12px;">
-          <p style="margin-bottom:8px;">Too much money chasing too few goods. Consumers are flush, businesses can't keep up. Prices rise, but people are working — a "good problem" compared to the alternatives.</p>
-          <p style="font-size:12px; color: var(--amber);"><strong>📅 Real example:</strong> U.S. post-COVID reopening 2021–22. Strong demand, labor shortages, supply chain issues drove inflation to 9.1% — but unemployment was low.</p>
-          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Raise interest rates. Makes borrowing more expensive → cools consumer spending. Painful but the mechanism is well understood.</p>
+          <p style="margin-bottom:8px;">Too much money chasing too few goods. Prices rise, but people are working, a "good problem."</p>
+          <p style="font-size:12px; color: var(--amber);"><strong>📅 Real example:</strong> U.S. post-COVID reopening 2021–22. Inflation hit 9.1% but unemployment was low.</p>
+          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Raise interest rates to cool spending.</p>
         </div>
       </div>
-
       <div class="quadrant warning" onclick="toggleQuadrant(this)" style="cursor:pointer;">
         <h4>↓ Inflation &nbsp;+&nbsp; ↑ Unemployment</h4>
         <p><strong>Recession with deflation risk.</strong> Fix: cut rates, stimulus. Standard Keynesian response.</p>
         <div class="q-expand" style="display:none; margin-top:14px; border-top:1px solid rgba(201,125,0,0.2); padding-top:12px;">
-          <p style="margin-bottom:8px;">The economy is contracting. People are losing jobs, spending falls, prices may drop (deflation). Frightening, but the policy toolkit is clear: inject money into the economy.</p>
-          <p style="font-size:12px; color: var(--amber);"><strong>📅 Real example:</strong> U.S. 2008–09 Financial Crisis. Unemployment hit 10%, inflation was near zero. The Fed cut rates to near zero and launched stimulus programs (QE).</p>
-          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Cut interest rates + fiscal stimulus (government spending). The standard Keynesian response. Slow but it works.</p>
+          <p style="margin-bottom:8px;">The economy is contracting. Frightening, but the policy toolkit is clear: inject money into the economy.</p>
+          <p style="font-size:12px; color: var(--amber);"><strong>📅 Real example:</strong> U.S. 2008–09 Financial Crisis. Unemployment hit 10%, inflation near zero.</p>
+          <p style="font-size:12px; margin-top:8px;"><strong>🔧 Policy:</strong> Cut interest rates + fiscal stimulus.</p>
         </div>
       </div>
-
       <div class="quadrant danger" onclick="toggleQuadrant(this)" style="cursor:pointer; position:relative;">
         <div style="position:absolute; top:10px; right:12px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--red); border:1px solid var(--red); padding:2px 6px; text-transform:uppercase;">1974–75 U.S.</div>
         <h4>↑ Inflation &nbsp;+&nbsp; ↑ Unemployment</h4>
         <p><strong>STAGFLATION.</strong> Cures for one problem worsen the other. No good options.</p>
         <div class="q-expand" style="display:none; margin-top:14px; border-top:1px solid rgba(192,57,43,0.3); padding-top:12px;">
-          <p style="margin-bottom:8px;">The nightmare. Every tool in the playbook backfires. Raise rates to fight inflation? Unemployment gets worse. Cut rates to fight unemployment? Inflation explodes. The Fed is trapped.</p>
-          <p style="font-size:12px; color: var(--red);"><strong>📅 Real example:</strong> U.S. 1974–75 — inflation 11%, unemployment 8.5%. Then again 1979–81: inflation 13.5%, unemployment 7–10%. Nixon, Ford, and Carter all failed to fix it.</p>
-          <p style="font-size:12px; margin-top:8px;"><strong>🔧 "Policy":</strong> Paul Volcker (Fed Chair 1979) chose to kill inflation first — raised rates to 20%, deliberately triggering a deep recession. It worked, but unemployment hit 10.8%. A brutal, painful cure.</p>
-          <p style="font-size:12px; margin-top:8px; font-style:italic; color:#888;"><strong>Key lesson:</strong> Stagflation proves the Phillips Curve is not a reliable policy menu — a supply shock breaks the normal inflation/unemployment trade-off entirely.</p>
+          <p style="margin-bottom:8px;">The nightmare. Raise rates to fight inflation? Unemployment gets worse. Cut rates? Inflation explodes.</p>
+          <p style="font-size:12px; color: var(--red);"><strong>📅 Real example:</strong> U.S. 1974–75, inflation 11%, unemployment 8.5%. Nixon, Ford, and Carter all failed to fix it.</p>
+          <p style="font-size:12px; margin-top:8px;"><strong>🔧 "Policy":</strong> Volcker raised rates to 20%, triggering a deep recession. It worked, but unemployment hit 10.8%.</p>
+          <p style="font-size:12px; margin-top:8px; font-style:italic; color:#888;"><strong>Key lesson:</strong> A supply shock breaks the normal inflation/unemployment trade-off entirely.</p>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -1303,18 +1005,14 @@
   window.toggleQuadrant = function(el) {
     const panel = el.querySelector('.q-expand');
     const isOpen = panel.style.display !== 'none';
-    // Close all
     document.querySelectorAll('.q-expand').forEach(p => p.style.display = 'none');
     document.querySelectorAll('.quadrant').forEach(q => q.style.outline = 'none');
-    if (!isOpen) {
-      panel.style.display = 'block';
-      el.style.outline = '2px solid currentColor';
-    }
+    if (!isOpen) { panel.style.display = 'block'; el.style.outline = '2px solid currentColor'; }
   };
   </script>
 
   <div class="body-text">
-    <p>The U.S. didn't fully escape stagflation until Federal Reserve Chairman <strong>Paul Volcker</strong> raised interest rates to a shocking <strong>20%</strong> in 1980–81 — essentially choking the economy on purpose to kill inflation. It worked, but triggered the worst recession since the Great Depression, with unemployment hitting 10.8%.</p>
+    <p>The U.S. didn't fully escape stagflation until Federal Reserve Chairman <strong>Paul Volcker</strong> raised interest rates to a shocking <strong>20%</strong> in 1980–81, essentially choking the economy on purpose to kill inflation. It worked, but triggered the worst recession since the Great Depression, with unemployment hitting 10.8%.</p>
     <p>The lesson: <strong>cost-push inflation caused by a supply shock is far more dangerous and harder to treat than ordinary demand-pull inflation.</strong> It exposed the limits of the economic tools governments thought they had mastered.</p>
   </div>
 
@@ -1353,7 +1051,7 @@
     </div>
     <div class="vocab-item">
       <span class="vocab-term">Demand-Pull Inflation</span>
-      <span class="vocab-def">Inflation caused by excessive demand — consumers have more money and bid up prices. Usually occurs during strong economic growth.</span>
+      <span class="vocab-def">Inflation caused by excessive demand, consumers have more money and bid up prices. Usually occurs during strong economic growth.</span>
     </div>
     <div class="vocab-item">
       <span class="vocab-term">Cost-Push Inflation</span>
@@ -1384,6 +1082,5 @@
   </div>
 
 </main>
-
 </body>
 </html>
