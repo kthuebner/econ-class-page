@@ -27,6 +27,57 @@
       overflow-x: hidden;
     }
 
+    /* ── Top Masthead ── */
+    .masthead {
+      background: #0a0e14;
+      border-bottom: 2px solid rgba(46,109,180,0.5);
+      padding: 10px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .masthead-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .masthead-logo {
+      height: 44px;
+      width: auto;
+      display: block;
+      /* logo has white bg — invert to dark mode */
+      filter: brightness(0) invert(1) opacity(0.9);
+    }
+
+    .masthead-divider {
+      width: 1px;
+      height: 36px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .masthead-course {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .masthead-right {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .masthead-right span {
+      color: var(--accent);
+    }
+
     .hero {
       position: relative;
       min-height: 50vh;
@@ -151,22 +202,13 @@
       color: white;
     }
 
-    .hero-desc {
-      font-size: 1.05rem;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.75);
-      max-width: 620px;
-      margin: 0 auto 20px;
-      animation: fadeInUp 0.7s ease 0.45s both;
-    }
-
     .section-label {
       font-family: 'Permanent Marker', cursive;
     }
 
     .case-studies {
       padding: 70px 20px 80px;
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
@@ -211,120 +253,41 @@
 
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
     }
 
+    /* ── Card header area ── */
     .card-header {
-      padding: 16px 20px 14px;
+      padding: 24px 24px 20px;
       display: flex;
-      align-items: center;
-      gap: 14px;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .unit-1 { border-top-color: #2e6db4; }
-    .unit-1 .card-header { background: linear-gradient(135deg, #1e4d8c, #2e6db4); }
-    .unit-1 .card-btn { background: linear-gradient(135deg, #1e4d8c, #2e6db4); }
-    .unit-1:hover .card-btn { background: linear-gradient(135deg, #2e6db4, #4a8fd4); }
-    .unit-1:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(46,109,180,0.4); }
-    .unit-1 .topic-tag { background: rgba(46,109,180,0.2); border-color: rgba(46,109,180,0.45); color: #5ba3e0; }
-
-    .unit-2 { border-top-color: #e07b20; }
-    .unit-2 .card-header { background: linear-gradient(135deg, #3a1a6e, #5c2d9e); }
-    .unit-2 .card-btn { background: linear-gradient(135deg, #3a1a6e, #e07b20); }
-    .unit-2:hover .card-btn { background: linear-gradient(135deg, #5c2d9e, #f09030); }
-    .unit-2:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(224,123,32,0.4); }
-    .unit-2 .topic-tag { background: rgba(224,123,32,0.15); border-color: rgba(224,123,32,0.4); color: #f0a050; }
-
-    .unit-3 { border-top-color: #7a9e7e; }
-    .unit-3 .card-header { background: linear-gradient(135deg, #2e4d32, #4a7a50); }
-    .unit-3 .card-btn { background: linear-gradient(135deg, #2e4d32, #5a8e60); }
-    .unit-3:hover .card-btn { background: linear-gradient(135deg, #4a7a50, #7ab080); }
-    .unit-3:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(122,158,126,0.4); }
-    .unit-3 .topic-tag { background: rgba(122,158,126,0.15); border-color: rgba(122,158,126,0.4); color: #9dc4a0; }
-
-    .unit-4 { border-top-color: #d4621a; }
-    .unit-4 .card-header { background: linear-gradient(135deg, #1a1a1a, #4a2000); }
-    .unit-4 .card-btn { background: linear-gradient(135deg, #2a1000, #d4621a); }
-    .unit-4:hover .card-btn { background: linear-gradient(135deg, #4a2000, #e87830); }
-    .unit-4:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,98,26,0.45); }
-    .unit-4 .topic-tag { background: rgba(212,98,26,0.15); border-color: rgba(212,98,26,0.4); color: #e8905a; }
-
-    .unit-5 { border-top-color: #2a9d8f; }
-    .unit-5 .card-header { background: linear-gradient(135deg, #0d3d38, #1a7a70); }
-    .unit-5 .card-btn { background: linear-gradient(135deg, #0d3d38, #2a9d8f); }
-    .unit-5:hover .card-btn { background: linear-gradient(135deg, #1a7a70, #3ab8a8); }
-    .unit-5:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(42,157,143,0.4); }
-    .unit-5 .topic-tag { background: rgba(42,157,143,0.15); border-color: rgba(42,157,143,0.4); color: #4ccfc0; }
-
-    .unit-6 { border-top-color: #c0392b; }
-    .unit-6 .card-header { background: linear-gradient(135deg, #4a2e1a, #8b4513); }
-    .unit-6 .card-btn { background: linear-gradient(135deg, #6b2a1e, #c0392b); }
-    .unit-6:hover .card-btn { background: linear-gradient(135deg, #8b2a1e, #e04535); }
-    .unit-6:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(192,57,43,0.4); }
-    .unit-6 .topic-tag { background: rgba(192,57,43,0.15); border-color: rgba(192,57,43,0.4); color: #e07060; }
-
-    .card-number {
+    .card-unit-label {
       font-family: 'Bebas Neue', sans-serif;
-      font-weight: 900;
-      font-size: 2.2rem;
-      color: rgba(255,255,255,0.25);
-      line-height: 1;
-      min-width: 44px;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
     }
 
     .card-title {
       font-family: 'Permanent Marker', cursive;
       font-weight: 400;
-      font-size: 1.05rem;
-      text-transform: none;
-      letter-spacing: 0.01em;
+      font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+      line-height: 1.25;
       color: white;
-      line-height: 1.2;
     }
 
-    .card-body {
-      padding: 20px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .card-desc {
-      font-size: 0.92rem;
-      color: rgba(255,255,255,0.65);
-      line-height: 1.6;
-      flex: 1;
-    }
-
-    .card-topics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: center;
-    }
-
-    .topic-tag {
-      background: rgba(46,109,180,0.2);
-      border: 1px solid rgba(46,109,180,0.4);
-      color: var(--accent);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 3px;
-    }
-
+    /* ── Button ── */
     .card-btn {
       display: block;
-      background: linear-gradient(135deg, var(--blue-dark), var(--blue));
       color: white;
       text-align: center;
-      padding: 14px 20px;
+      padding: 16px 20px;
       font-family: 'Bebas Neue', sans-serif;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.05rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       text-decoration: none;
@@ -333,6 +296,23 @@
       transition: background 0.2s ease, letter-spacing 0.2s ease;
       position: relative;
       overflow: hidden;
+      margin-top: auto;
+    }
+
+    /* diagonal stripe texture overlay on buttons */
+    .card-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.045) 0px,
+        rgba(255,255,255,0.045) 1px,
+        transparent 1px,
+        transparent 8px
+      );
+      pointer-events: none;
+      z-index: 0;
     }
 
     .card-btn::after {
@@ -340,11 +320,74 @@
       margin-left: 8px;
       display: inline-block;
       transition: transform 0.2s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* keep button text above texture */
+    .card-btn span, .card-btn {
+      position: relative;
+      z-index: 1;
     }
 
     .card:hover .card-btn::after {
       transform: translateX(4px);
     }
+
+    /* ══════════════════════════════════════
+       UNIT COLOR SCHEMES
+    ══════════════════════════════════════ */
+
+    /* Unit 1 — Blue */
+    .unit-1 { border-top-color: #2e6db4; }
+    .unit-1 .card-header { background: linear-gradient(135deg, #1e4d8c, #2e6db4); }
+    .unit-1 .card-btn { background: linear-gradient(135deg, #1e4d8c, #2e6db4); }
+    .unit-1:hover .card-btn { background: linear-gradient(135deg, #2e6db4, #4a8fd4); }
+    .unit-1:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(46,109,180,0.4); }
+
+    /* Unit 2 — Purple/Orange */
+    .unit-2 { border-top-color: #e07b20; }
+    .unit-2 .card-header { background: linear-gradient(135deg, #3a1a6e, #5c2d9e); }
+    .unit-2 .card-btn { background: linear-gradient(135deg, #3a1a6e, #e07b20); }
+    .unit-2:hover .card-btn { background: linear-gradient(135deg, #5c2d9e, #f09030); }
+    .unit-2:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(224,123,32,0.4); }
+
+    /* Unit 3 — Green */
+    .unit-3 { border-top-color: #7a9e7e; }
+    .unit-3 .card-header { background: linear-gradient(135deg, #2e4d32, #4a7a50); }
+    .unit-3 .card-btn { background: linear-gradient(135deg, #2e4d32, #5a8e60); }
+    .unit-3:hover .card-btn { background: linear-gradient(135deg, #4a7a50, #7ab080); }
+    .unit-3:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(122,158,126,0.4); }
+
+    /* Unit 4 — Dark Orange/Rust */
+    .unit-4 { border-top-color: #d4621a; }
+    .unit-4 .card-header { background: linear-gradient(135deg, #1a1a1a, #4a2000); }
+    .unit-4 .card-btn { background: linear-gradient(135deg, #2a1000, #d4621a); }
+    .unit-4:hover .card-btn { background: linear-gradient(135deg, #4a2000, #e87830); }
+    .unit-4:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,98,26,0.45); }
+
+    /* Unit 5 — Dark Blue (was teal) */
+    .unit-5 { border-top-color: #1a5276; }
+    .unit-5 .card-header { background: linear-gradient(135deg, #0d1f3c, #1a3a5c); }
+    .unit-5 .card-btn { background: linear-gradient(135deg, #0d1f3c, #1a5276); }
+    .unit-5:hover .card-btn { background: linear-gradient(135deg, #1a3a5c, #2e6898); }
+    .unit-5:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(26,82,118,0.5); }
+
+    /* Unit 6 — Teal (Trade) */
+    .unit-6 { border-top-color: #2a9d8f; }
+    .unit-6 .card-header { background: linear-gradient(135deg, #0d3d38, #1a7a70); }
+    .unit-6 .card-btn { background: linear-gradient(135deg, #0d3d38, #2a9d8f); }
+    .unit-6:hover .card-btn { background: linear-gradient(135deg, #1a7a70, #3ab8a8); }
+    .unit-6:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(42,157,143,0.4); }
+
+    /* Unit 7 — Red (Communism) */
+    .unit-7 { border-top-color: #c0392b; }
+    .unit-7 .card-header { background: linear-gradient(135deg, #4a2e1a, #8b4513); }
+    .unit-7 .card-btn { background: linear-gradient(135deg, #6b2a1e, #c0392b); }
+    .unit-7:hover .card-btn { background: linear-gradient(135deg, #8b2a1e, #e04535); }
+    .unit-7:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(192,57,43,0.4); }
+
+    /* ══════════════════════════════════════ */
 
     .blue-divider {
       height: 6px;
@@ -399,6 +442,7 @@
     .card:nth-child(4) { animation: fadeInUp 0.6s ease 0.4s both; }
     .card:nth-child(5) { animation: fadeInUp 0.6s ease 0.5s both; }
     .card:nth-child(6) { animation: fadeInUp 0.6s ease 0.6s both; }
+    .card:nth-child(7) { animation: fadeInUp 0.6s ease 0.7s both; }
 
     .bottom-bar {
       background: #111;
@@ -442,15 +486,11 @@
 
   <section class="hero">
     <div class="hero-content">
-      <div class="bva-badge">
-        <div class="bva-logo">BVA</div>
-        Blue Valley Academy &nbsp;·&nbsp; Economics
-      </div>
       <div class="title-banner">
         <h1>Intro to Economics</h1>
       </div>
       <div class="subtitle-strip">
-        <p>Mr. Huebner's Intro to Economics — Select a Unit Below</p>
+        <p>Mr. Huebner's Econ Class — Select a Unit Below</p>
       </div>
     </div>
   </section>
@@ -468,111 +508,65 @@
 
       <div class="card unit-1">
         <div class="card-header">
-          <div class="card-number">01</div>
-          <div class="card-title">What Is Economics? & Economic Systems</div>
+          <div class="card-unit-label">Unit 1</div>
+          <div class="card-title">What Is Economics?</div>
         </div>
-        <div class="card-body">
-          <p class="card-desc">What is economics? Factors of Production, The 3 Key Questions of Economic Systems, Economic Goals</p>
-          <div class="card-topics">
-            <span class="topic-tag">Scarcity</span>
-            <span class="topic-tag">Factors of Production</span>
-            <span class="topic-tag">3 Key Questions</span>
-            <span class="topic-tag">Economic Systems</span>
-          </div>
-        </div>
-        <a href="unit-1.html" class="card-btn">Open Unit 1</a>
+        <a href="unit-1.html" class="card-btn">Open Case Study</a>
       </div>
 
       <div class="card unit-2">
         <div class="card-header">
-          <div class="card-number">02</div>
-          <div class="card-title">Supply & Demand</div>
+          <div class="card-unit-label">Unit 2</div>
+          <div class="card-title">What's Supply & Demand?</div>
         </div>
-        <div class="card-body">
-          <p class="card-desc">Microeconomics, Supply & Demand, Elasticity. What shifts the Curves?</p>
-          <div class="card-topics">
-            <span class="topic-tag">Supply Curve</span>
-            <span class="topic-tag">Demand Curve</span>
-            <span class="topic-tag">Equilibrium</span>
-            <span class="topic-tag">Price Signals</span>
-          </div>
-        </div>
-        <a href="unit-2.html" class="card-btn">Open Unit 2</a>
+        <a href="unit-2.html" class="card-btn">Open Case Study</a>
       </div>
 
       <div class="card unit-3">
         <div class="card-header">
-          <div class="card-number">03</div>
-          <div class="card-title">What is Money?</div>
+          <div class="card-unit-label">Unit 3</div>
+          <div class="card-title">What Is Money?</div>
         </div>
-        <div class="card-body">
-          <p class="card-desc">Mini Unit — What is Money? Inflation, Deflation, The Role of Banks.</p>
-          <div class="card-topics">
-            <span class="topic-tag">Currency</span>
-            <span class="topic-tag">Banking</span>
-            <span class="topic-tag">Federal Reserve</span>
-            <span class="topic-tag">Inflation</span>
-          </div>
-        </div>
-        <a href="unit-3.html" class="card-btn">Open Unit 3</a>
+        <a href="unit-3.html" class="card-btn">Open Case Study</a>
       </div>
 
       <div class="card unit-4">
         <div class="card-header">
-          <div class="card-number">04</div>
+          <div class="card-unit-label">Unit 4</div>
           <div class="card-title">What Are Market Failures?</div>
         </div>
-        <div class="card-body">
-          <p class="card-desc">What Happens When Free Markets Break? Externalities, Monopolies, Public Goods, Information Asymmetry.</p>
-          <div class="card-topics">
-            <span class="topic-tag">Externalities</span>
-            <span class="topic-tag">Public Goods</span>
-            <span class="topic-tag">Monopoly</span>
-            <span class="topic-tag">Inequality</span>
-          </div>
-        </div>
-        <a href="unit-4.html" class="card-btn">Open Unit 4</a>
+        <a href="unit-4.html" class="card-btn">Open Case Study</a>
       </div>
 
       <div class="card unit-5">
         <div class="card-header">
-          <div class="card-number">05</div>
-          <div class="card-title">The Government & the Economy</div>
+          <div class="card-unit-label">Unit 5</div>
+          <div class="card-title">What's the Government's Role?</div>
         </div>
-        <div class="card-body">
-          <p class="card-desc">When and how should government step in? Explore fiscal policy, taxation, regulation, and the ongoing debate over government's role in a mixed economy.</p>
-          <div class="card-topics">
-            <span class="topic-tag">Fiscal Policy</span>
-            <span class="topic-tag">Taxation</span>
-            <span class="topic-tag">Regulation</span>
-            <span class="topic-tag">Mixed Economy</span>
-          </div>
-        </div>
-        <a href="unit-5.html" class="card-btn">Open Unit 5</a>
+        <a href="unit-5.html" class="card-btn">Open Case Study</a>
       </div>
 
       <div class="card unit-6">
         <div class="card-header">
-          <div class="card-number">06</div>
-          <div class="card-title">Socialism, Communism & Marxism</div>
+          <div class="card-unit-label">Unit 6</div>
+          <div class="card-title">Why Do We Trade?</div>
         </div>
-        <div class="card-body">
-          <p class="card-desc">What are the alternatives to capitalism? Examine the history, theory, and real-world results of socialist and communist economic systems.</p>
-          <div class="card-topics">
-            <span class="topic-tag">Socialism</span>
-            <span class="topic-tag">Communism</span>
-            <span class="topic-tag">Marxism</span>
-            <span class="topic-tag">Capitalism</span>
-          </div>
+        <a href="unit-6.html" class="card-btn">Open Case Study</a>
+      </div>
+
+      <div class="card unit-7">
+        <div class="card-header">
+          <div class="card-unit-label">Unit 7</div>
+          <div class="card-title">What's Communism?</div>
         </div>
-        <a href="unit-6.html" class="card-btn">Open Unit 6</a>
+        <a href="unit-7.html" class="card-btn">Open Case Study</a>
       </div>
 
     </div>
   </section>
 
   <div class="bottom-bar">
-    <span>Mr. Huebner's Intro to Economics</span>
+    <span>Intro to Economics</span>
     <div class="bva-bottom">
       <span>Blue Valley Academy</span>
       <div class="bva-box">BVA</div>
@@ -581,7 +575,7 @@
 
   <footer>
     <div class="footer-inner">
-      <div class="footer-logo">Mr. Huebner's Intro to Economics &nbsp;<span>·</span>&nbsp; Blue Valley Academy</div>
+      <div class="footer-logo">Intro to Economics &nbsp;<span>·</span>&nbsp; Blue Valley Academy</div>
       <p>Select a case study above to begin. Links will activate as units are published.</p>
     </div>
   </footer>
