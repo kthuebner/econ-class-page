@@ -798,6 +798,27 @@
 
   strong { font-weight: 500; }
 
+  /* CONCEPT CALLOUT */
+  .concept-callout {
+    background: #eef2f8;
+    border-left: 3px solid var(--west-blue);
+    padding: 13px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.75;
+    color: #333;
+  }
+  .concept-callout strong { color: var(--west-blue); }
+  .cc-label {
+    display: block;
+    font-family: var(--display);
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--west-blue);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
   @media (max-width: 680px) {
     .masthead-inner, .narr-split { grid-template-columns: 1fr; }
     .mast-divider, .narr-bar { height: 4px; width: 100%; }
@@ -810,6 +831,97 @@
     .lesson-footer { padding: 18px; }
     .narr-east, .narr-west { padding: 22px 20px; }
   }
+
+  /* ── SLIDESHOW ── */
+  .slideshow-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 4px solid var(--divider);
+    background: #000;
+    line-height: 0;
+  }
+  .slide {
+    display: none;
+    position: relative;
+    width: 100%;
+    animation: slideFadeIn 0.7s ease;
+  }
+  .slide.active { display: block; }
+  @keyframes slideFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .slide img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    filter: grayscale(10%) contrast(1.04);
+  }
+  /* Map slide — show more of it */
+  .slide:first-child img {
+    object-position: center center;
+    object-fit: contain;
+    background: #1a1a1a;
+  }
+  .slide-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.72));
+    color: rgba(255,255,255,0.82);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.55;
+    padding: 32px 56px 12px 20px;
+  }
+  /* Prev / Next buttons */
+  .slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.38);
+    border: none;
+    color: rgba(255,255,255,0.75);
+    font-size: 28px;
+    line-height: 1;
+    width: 36px;
+    height: 56px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s;
+    z-index: 10;
+    padding: 0;
+  }
+  .slide-btn:hover { background: rgba(192,57,43,0.65); color: white; }
+  .slide-prev { left: 0; }
+  .slide-next { right: 0; }
+  /* Dot indicators */
+  .slide-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.35);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.18s, transform 0.18s;
+  }
+  .dot.active { background: var(--east-gold); transform: scale(1.25); }
+  .dot:hover  { background: rgba(255,255,255,0.65); }
+
 </style>
 </head>
 <body>
@@ -883,8 +995,10 @@
 
   <!-- HOOK -->
   <div class="hook-strip">
-    <div class="hook-question">"What if you could run the same country as two completely different economic experiments, at the same time?"</div>
-    <p>In 1949, one nation split into two. Same people, same language, same bombed-out starting line. The only difference: one half chose free markets, and the other chose to let the government plan everything. Forty years later, you could measure the results. One side had produced one of the great economic miracles of the 20th century. The other had produced... the Trabant.</p>
+    <div class="hook-question">Imagine ordering a car today and being told it will arrive in 2037.</div>
+    <p>During the Cold War, this was completely normal in East Germany. People who wanted to buy the country's most common car, the Trabant, often waited 10 to 13 years after placing their order. Some families put their children on the waiting list when they were young so they could receive the car as adults.</p>
+    <p style="margin-top:0.85em;">Why would a country end up with decade-long waiting lists for a small, underpowered car? The answer is all about economic systems, who answers the <strong>3 Key Questions of Macroeconomics</strong> and what can happen with no competition and no innovation.</p>
+    <p style="margin-top:0.85em;">In 1949, one nation split into two. West Germany chose free markets. East Germany was forced to embrace a command economy. Forty years later, you could clearly see the results. One side produced one of the great economic miracles of the 20th century. The other produced... the Trabant.</p>
   </div>
 
   <!-- SECTION 1: BACKGROUND -->
@@ -895,9 +1009,8 @@
         <div class="part-tag gold">Part 1 — How Did This Happen?</div>
         <div class="section-heading">Germany, Divided</div>
         <div class="body-text">
-          <p>World War II ended in 1945 with Germany in ruins. The four Allied powers divided it into occupation zones. The plan was temporary. It wasn't.</p>
-          <p>By 1949, two separate nations had formed. The western zones became the <strong>Federal Republic of Germany</strong>, a democracy with free markets backed by the U.S. The Soviet zone became the <strong>German Democratic Republic</strong>, a communist state controlled by a single party, despite the word "democratic" in the name.</p>
-          <p>Families were split across the new border. Berlin itself was cut in two. By 1961, more than 3.5 million East Germans had fled west, many of them doctors, engineers and teachers. The East German government's solution: build a wall overnight to stop people from leaving. It worked. It stood for 28 years. When it fell in November 1989, crowds tore it down with hammers within hours.</p>
+          <p>World War II ended in 1945 with Germany in ruins. The four Allied powers divided it into occupation zones. This was supposed to be temporary, but by 1949 two separate nations had formed. The western zones became the <strong>Federal Republic of Germany</strong>, a democracy with free markets backed by the U.S. The Soviet zone became the <strong>German Democratic Republic</strong>, a communist state controlled by a single party.</p>
+          <p>Families were split across the new border and Berlin itself was cut in two. By 1961, more than 3.5 million East Germans had fled west, many of them doctors, engineers and teachers. The East German government's solution: build a wall overnight to stop people from leaving. This wall would stand for 28 years and became a symbol of how the world was divided by the rivalry known as the Cold War.</p>
         </div>
       </div>
       <div>
@@ -905,8 +1018,12 @@
         <div class="section-heading">The World's Best Economic Experiment</div>
         <div class="body-text">
           <p>Comparing economic systems is usually messy. Different countries have different cultures, resources, languages and histories, so it is hard to isolate what the economic system itself actually does.</p>
-          <p>Germany is different. In 1949, the starting conditions were as close to identical as history ever produces. Same people, same language, same destroyed infrastructure, same culture. The only variable was the economic system, and it was changed completely and on purpose.</p>
-          <p>Run that experiment for 40 years, then open the border and see what happens. By 1989, West Germans were roughly <strong>three times wealthier</strong> on average. When East Germans could finally cross freely, they flooded west and abandoned nearly everything they had owned in the East, including their cars. The experiment had a clear result.</p>
+          <p>This case is different. In 1949, the starting conditions were as close to identical as history ever produced. The same nation of people were divided, with one side embracing free-market capitalism (with a strong social safety net, so some elements of socialism) while the other side had authoritarian socialism thrust upon it. Also, Stalin stole a lot of their resources.</p>
+          <p>By 1989, West Germans were roughly <strong>three times wealthier</strong> on average. When East Germans could finally cross freely, they flooded west and abandoned nearly everything they had owned in the East, including their cars. The experiment had a clear result.</p>
+          <div class="concept-callout" style="margin-top:16px;">
+            <span class="cc-label">Stop and think</span>
+            Before reading on, consider: why might a society end up with decade-long waiting lists for a car? Think about what would have to be true about factories, prices, and government control for this to happen.
+          </div>
         </div>
         <div class="pull-quote west-quote" style="margin-top:14px;">
           "Prosperity for all."
@@ -1023,7 +1140,18 @@
   <div class="trabant-section">
     <div class="section-label red-label">Section 03 · The Trabant Problem</div>
     <div class="section-heading">One Car Tells the Whole Story</div>
-    <p class="body-text" style="max-width:680px;">Nothing illustrates the gap between the two systems more vividly than their cars. East Germany produced one model, the Trabant. West Germany let its auto industry compete freely. Tap the cards to dig into what that actually meant.</p>
+    <p class="body-text" style="max-width:680px;">Nothing illustrates the gap between the two systems more vividly than their cars. East Germany produced one model, the Trabant. West Germany let its auto industry compete freely. But here is the thing: <strong>when the Trabant first appeared in 1957, it was actually a fairly modern small car</strong> — front-wheel drive, lightweight body, cheap to produce. It wasn't a bad design. The problem was that it never changed. Central planning, material shortages and zero competition meant there was simply no reason to improve it. By the time production ended in 1991, East Germany was still building a car designed in the 1950s.</p>
+
+    <p class="body-text" style="max-width:680px; margin-top:12px;">Tap the cards to dig into what that actually meant in numbers.</p>
+
+    <div class="concept-callout" style="max-width:680px; margin: 14px 0 20px;">
+      <span class="cc-label">Economic concept: Shortage</span>
+      A <strong>shortage</strong> happens when the quantity demanded of a good is greater than the quantity supplied at the current price. The Trabant waiting list was not just an inconvenience. It was a textbook shortage, built into the system by design.
+      <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(26,58,107,0.15);">
+        <span class="cc-label">The used-car paradox</span>
+        Because the waiting list was so long, <strong>used Trabants often sold for more money than brand-new ones.</strong> Buyers were willing to pay a premium to skip the 11-year wait. In a market economy, higher prices would have signaled factories to produce more. In East Germany, prices were fixed by the state, so that signal never happened. The shortage just... continued.
+      </div>
+    </div>
 
     <div class="trabant-layout">
       <div class="flip-card" onclick="this.classList.toggle('flipped')" title="Click to flip">
@@ -1143,8 +1271,8 @@
       <div class="activity-label">&#9733; Discussion</div>
       <div class="activity-heading">East Germany Failed. But It's Worth Asking: At What?</div>
       <div class="activity-body">
-        <p>East Germany did not fail at everything. It failed at the goals it was not trying to achieve: growth, efficiency, innovation and freedom. On the goals it was pursuing, equality of wages, guaranteed employment and universal social services, it actually performed. The problem is that it sacrificed so much to get there, and ultimately could not sustain even those wins without a functioning economy underneath them.</p>
-        <p>West Germany's story is just as instructive, and it is often misread. West Germany was not pure free market capitalism. It was a <strong>mixed economy</strong>, one that used markets to drive growth and innovation while the government kept a strong safety net in place. The result was a system that performed well across nearly every goal simultaneously: strong growth, high efficiency, real freedom and still solid welfare, employment and social security. That balance is the point. The lesson is not "markets beat planning." It is that well-designed mixed economies can pursue multiple goals at once, while ideologically pure systems tend to win on some goals and collapse on others.</p>
+        <p>East Germany's economy clearly had problems. When it comes to growth, efficiency, innovation and freedom, the East failed. On the goals it was pursuing, equality of wages, guaranteed employment and universal social services, it actually performed somewhat better. The problem is that it sacrificed so much to get there, and ultimately could not sustain even those wins without a functioning economy.</p>
+        <p>West Germany's story is just as instructive, and it is often misread. West Germany was not pure free market capitalism. It was a <strong>mixed economy</strong>, one that used markets to drive growth and innovation while the government kept a strong safety net in place. The result was a system that performed well across nearly every goal simultaneously: strong growth, high efficiency, real freedom and still solid welfare, employment and social security. That balance is the point. The lesson is not "free markets beat planning." It is that well-designed mixed economies can pursue multiple goals at once, while ideologically extreme systems tend to win on some goals and collapse on others.</p>
         <p>If you had to live in one of these countries in 1975, not knowing anything about their future, which would you choose and why? Does your answer change if you are a factory worker? A doctor? A single parent? What does that tell you about who economic goals actually serve?</p>
       </div>
     </div>
@@ -1157,6 +1285,7 @@
     <ul class="cfu-list">
       <li>In East Germany, who answered the three key questions and what did they use to make those decisions? In West Germany, who answered them and what drove their choices?</li>
       <li>The Trabant went virtually unchanged for 30 years. Use the concepts of <em>price makers, price takers</em> and <em>competition</em> to explain why. What would have needed to change for East Germany to build a better car?</li>
+      <li>Used Trabants often sold for <em>more</em> than brand-new ones. In a market economy, what would rising prices normally signal producers to do? Why didn't that happen in East Germany? What does this tell you about the role of price signals?</li>
       <li>East Germany had essentially zero unemployment. Is that automatically a good thing? What does it tell us about the trade-offs between economic goals?</li>
       <li><strong>Synthesis:</strong> When the Wall fell, East Germans abandoned their Trabants and flooded west. In economic terms, what were they revealing about which goals they personally prioritized? Does a population "voting with their feet" tell us something markets and ballots cannot?</li>
     </ul>
@@ -1262,6 +1391,38 @@
   function toggleCard(card) {
     card.classList.toggle("open");
   }
+</script>
+
+
+<script>
+  (function() {
+    var slides = document.querySelectorAll('#mainSlideshow .slide');
+    var dots   = document.querySelectorAll('#mainSlideshow .dot');
+    var current = 0;
+    var timer;
+
+    function show(n) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (n + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function next() { show(current + 1); }
+
+    function startAuto() { timer = setInterval(next, 4500); }
+    function stopAuto()  { clearInterval(timer); }
+
+    window.moveSlide = function(dir) { stopAuto(); show(current + dir); startAuto(); };
+    window.goToSlide = function(n)   { stopAuto(); show(n); startAuto(); };
+
+    var hero = document.getElementById('mainSlideshow');
+    hero.addEventListener('mouseenter', stopAuto);
+    hero.addEventListener('mouseleave', startAuto);
+
+    startAuto();
+  })();
 </script>
 
 </body>
