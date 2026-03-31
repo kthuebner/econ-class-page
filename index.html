@@ -334,33 +334,59 @@
       transform: translateX(4px);
     }
 
-    /* ── Resource link (secondary button) ── */
+    /* ── Resource button (secondary, darker gradient) ── */
     .card-resource {
       display: block;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255,255,255,0.8);
       text-align: center;
-      padding: 11px 20px;
+      padding: 13px 20px;
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.9rem;
+      font-size: 1.0rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       text-decoration: none;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.3);
-      transition: background 0.2s ease, color 0.2s ease;
+      border-top: 1px solid rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+      transition: color 0.2s ease, filter 0.2s ease;
     }
 
+    /* same diagonal stripe texture as primary button */
     .card-resource::before {
-      content: '↗';
-      margin-right: 7px;
-      font-size: 0.85rem;
-      opacity: 0.7;
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        45deg,
+        rgba(0,0,0,0.12) 0px,
+        rgba(0,0,0,0.12) 1px,
+        transparent 1px,
+        transparent 8px
+      );
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .card:hover .card-resource {
-      background: rgba(0,0,0,0.5);
-      color: rgba(255,255,255,0.85);
+    .card-resource::after {
+      content: '↗';
+      margin-left: 8px;
+      display: inline-block;
+      transition: transform 0.2s ease;
+      position: relative;
+      z-index: 1;
     }
+
+    .card:hover .card-resource { filter: brightness(1.15); }
+    .card:hover .card-resource::after { transform: translate(3px, -3px); }
+
+    /* Per-unit resource button colors — same gradient, darkened ~40% */
+    .unit-1 .card-resource { background: linear-gradient(135deg, #122e54, #1e4d8c); }
+    .unit-2 .card-resource { background: linear-gradient(135deg, #200e3e, #3a1a6e); }
+    .unit-3 .card-resource { background: linear-gradient(135deg, #1a2e1c, #2e4d32); }
+    .unit-4 .card-resource { background: linear-gradient(135deg, #180a00, #2a1000); }
+    .unit-5 .card-resource { background: linear-gradient(135deg, #060f1e, #0d1f3c); }
+    .unit-6 .card-resource { background: linear-gradient(135deg, #062420, #0d3d38); }
+    .unit-7 .card-resource { background: linear-gradient(135deg, #2a100a, #4a1810); }
 
     /* ══════════════════════════════════════
        UNIT COLOR SCHEMES
@@ -540,7 +566,7 @@
           <div class="card-title">What Is Economics?</div>
         </div>
         <a href="unit-1.html" class="card-btn">Open Case Study</a>
-        <a href="unit-1-resources.html" class="card-resource">Unit 1 Resources</a>
+        <a href="unit-1b.html" class="card-resource">Unit 1 Resources</a>
       </div>
 
       <div class="card unit-2">
@@ -549,7 +575,7 @@
           <div class="card-title">What's Supply & Demand?</div>
         </div>
         <a href="unit-2.html" class="card-btn">Open Case Study</a>
-        <a href="unit-2-resources.html" class="card-resource">Unit 2 Resources</a>
+        <a href="unit-2b.html" class="card-resource">Unit 2 Resources</a>
       </div>
 
       <div class="card unit-3">
@@ -558,7 +584,7 @@
           <div class="card-title">What Is Money?</div>
         </div>
         <a href="unit-3.html" class="card-btn">Open Case Study</a>
-        <a href="unit-3-resources.html" class="card-resource">Unit 3 Resources</a>
+        <a href="unit-3b.html" class="card-resource">Unit 3 Resources</a>
       </div>
 
       <div class="card unit-4">
@@ -567,7 +593,7 @@
           <div class="card-title">What Are Market Failures?</div>
         </div>
         <a href="unit-4.html" class="card-btn">Open Case Study</a>
-        <a href="unit-4-resources.html" class="card-resource">Unit 4 Resources</a>
+        <a href="unit-4b.html" class="card-resource">Unit 4 Resources</a>
       </div>
 
       <div class="card unit-5">
@@ -576,7 +602,7 @@
           <div class="card-title">What's the Government's Role?</div>
         </div>
         <a href="unit-5.html" class="card-btn">Open Case Study</a>
-        <a href="unit-5-resources.html" class="card-resource">Unit 5 Resources</a>
+        <a href="unit-5b.html" class="card-resource">Unit 5 Resources</a>
       </div>
 
       <div class="card unit-6">
@@ -585,7 +611,7 @@
           <div class="card-title">Why Do We Trade?</div>
         </div>
         <a href="unit-6.html" class="card-btn">Open Case Study</a>
-        <a href="unit-6-resources.html" class="card-resource">Unit 6 Resources</a>
+        <a href="unit-6b.html" class="card-resource">Unit 6 Resources</a>
       </div>
 
       <div class="card unit-7">
@@ -594,7 +620,7 @@
           <div class="card-title">What's Communism?</div>
         </div>
         <a href="unit-7.html" class="card-btn">Open Case Study</a>
-        <a href="unit-7-resources.html" class="card-resource">Unit 7 Resources</a>
+        <a href="unit-7b.html" class="card-resource">Unit 7 Resources</a>
       </div>
 
     </div>
