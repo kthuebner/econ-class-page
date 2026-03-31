@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Game: Your Investing Encyclopedia</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .intro {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .intro h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .intro p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .investment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .investment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .investment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .investment-card h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .investment-icon {
+            font-size: 2.5rem;
+            width: 50px;
+            text-align: center;
+        }
+        
+        .definition {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+        }
+        
+        .definition strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .pros, .cons {
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .pros {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border-left: 4px solid #28a745;
+        }
+        
+        .cons {
+            background: linear-gradient(135deg, #ffeaea, #f5c6cb);
+            border-left: 4px solid #dc3545;
+        }
+        
+        .pros h4, .cons h4 {
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .pros h4 {
+            color: #155724;
+        }
+        
+        .cons h4 {
+            color: #721c24;
+        }
+        
+        .example-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .example-box strong {
+            color: #856404;
+        }
+        
+        .risk-meter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            font-weight: 700;
+        }
+        
+        .risk-dots {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .risk-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+        
+        .risk-dot.filled {
+            background: #e74c3c;
+        }
+        
+        .key-terms {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .key-terms h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .term-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .term-card h4 {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .diversification-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .diversification-section h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .diversification-visual {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .basket {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .basket h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .investment-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>INVESTING ENCYCLOPEDIA</h1>
+        <p class="subtitle">Diversify Your Portfolio Assignment</p>
+    </div>
+    
+    <div class="container">
+        <div class="intro">
+            <h2>Why Should You Care About Investing?</h2>
+            <p>Look, leaving your money in a regular savings account is like letting it slowly melt away thanks to inflation. Investing lets your money actually <em>work</em> for you instead of just sitting there doing nothing.</p>
+            <p><strong>The bottom line:</strong> If you want to build wealth over time (and who doesn't?), you need to understand these basic investment types. Don't worry, we'll keep it simple.</p>
+        </div>
+        
+        <div class="diversification-section">
+            <h2>The Golden Rule: Don't Put All Your Eggs in One Basket</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">Diversification means spreading your money across different types of investments. It's like not betting your entire allowance on one horse race.</p>
+            
+            <div class="diversification-visual">
+                <div class="basket">
+                    <h4>❌ Bad Idea</h4>
+                    <p>All money in ONE stock<br>(Like our Tesla example!)</p>
+                </div>
+                <div class="basket">
+                    <h4>✅ Smart Move</h4>
+                    <p>Money spread across stocks, bonds, and other investments</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="investment-grid">
+            <div class="investment-card">
+                <h3><span class="investment-icon">📈</span> Stocks</h3>
+                <div class="definition">
+                    <strong>What it is:</strong> You own a tiny piece of a company. When the company does well, your stock value goes up. When it doesn't... well, you get the idea.
+                </div>
+                
+                <div class="risk-meter">
+                    Risk Level: 
+                    <div class="risk-dots">
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot"></div>
+                    </div>
+                    (High)
+                </div>
+                
+                <div class="example-box">
+                    <strong>Real Example:</strong> Buy Apple stock at $150. If Apple releases the next iPhone and everyone loves it, your stock might jump to $180. If they release a phone that explodes... not so good.
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Historically, stocks beat inflation over long periods</li>
+                            <li>You can make serious money if you pick winners</li>
+                            <li>Some stocks pay dividends (free money!)</li>
+                            <li>Easy to buy and sell</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Stock prices can be totally unpredictable</li>
+                            <li>You could lose everything if the company goes bankrupt</li>
+                            <li>Requires research and luck</li>
+                            <li>Emotional rollercoaster watching prices</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="investment-card">
+                <h3><span class="investment-icon">🛒</span> Index Funds & ETFs</h3>
+                <div class="definition">
+                    <strong>What it is:</strong> Like a basket containing hundreds of different stocks. Instead of picking individual companies, you buy the whole basket and let someone else manage it.
+                </div>
+                
+                <div class="risk-meter">
+                    Risk Level: 
+                    <div class="risk-dots">
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot"></div>
+                        <div class="risk-dot"></div>
+                    </div>
+                    (Medium)
+                </div>
+                
+                <div class="example-box">
+                    <strong>Real Example:</strong> An S&P 500 index fund contains stock from 500 of America's biggest companies. When you buy it, you own a tiny piece of Apple, Microsoft, Google, and 497 others all at once.
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Instant diversification in one purchase</li>
+                            <li>Lower fees than actively managed funds</li>
+                            <li>Historically steady growth over time</li>
+                            <li>Perfect for lazy investors (in a good way)</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Won't make you rich overnight</li>
+                            <li>Still goes down when the whole market crashes</li>
+                            <li>Average returns, not spectacular ones</li>
+                            <li>Boring (some people see this as a con)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="investment-card">
+                <h3><span class="investment-icon">🏛️</span> Bonds</h3>
+                <div class="definition">
+                    <strong>What it is:</strong> You're basically loaning money to the government or a company, and they promise to pay you back with interest. Think of it as being the bank.
+                </div>
+                
+                <div class="risk-meter">
+                    Risk Level: 
+                    <div class="risk-dots">
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot"></div>
+                        <div class="risk-dot"></div>
+                        <div class="risk-dot"></div>
+                    </div>
+                    (Low)
+                </div>
+                
+                <div class="example-box">
+                    <strong>Real Example:</strong> Buy a 10-year U.S. Treasury bond for $1,000. The government pays you 3% interest each year ($30) and gives you back your $1,000 after 10 years. Boring but predictable.
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Very safe (especially government bonds)</li>
+                            <li>Predictable income stream</li>
+                            <li>Good balance for risky investments</li>
+                            <li>You know exactly what you'll get</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Low returns compared to stocks</li>
+                            <li>Inflation can eat away at your purchasing power</li>
+                            <li>Interest rate changes affect bond prices</li>
+                            <li>Not exciting at all</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="investment-card">
+                <h3><span class="investment-icon">🌾</span> Commodities</h3>
+                <div class="definition">
+                    <strong>What it is:</strong> Investing in physical stuff like gold, oil, wheat, or coffee. You're betting on the price of actual materials that people need.
+                </div>
+                
+                <div class="risk-meter">
+                    Risk Level: 
+                    <div class="risk-dots">
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot"></div>
+                    </div>
+                    (High)
+                </div>
+                
+                <div class="example-box">
+                    <strong>Real Example:</strong> Invest in oil when it's $60 per barrel. If a war breaks out or OPEC cuts production, oil might jump to $100. If everyone starts driving electric cars... not so good.
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Hedge against inflation (things get more expensive)</li>
+                            <li>Diversification from stocks and bonds</li>
+                            <li>Gold has been valuable for thousands of years</li>
+                            <li>Can do well during economic uncertainty</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Extremely volatile prices</li>
+                            <li>No dividends or interest payments</li>
+                            <li>Affected by weather, politics, wars</li>
+                            <li>Storage and insurance costs (for physical commodities)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-terms">
+            <h2>Key Terms You Need to Know</h2>
+            <div class="terms-grid">
+                <div class="term-card">
+                    <h4>Portfolio</h4>
+                    <p>All your investments together. Like your investment collection.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Diversification</h4>
+                    <p>Spreading your money across different investments to reduce risk.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Bull Market</h4>
+                    <p>When stock prices are generally going up. Everyone's happy.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Bear Market</h4>
+                    <p>When stock prices are falling. Time to panic? Nah, time to learn.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Dividend</h4>
+                    <p>Money some companies pay shareholders just for owning their stock.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Volatility</h4>
+                    <p>How much an investment's price bounces around. High volatility = wild ride.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Market Cap</h4>
+                    <p>Total value of all a company's shares. Shows how big the company is.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Expense Ratio</h4>
+                    <p>Annual fee for owning a mutual fund or ETF. Lower is better.</p>
+                </div>
+                <div class="term-card">
+                    <h4>P/E Ratio</h4>
+                    <p>Price-to-Earnings ratio. Tells you if a stock might be overpriced.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Asset Allocation</h4>
+                    <p>How you split your money between stocks, bonds, and other investments.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Compound Interest</h4>
+                    <p>Earning money on your earnings. Einstein called it the 8th wonder of the world.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Dollar-Cost Averaging</h4>
+                    <p>Investing the same amount regularly, regardless of market ups and downs.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="intro">
+            <h2>The Bottom Line</h2>
+            <p>Investing isn't about getting rich quick (that's gambling). It's about building wealth slowly and steadily over time. The key is to start early, diversify your investments, and don't panic when markets get crazy.</p>
+            <p><strong>Remember:</strong> Every successful investor was once a beginner who had to learn this stuff too. The sooner you start learning and practicing with your stock market game, the better off you'll be in the real world.</p>
+            <p style="margin-top: 1rem;"><strong>Pro tip:</strong> Want to learn more? Check out Investopedia or MarketWatch for deeper dives into any of these topics.</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2026 Intro to Economics • Blue Valley Academy</p>
+    </div>
+</body>
+</html>
