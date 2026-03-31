@@ -1,645 +1,579 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Intro to Economics – Blue Valley Academy</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Permanent+Marker&family=News+Cycle:wght@400;700&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --blue: #2e6db4;
-      --blue-dark: #1e4d8c;
-      --blue-light: #4a8fd4;
-      --charcoal: #2a2a2a;
-      --dark: #1a1a1a;
-      --mid: #3a3a3a;
-      --light-text: #e8e8e8;
-      --white: #ffffff;
-      --accent: #5ba3e0;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background-color: var(--dark);
-      color: var(--light-text);
-      font-family: 'News Cycle', sans-serif;
-      overflow-x: hidden;
-    }
-
-    /* ── Top Masthead ── */
-    .masthead {
-      background: #0a0e14;
-      border-bottom: 2px solid rgba(46,109,180,0.5);
-      padding: 10px 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .masthead-left {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .masthead-logo {
-      height: 44px;
-      width: auto;
-      display: block;
-      /* logo has white bg — invert to dark mode */
-      filter: brightness(0) invert(1) opacity(0.9);
-    }
-
-    .masthead-divider {
-      width: 1px;
-      height: 36px;
-      background: rgba(255,255,255,0.15);
-    }
-
-    .masthead-course {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.1rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-    }
-
-    .masthead-right {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.55);
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-    }
-
-    .masthead-right span {
-      color: var(--accent);
-    }
-
-    .hero {
-      position: relative;
-      min-height: 50vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      overflow: hidden;
-      padding: 40px 20px 40px;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(46,109,180,0.35) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(46,109,180,0.25) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(30,40,60,0.9) 0%, transparent 80%);
-      background-color: #111820;
-      z-index: 0;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px);
-      background-size: 28px 28px;
-      z-index: 1;
-      opacity: 0.5;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 900px;
-    }
-
-    .bva-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      padding: 8px 20px;
-      border-radius: 4px;
-      margin-bottom: 30px;
-      font-family: 'Permanent Marker', cursive;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      animation: fadeInDown 0.6s ease both;
-    }
-
-    .bva-logo {
-      width: 32px;
-      height: 32px;
-      background: var(--blue);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Bebas Neue', sans-serif;
-      font-weight: 900;
-      font-size: 0.9rem;
-      border-radius: 3px;
-      color: white;
-    }
-
-    .title-banner {
-      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 50%, var(--blue-light) 100%);
-      padding: 18px 50px;
-      margin-bottom: 6px;
-      animation: fadeInUp 0.7s ease 0.2s both;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .title-banner::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        rgba(255,255,255,0.03) 0px,
-        rgba(255,255,255,0.03) 1px,
-        transparent 1px,
-        transparent 12px
-      );
-    }
-
-    .title-banner h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-weight: 900;
-      font-size: clamp(3rem, 8vw, 6rem);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: white;
-      text-shadow: 3px 3px 0 rgba(0,0,0,0.4);
-      position: relative;
-      z-index: 1;
-    }
-
-    .subtitle-strip {
-      background: rgba(0,0,0,0.6);
-      border-top: 3px solid var(--blue);
-      border-bottom: 3px solid var(--blue);
-      padding: 14px 40px;
-      margin-bottom: 40px;
-      animation: fadeInUp 0.7s ease 0.35s both;
-    }
-
-    .subtitle-strip p {
-      font-family: 'Permanent Marker', cursive;
-      font-style: normal;
-      font-weight: 400;
-      font-size: clamp(1rem, 2.5vw, 1.45rem);
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      color: white;
-    }
-
-    .section-label {
-      font-family: 'Permanent Marker', cursive;
-    }
-
-    .case-studies {
-      padding: 70px 20px 80px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-weight: 900;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: white;
-      line-height: 1;
-    }
-
-    .title-underline {
-      width: 80px;
-      height: 4px;
-      background: var(--blue);
-      margin: 14px auto 0;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 24px;
-    }
-
-    .card {
-      background: linear-gradient(145deg, #262c38 0%, #1e2330 100%);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-top: 3px solid var(--blue);
-      border-radius: 4px;
-      overflow: hidden;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    /* ── Card header area ── */
-    .card-header {
-      padding: 24px 24px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .card-unit-label {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-    }
-
-    .card-title {
-      font-family: 'Permanent Marker', cursive;
-      font-weight: 400;
-      font-size: clamp(1.35rem, 2.5vw, 1.65rem);
-      line-height: 1.25;
-      color: white;
-    }
-
-    /* ── Button ── */
-    .card-btn {
-      display: block;
-      color: white;
-      text-align: center;
-      padding: 16px 20px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-weight: 700;
-      font-size: 1.05rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s ease, letter-spacing 0.2s ease;
-      position: relative;
-      overflow: hidden;
-      margin-top: auto;
-    }
-
-    /* diagonal stripe texture overlay on buttons */
-    .card-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: repeating-linear-gradient(
-        45deg,
-        rgba(255,255,255,0.045) 0px,
-        rgba(255,255,255,0.045) 1px,
-        transparent 1px,
-        transparent 8px
-      );
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .card-btn::after {
-      content: '→';
-      margin-left: 8px;
-      display: inline-block;
-      transition: transform 0.2s ease;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* keep button text above texture */
-    .card-btn span, .card-btn {
-      position: relative;
-      z-index: 1;
-    }
-
-    .card:hover .card-btn::after {
-      transform: translateX(4px);
-    }
-
-    /* ── Resource button (secondary, darker gradient) ── */
-    .card-resource {
-      display: block;
-      color: rgba(255,255,255,0.8);
-      text-align: center;
-      padding: 13px 20px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.0rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-top: 1px solid rgba(0,0,0,0.3);
-      position: relative;
-      overflow: hidden;
-      transition: color 0.2s ease, filter 0.2s ease;
-    }
-
-    /* same diagonal stripe texture as primary button */
-    .card-resource::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: repeating-linear-gradient(
-        45deg,
-        rgba(0,0,0,0.12) 0px,
-        rgba(0,0,0,0.12) 1px,
-        transparent 1px,
-        transparent 8px
-      );
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .card-resource::after {
-      content: '↗';
-      margin-left: 8px;
-      display: inline-block;
-      transition: transform 0.2s ease;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card:hover .card-resource { filter: brightness(1.15); }
-    .card:hover .card-resource::after { transform: translate(3px, -3px); }
-
-    /* Per-unit resource button colors — same gradient, darkened ~40% */
-    .unit-1 .card-resource { background: linear-gradient(135deg, #122e54, #1e4d8c); }
-    .unit-2 .card-resource { background: linear-gradient(135deg, #200e3e, #3a1a6e); }
-    .unit-3 .card-resource { background: linear-gradient(135deg, #1a2e1c, #2e4d32); }
-    .unit-4 .card-resource { background: linear-gradient(135deg, #180a00, #2a1000); }
-    .unit-5 .card-resource { background: linear-gradient(135deg, #060f1e, #0d1f3c); }
-    .unit-6 .card-resource { background: linear-gradient(135deg, #062420, #0d3d38); }
-    .unit-7 .card-resource { background: linear-gradient(135deg, #2a100a, #4a1810); }
-
-    /* ══════════════════════════════════════
-       UNIT COLOR SCHEMES
-    ══════════════════════════════════════ */
-
-    /* Unit 1 — Blue */
-    .unit-1 { border-top-color: #2e6db4; }
-    .unit-1 .card-header { background: linear-gradient(135deg, #1e4d8c, #2e6db4); }
-    .unit-1 .card-btn { background: linear-gradient(135deg, #1e4d8c, #2e6db4); }
-    .unit-1:hover .card-btn { background: linear-gradient(135deg, #2e6db4, #4a8fd4); }
-    .unit-1:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(46,109,180,0.4); }
-
-    /* Unit 2 — Purple/Orange */
-    .unit-2 { border-top-color: #e07b20; }
-    .unit-2 .card-header { background: linear-gradient(135deg, #3a1a6e, #5c2d9e); }
-    .unit-2 .card-btn { background: linear-gradient(135deg, #3a1a6e, #e07b20); }
-    .unit-2:hover .card-btn { background: linear-gradient(135deg, #5c2d9e, #f09030); }
-    .unit-2:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(224,123,32,0.4); }
-
-    /* Unit 3 — Green */
-    .unit-3 { border-top-color: #7a9e7e; }
-    .unit-3 .card-header { background: linear-gradient(135deg, #2e4d32, #4a7a50); }
-    .unit-3 .card-btn { background: linear-gradient(135deg, #2e4d32, #5a8e60); }
-    .unit-3:hover .card-btn { background: linear-gradient(135deg, #4a7a50, #7ab080); }
-    .unit-3:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(122,158,126,0.4); }
-
-    /* Unit 4 — Dark Orange/Rust */
-    .unit-4 { border-top-color: #d4621a; }
-    .unit-4 .card-header { background: linear-gradient(135deg, #1a1a1a, #4a2000); }
-    .unit-4 .card-btn { background: linear-gradient(135deg, #2a1000, #d4621a); }
-    .unit-4:hover .card-btn { background: linear-gradient(135deg, #4a2000, #e87830); }
-    .unit-4:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,98,26,0.45); }
-
-    /* Unit 5 — Dark Blue (was teal) */
-    .unit-5 { border-top-color: #1a5276; }
-    .unit-5 .card-header { background: linear-gradient(135deg, #0d1f3c, #1a3a5c); }
-    .unit-5 .card-btn { background: linear-gradient(135deg, #0d1f3c, #1a5276); }
-    .unit-5:hover .card-btn { background: linear-gradient(135deg, #1a3a5c, #2e6898); }
-    .unit-5:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(26,82,118,0.5); }
-
-    /* Unit 6 — Teal (Trade) */
-    .unit-6 { border-top-color: #2a9d8f; }
-    .unit-6 .card-header { background: linear-gradient(135deg, #0d3d38, #1a7a70); }
-    .unit-6 .card-btn { background: linear-gradient(135deg, #0d3d38, #2a9d8f); }
-    .unit-6:hover .card-btn { background: linear-gradient(135deg, #1a7a70, #3ab8a8); }
-    .unit-6:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(42,157,143,0.4); }
-
-    /* Unit 7 — Red (Communism) */
-    .unit-7 { border-top-color: #c0392b; }
-    .unit-7 .card-header { background: linear-gradient(135deg, #4a2e1a, #8b4513); }
-    .unit-7 .card-btn { background: linear-gradient(135deg, #6b2a1e, #c0392b); }
-    .unit-7:hover .card-btn { background: linear-gradient(135deg, #8b2a1e, #e04535); }
-    .unit-7:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(192,57,43,0.4); }
-
-    /* ══════════════════════════════════════ */
-
-    .blue-divider {
-      height: 6px;
-      background: linear-gradient(90deg, transparent, var(--blue), var(--blue-light), var(--blue), transparent);
-      opacity: 0.6;
-    }
-
-    footer {
-      background: #0e1218;
-      border-top: 3px solid var(--blue);
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .footer-inner {
-      max-width: 800px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-weight: 900;
-      font-size: 1.1rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: white;
-    }
-
-    .footer-logo span { color: var(--accent); }
-
-    footer p {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.4);
-    }
-
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .card:nth-child(1) { animation: fadeInUp 0.6s ease 0.1s both; }
-    .card:nth-child(2) { animation: fadeInUp 0.6s ease 0.2s both; }
-    .card:nth-child(3) { animation: fadeInUp 0.6s ease 0.3s both; }
-    .card:nth-child(4) { animation: fadeInUp 0.6s ease 0.4s both; }
-    .card:nth-child(5) { animation: fadeInUp 0.6s ease 0.5s both; }
-    .card:nth-child(6) { animation: fadeInUp 0.6s ease 0.6s both; }
-    .card:nth-child(7) { animation: fadeInUp 0.6s ease 0.7s both; }
-
-    .bottom-bar {
-      background: #111;
-      border-top: 2px solid rgba(255,255,255,0.08);
-      padding: 12px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: 'Bebas Neue', sans-serif;
-      font-weight: 700;
-      font-size: 0.85rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-    }
-
-    .bva-bottom {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .bva-box {
-      background: var(--blue);
-      color: white;
-      font-family: 'Bebas Neue', sans-serif;
-      font-weight: 900;
-      font-size: 0.75rem;
-      padding: 3px 6px;
-      border-radius: 2px;
-    }
-
-    @media (max-width: 600px) {
-      .title-banner { padding: 14px 20px; }
-      .subtitle-strip { padding: 12px 20px; }
-      .bottom-bar { flex-direction: column; gap: 6px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Game: Your Investing Encyclopedia</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .intro {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .intro h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .intro p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .investment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .investment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .investment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .investment-card h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .investment-icon {
+            font-size: 2.5rem;
+            width: 50px;
+            text-align: center;
+        }
+        
+        .definition {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+        }
+        
+        .definition strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .pros, .cons {
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .pros {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border-left: 4px solid #28a745;
+        }
+        
+        .cons {
+            background: linear-gradient(135deg, #ffeaea, #f5c6cb);
+            border-left: 4px solid #dc3545;
+        }
+        
+        .pros h4, .cons h4 {
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .pros h4 {
+            color: #155724;
+        }
+        
+        .cons h4 {
+            color: #721c24;
+        }
+        
+        .example-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .example-box strong {
+            color: #856404;
+        }
+        
+        .risk-meter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            font-weight: 700;
+        }
+        
+        .risk-dots {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .risk-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+        
+        .risk-dot.filled {
+            background: #e74c3c;
+        }
+        
+        .key-terms {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .key-terms h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .term-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .term-card h4 {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .diversification-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .diversification-section h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .diversification-visual {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .basket {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .basket h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .investment-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <section class="hero">
-    <div class="hero-content">
-      <div class="title-banner">
-        <h1>Intro to Economics</h1>
-      </div>
-      <div class="subtitle-strip">
-        <p>Intro to Economics — Select a Unit Below</p>
-      </div>
+    <div class="header">
+        <h1>INVESTING ENCYCLOPEDIA</h1>
+        <p class="subtitle">Diversify Your Portfolio Assignment</p>
     </div>
-  </section>
-
-  <div class="blue-divider"></div>
-
-  <section class="case-studies">
-    <div class="section-header">
-      <p class="section-label">Course Materials</p>
-      <h2 class="section-title">Case Studies & Units</h2>
-      <div class="title-underline"></div>
+    
+    <div class="container">
+        <div class="intro">
+            <h2>Why Should You Care About Investing?</h2>
+            <p>Look, leaving your money in a regular savings account is like letting it slowly melt away thanks to inflation. Investing lets your money actually <em>work</em> for you instead of just sitting there doing nothing.</p>
+            <p><strong>The bottom line:</strong> If you want to build wealth over time (and who doesn't?), you need to understand these basic investment types. Don't worry, we'll keep it simple.</p>
+        </div>
+        
+        <div class="diversification-section">
+            <h2>The Golden Rule: Don't Put All Your Eggs in One Basket</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">Diversification means spreading your money across different types of investments. It's like not betting your entire allowance on one horse race.</p>
+            
+            <div class="diversification-visual">
+                <div class="basket">
+                    <h4>❌ Bad Idea</h4>
+                    <p>All money in ONE stock<br>(Like our Tesla example!)</p>
+                </div>
+                <div class="basket">
+                    <h4>✅ Smart Move</h4>
+                    <p>Money spread across stocks, bonds, and other investments</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="investment-grid">
+            <div class="investment-card">
+                <h3><span class="investment-icon">📈</span> Stocks</h3>
+                <div class="definition">
+                    <strong>What it is:</strong> You own a tiny piece of a company. When the company does well, your stock value goes up. When it doesn't... well, you get the idea.
+                </div>
+                
+                <div class="risk-meter">
+                    Risk Level: 
+                    <div class="risk-dots">
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot"></div>
+                    </div>
+                    (High)
+                </div>
+                
+                <div class="example-box">
+                    <strong>Real Example:</strong> Buy Apple stock at $150. If Apple releases the next iPhone and everyone loves it, your stock might jump to $180. If they release a phone that explodes... not so good.
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Historically, stocks beat inflation over long periods</li>
+                            <li>You can make serious money if you pick winners</li>
+                            <li>Some stocks pay dividends (free money!)</li>
+                            <li>Easy to buy and sell</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Stock prices can be totally unpredictable</li>
+                            <li>You could lose everything if the company goes bankrupt</li>
+                            <li>Requires research and luck</li>
+                            <li>Emotional rollercoaster watching prices</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="investment-card">
+                <h3><span class="investment-icon">🛒</span> Index Funds & ETFs</h3>
+                <div class="definition">
+                    <strong>What it is:</strong> Like a basket containing hundreds of different stocks. Instead of picking individual companies, you buy the whole basket and let someone else manage it.
+                </div>
+                
+                <div class="risk-meter">
+                    Risk Level: 
+                    <div class="risk-dots">
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot"></div>
+                        <div class="risk-dot"></div>
+                    </div>
+                    (Medium)
+                </div>
+                
+                <div class="example-box">
+                    <strong>Real Example:</strong> An S&P 500 index fund contains stock from 500 of America's biggest companies. When you buy it, you own a tiny piece of Apple, Microsoft, Google, and 497 others all at once.
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Instant diversification in one purchase</li>
+                            <li>Lower fees than actively managed funds</li>
+                            <li>Historically steady growth over time</li>
+                            <li>Perfect for lazy investors (in a good way)</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Won't make you rich overnight</li>
+                            <li>Still goes down when the whole market crashes</li>
+                            <li>Average returns, not spectacular ones</li>
+                            <li>Boring (some people see this as a con)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="investment-card">
+                <h3><span class="investment-icon">🏛️</span> Bonds</h3>
+                <div class="definition">
+                    <strong>What it is:</strong> You're basically loaning money to the government or a company, and they promise to pay you back with interest. Think of it as being the bank.
+                </div>
+                
+                <div class="risk-meter">
+                    Risk Level: 
+                    <div class="risk-dots">
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot"></div>
+                        <div class="risk-dot"></div>
+                        <div class="risk-dot"></div>
+                    </div>
+                    (Low)
+                </div>
+                
+                <div class="example-box">
+                    <strong>Real Example:</strong> Buy a 10-year U.S. Treasury bond for $1,000. The government pays you 3% interest each year ($30) and gives you back your $1,000 after 10 years. Boring but predictable.
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Very safe (especially government bonds)</li>
+                            <li>Predictable income stream</li>
+                            <li>Good balance for risky investments</li>
+                            <li>You know exactly what you'll get</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Low returns compared to stocks</li>
+                            <li>Inflation can eat away at your purchasing power</li>
+                            <li>Interest rate changes affect bond prices</li>
+                            <li>Not exciting at all</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="investment-card">
+                <h3><span class="investment-icon">🌾</span> Commodities</h3>
+                <div class="definition">
+                    <strong>What it is:</strong> Investing in physical stuff like gold, oil, wheat, or coffee. You're betting on the price of actual materials that people need.
+                </div>
+                
+                <div class="risk-meter">
+                    Risk Level: 
+                    <div class="risk-dots">
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot filled"></div>
+                        <div class="risk-dot"></div>
+                    </div>
+                    (High)
+                </div>
+                
+                <div class="example-box">
+                    <strong>Real Example:</strong> Invest in oil when it's $60 per barrel. If a war breaks out or OPEC cuts production, oil might jump to $100. If everyone starts driving electric cars... not so good.
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Hedge against inflation (things get more expensive)</li>
+                            <li>Diversification from stocks and bonds</li>
+                            <li>Gold has been valuable for thousands of years</li>
+                            <li>Can do well during economic uncertainty</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Extremely volatile prices</li>
+                            <li>No dividends or interest payments</li>
+                            <li>Affected by weather, politics, wars</li>
+                            <li>Storage and insurance costs (for physical commodities)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-terms">
+            <h2>Key Terms You Need to Know</h2>
+            <div class="terms-grid">
+                <div class="term-card">
+                    <h4>Portfolio</h4>
+                    <p>All your investments together. Like your investment collection.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Diversification</h4>
+                    <p>Spreading your money across different investments to reduce risk.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Bull Market</h4>
+                    <p>When stock prices are generally going up. Everyone's happy.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Bear Market</h4>
+                    <p>When stock prices are falling. Time to panic? Nah, time to learn.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Dividend</h4>
+                    <p>Money some companies pay shareholders just for owning their stock.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Volatility</h4>
+                    <p>How much an investment's price bounces around. High volatility = wild ride.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Market Cap</h4>
+                    <p>Total value of all a company's shares. Shows how big the company is.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Expense Ratio</h4>
+                    <p>Annual fee for owning a mutual fund or ETF. Lower is better.</p>
+                </div>
+                <div class="term-card">
+                    <h4>P/E Ratio</h4>
+                    <p>Price-to-Earnings ratio. Tells you if a stock might be overpriced.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Asset Allocation</h4>
+                    <p>How you split your money between stocks, bonds, and other investments.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Compound Interest</h4>
+                    <p>Earning money on your earnings. Einstein called it the 8th wonder of the world.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Dollar-Cost Averaging</h4>
+                    <p>Investing the same amount regularly, regardless of market ups and downs.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="intro">
+            <h2>The Bottom Line</h2>
+            <p>Investing isn't about getting rich quick (that's gambling). It's about building wealth slowly and steadily over time. The key is to start early, diversify your investments, and don't panic when markets get crazy.</p>
+            <p><strong>Remember:</strong> Every successful investor was once a beginner who had to learn this stuff too. The sooner you start learning and practicing with your stock market game, the better off you'll be in the real world.</p>
+            <p style="margin-top: 1rem;"><strong>Pro tip:</strong> Want to learn more? Check out Investopedia or MarketWatch for deeper dives into any of these topics.</p>
+        </div>
     </div>
-
-    <div class="grid">
-
-      <div class="card unit-1">
-        <div class="card-header">
-          <div class="card-unit-label">Unit 1</div>
-          <div class="card-title">What Is Economics?</div>
-        </div>
-        <a href="unit-1.html" class="card-btn">Open Case Study</a>
-        <a href="unit-1b.html" class="card-resource">Unit 1 Resources</a>
-      </div>
-
-      <div class="card unit-2">
-        <div class="card-header">
-          <div class="card-unit-label">Unit 2</div>
-          <div class="card-title">What's Supply & Demand?</div>
-        </div>
-        <a href="unit-2.html" class="card-btn">Open Case Study</a>
-        <a href="unit-2b.html" class="card-resource">Unit 2 Resources</a>
-      </div>
-
-      <div class="card unit-3">
-        <div class="card-header">
-          <div class="card-unit-label">Unit 3</div>
-          <div class="card-title">What Is Money?</div>
-        </div>
-        <a href="unit-3.html" class="card-btn">Open Case Study</a>
-        <a href="unit-3b.html" class="card-resource">Unit 3 Resources</a>
-      </div>
-
-      <div class="card unit-4">
-        <div class="card-header">
-          <div class="card-unit-label">Unit 4</div>
-          <div class="card-title">What Are Market Failures?</div>
-        </div>
-        <a href="unit-4.html" class="card-btn">Open Case Study</a>
-        <a href="unit-4b.html" class="card-resource">Unit 4 Resources</a>
-      </div>
-
-      <div class="card unit-5">
-        <div class="card-header">
-          <div class="card-unit-label">Unit 5</div>
-          <div class="card-title">What's the Government's Role?</div>
-        </div>
-        <a href="unit-5.html" class="card-btn">Open Case Study</a>
-        <a href="unit-5b.html" class="card-resource">Unit 5 Resources</a>
-      </div>
-
-      <div class="card unit-6">
-        <div class="card-header">
-          <div class="card-unit-label">Unit 6</div>
-          <div class="card-title">Why Do We Trade?</div>
-        </div>
-        <a href="unit-6.html" class="card-btn">Open Case Study</a>
-        <a href="unit-6b.html" class="card-resource">Unit 6 Resources</a>
-      </div>
-
-      <div class="card unit-7">
-        <div class="card-header">
-          <div class="card-unit-label">Unit 7</div>
-          <div class="card-title">What's Communism?</div>
-        </div>
-        <a href="unit-7.html" class="card-btn">Open Case Study</a>
-        <a href="unit-7b.html" class="card-resource">Unit 7 Resources</a>
-      </div>
-
+    
+    <div class="footer">
+        <p>&copy; 2026 Intro to Economics • Blue Valley Academy</p>
     </div>
-  </section>
-
-  <div class="bottom-bar">
-    <span>Intro to Economics</span>
-    <div class="bva-bottom">
-      <span>Blue Valley Academy</span>
-      <div class="bva-box">BVA</div>
-    </div>
-  </div>
-
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-logo">Intro to Economics &nbsp;<span>·</span>&nbsp; Blue Valley Academy</div>
-      <p>Select a case study above to begin. Links will activate as units are published.</p>
-    </div>
-  </footer>
-
 </body>
 </html>
