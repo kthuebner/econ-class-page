@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profit Now, Pain Later</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=News+Cycle:wght@400;700&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744;
+    --red: #c0392b;
+    --gold: #e8a020;
+    --cream: #f5f0e8;
+    --mid-gray: #666;
+    --dark: #111;
+    --white: #ffffff;
+    --green: #2e7d4f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'News Cycle', serif; background: var(--cream); color: var(--dark); font-size: 17px; line-height: 1.65; }
+
+  .hero { background: var(--navy); color: var(--white); padding: 56px 40px 48px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px); }
+  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-unit-tag { font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 8vw, 88px); line-height: 0.95; letter-spacing: 2px; color: var(--white); margin-bottom: 20px; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { font-family: 'Barlow', sans-serif; font-size: 17px; color: rgba(255,255,255,0.75); max-width: 600px; line-height: 1.5; border-left: 3px solid var(--gold); padding-left: 16px; }
+
+  .main { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  .section-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-bottom: 6px; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--navy); letter-spacing: 1px; margin-bottom: 20px; line-height: 1; }
+  .section-intro { font-size: 16px; color: var(--mid-gray); margin-bottom: 28px; max-width: 700px; }
+
+  /* DIAGRAM 1 */
+  .diagram-section { margin-bottom: 56px; }
+  .diagram-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 2px solid var(--navy); border-radius: 4px; overflow: hidden; }
+  .diagram-panel { padding: 32px 28px; }
+  .diagram-panel.friedman { background: #1a2744; color: white; border-right: 1px solid rgba(255,255,255,0.1); }
+  .diagram-panel.stakeholder { background: #f8f4ee; color: var(--dark); }
+  .diagram-panel-label { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 18px; display: block; }
+  .diagram-panel.friedman .diagram-panel-label { color: var(--gold); }
+  .diagram-panel.stakeholder .diagram-panel-label { color: var(--red); }
+  .diagram-panel-quote { font-family: 'Barlow', sans-serif; font-style: italic; font-size: 14px; margin-bottom: 24px; line-height: 1.5; opacity: 0.85; }
+  .diagram-panel.stakeholder .diagram-panel-quote { color: var(--mid-gray); }
+  .diagram-svg { width: 100%; height: 240px; }
+  .diagram-callout { background: var(--navy); color: var(--white); padding: 18px 24px; border-top: 3px solid var(--gold); }
+  .diagram-callout p { font-family: 'Barlow', sans-serif; font-size: 14px; line-height: 1.5; }
+  .diagram-callout strong { color: var(--gold); }
+
+  /* REVIEW BOXES */
+  .review-section { margin-bottom: 48px; }
+  .review-box { border-radius: 4px; overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .review-box-header { padding: 14px 22px; display: flex; align-items: center; gap: 12px; }
+  .review-box-header .box-icon { font-size: 20px; flex-shrink: 0; }
+  .review-box-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; }
+  .review-box-header .box-tag { margin-left: auto; font-family: 'Barlow', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 9px; border-radius: 2px; }
+  .review-box.recall .review-box-header { background: var(--navy); color: var(--white); }
+  .review-box.recall .box-tag { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+  .review-box.recall .review-box-body { background: #f0f3f8; border-left: 4px solid var(--navy); }
+  .review-box.apply .review-box-header { background: var(--red); color: var(--white); }
+  .review-box.apply .box-tag { background: rgba(255,255,255,0.2); color: white; }
+  .review-box.apply .review-box-body { background: #fdf3f2; border-left: 4px solid var(--red); }
+  .review-box-body { padding: 22px 24px; }
+  .review-box-body p { margin-bottom: 14px; font-size: 16px; line-height: 1.6; }
+  .review-box-body p:last-child { margin-bottom: 0; }
+  .review-box-body ol { padding-left: 22px; margin-bottom: 0; }
+  .review-box-body li { margin-bottom: 10px; font-size: 16px; line-height: 1.55; }
+  .review-box-body li:last-child { margin-bottom: 0; }
+  .answer-line { display: block; border-bottom: 1px solid #bbb; height: 26px; margin-top: 4px; margin-bottom: 10px; }
+  .passage-box { background: white; border-left: 4px solid var(--red); padding: 16px 18px; margin: 16px 0; border-radius: 2px; font-size: 15px; color: #333; line-height: 1.65; }
+
+  /* CONTRAST */
+  .contrast-section { margin-bottom: 40px; }
+  .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #ccc; border: 2px solid #ccc; border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+  .contrast-card { padding: 28px 26px; }
+  .contrast-card.tru { background: #fff8f8; }
+  .contrast-card.lego { background: #f5fff8; }
+  .contrast-card-label { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 4px; }
+  .contrast-card.tru .contrast-card-label { color: var(--red); }
+  .contrast-card.lego .contrast-card-label { color: var(--green); }
+  .contrast-card h4 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; margin-bottom: 14px; line-height: 1; }
+  .contrast-card.tru h4 { color: var(--navy); }
+  .contrast-card.lego h4 { color: var(--green); }
+  .contrast-card p { font-size: 15px; line-height: 1.6; color: #333; margin-bottom: 12px; }
+  .contrast-card p:last-child { margin-bottom: 0; }
+  .contrast-stat { padding: 8px 14px; font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600; border-radius: 2px; display: inline-block; margin-top: 6px; color: white; }
+  .contrast-card.tru .contrast-stat { background: var(--red); }
+  .contrast-card.lego .contrast-stat { background: var(--green); }
+  .contrast-note { background: #f0f3f8; border-left: 4px solid var(--navy); padding: 14px 18px; border-radius: 2px; font-size: 15px; color: #333; }
+
+  /* MONEY FLOW DIAGRAM */
+  .money-diagram-section { margin-bottom: 56px; }
+  .money-diagram-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 2px solid var(--navy); border-radius: 4px 4px 0 0; overflow: hidden; }
+  .money-panel { padding: 28px 24px 20px; }
+  .money-panel.extraction { background: #1a2744; border-right: 1px solid rgba(255,255,255,0.08); }
+  .money-panel.reinvestment { background: #f8f4ee; }
+  .money-panel-label { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+  .money-panel.extraction .money-panel-label { color: var(--gold); }
+  .money-panel.reinvestment .money-panel-label { color: var(--red); }
+  .money-panel-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; margin-bottom: 16px; letter-spacing: 1px; }
+  .money-svg { width: 100%; height: 300px; }
+  .money-callout { background: #f0f3f8; border-left: 4px solid var(--navy); border: 1px solid #ccc; border-top: none; border-radius: 0 0 4px 4px; padding: 16px 22px; font-family: 'Barlow', sans-serif; font-size: 14px; color: #333; line-height: 1.55; }
+  .money-callout strong { color: var(--navy); }
+
+  /* BOEING */
+  .boeing-callout { background: var(--navy); color: var(--white); padding: 28px 32px; border-radius: 4px; margin-bottom: 48px; display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start; border-left: 6px solid var(--red); }
+  .boeing-callout .callout-icon { font-size: 36px; line-height: 1; }
+  .boeing-callout h4 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--gold); margin-bottom: 10px; letter-spacing: 1px; }
+  .boeing-callout p { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.85); margin-bottom: 10px; }
+  .boeing-callout p:last-child { margin-bottom: 0; }
+  .boeing-callout strong { color: var(--gold); }
+
+  /* DISCUSSION */
+  .discussion-section { background: var(--navy); border-radius: 4px; overflow: hidden; margin-bottom: 48px; }
+  .discussion-header { background: var(--red); padding: 18px 28px; display: flex; align-items: center; gap: 12px; }
+  .discussion-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--white); letter-spacing: 1px; }
+  .discussion-body { padding: 28px 32px; }
+  .discussion-q { display: grid; grid-template-columns: 32px 1fr; gap: 14px; margin-bottom: 22px; align-items: start; }
+  .discussion-q:last-child { margin-bottom: 0; }
+  .discussion-q .q-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--gold); line-height: 1; margin-top: -2px; }
+  .discussion-q p { font-family: 'Barlow', sans-serif; font-size: 16px; color: rgba(255,255,255,0.9); line-height: 1.55; }
+  .discussion-q p em { color: rgba(255,255,255,0.55); font-style: italic; font-size: 14px; display: block; margin-top: 4px; }
+
+  .page-footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 20px 40px; font-family: 'Barlow', sans-serif; font-size: 12px; text-align: center; letter-spacing: 1px; }
+
+  @media (max-width: 640px) {
+    .diagram-container, .contrast-grid, .money-diagram-container { grid-template-columns: 1fr; }
+    .hero { padding: 36px 20px 32px; }
+    .main { padding: 32px 16px 60px; }
+    .boeing-callout { grid-template-columns: 1fr; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-unit-tag">Unit 2 &middot; Markets &amp; Their Limits</div>
+    <h1>Profit Now,<br><span>Pain Later</span></h1>
+    <p class="hero-sub">Markets are powerful. The profit motive drives innovation, creates jobs, and raises living standards. But profit-seeking can also be short-sighted, and when it is, real people pay the price.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- DIAGRAM 1: WHO DOES A CORPORATION SERVE -->
+  <div class="diagram-section">
+    <div class="section-label">Core Concept</div>
+    <div class="section-title">Who Does a Corporation Serve?</div>
+    <p class="section-intro">In 1970, economist Milton Friedman published a famous essay arguing that corporations have exactly one obligation: maximize profit for their shareholders. That idea reshaped American business. But is it complete?</p>
+
+    <div class="diagram-container">
+      <div class="diagram-panel friedman">
+        <span class="diagram-panel-label">Friedman's View (1970)</span>
+        <p class="diagram-panel-quote">"The social responsibility of business is to increase its profits."</p>
+        <svg class="diagram-svg" viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(80,60)">
+            <rect x="10" y="-28" width="14" height="30" fill="#4a7fb5" rx="2"/>
+            <rect x="36" y="-18" width="14" height="20" fill="#4a7fb5" rx="2"/>
+            <circle cx="17" cy="-32" r="7" fill="rgba(200,220,255,0.25)"/>
+            <circle cx="22" cy="-42" r="5" fill="rgba(200,220,255,0.18)"/>
+            <circle cx="43" cy="-24" r="6" fill="rgba(200,220,255,0.2)"/>
+            <rect x="0" y="2" width="80" height="55" fill="#4a7fb5" rx="2"/>
+            <rect x="0" y="0" width="80" height="6" fill="#2c5f8a"/>
+            <rect x="8" y="14" width="14" height="14" fill="#aed6f1" rx="1"/>
+            <rect x="33" y="14" width="14" height="14" fill="#aed6f1" rx="1"/>
+            <rect x="58" y="14" width="14" height="14" fill="#aed6f1" rx="1"/>
+            <rect x="33" y="36" width="14" height="21" fill="#1a5276" rx="1"/>
+            <rect x="-10" y="57" width="100" height="3" fill="rgba(255,255,255,0.15)" rx="1"/>
+          </g>
+          <line x1="170" y1="120" x2="215" y2="100" stroke="#e8a020" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ag1)"/>
+          <circle cx="235" cy="93" r="26" fill="#e8a020"/>
+          <text x="235" y="88" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9" fill="#1a2744">SHARE-</text>
+          <text x="235" y="99" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9" fill="#1a2744">HOLDERS</text>
+          <text x="235" y="112" text-anchor="middle" font-family="Barlow,sans-serif" font-size="9" fill="#1a2744">Profit</text>
+          <text x="30" y="195" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Workers</text>
+          <text x="115" y="208" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Community</text>
+          <text x="210" y="200" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Customers</text>
+          <defs>
+            <marker id="ag1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#e8a020"/></marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="diagram-panel stakeholder">
+        <span class="diagram-panel-label">The Stakeholder View</span>
+        <p class="diagram-panel-quote">"A corporation's decisions affect far more than its investors."</p>
+        <svg class="diagram-svg" viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(100,70)">
+            <rect x="10" y="-28" width="14" height="30" fill="#4a90d9" rx="2"/>
+            <rect x="56" y="-18" width="14" height="20" fill="#4a90d9" rx="2"/>
+            <circle cx="17" cy="-33" r="7" fill="rgba(100,160,220,0.2)"/>
+            <circle cx="63" cy="-25" r="6" fill="rgba(100,160,220,0.18)"/>
+            <rect x="0" y="2" width="80" height="55" fill="#4a90d9" rx="2"/>
+            <rect x="0" y="0" width="80" height="6" fill="#2c6fad"/>
+            <rect x="8" y="14" width="14" height="14" fill="#aed6f1" rx="1"/>
+            <rect x="33" y="14" width="14" height="14" fill="#aed6f1" rx="1"/>
+            <rect x="58" y="14" width="14" height="14" fill="#aed6f1" rx="1"/>
+            <rect x="33" y="36" width="14" height="21" fill="#1a5276" rx="1"/>
+            <rect x="-10" y="57" width="100" height="3" fill="rgba(0,0,0,0.08)" rx="1"/>
+          </g>
+          <line x1="190" y1="105" x2="240" y2="68" stroke="#e8a020" stroke-width="2" stroke-linecap="round" marker-end="url(#ag2)"/>
+          <line x1="192" y1="118" x2="248" y2="120" stroke="#5dade2" stroke-width="2" stroke-linecap="round" marker-end="url(#ab2)"/>
+          <line x1="188" y1="132" x2="238" y2="168" stroke="#58d68d" stroke-width="2" stroke-linecap="round" marker-end="url(#agr2)"/>
+          <line x1="100" y1="100" x2="50" y2="65" stroke="#f1948a" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/>
+          <line x1="102" y1="128" x2="44" y2="168" stroke="#bb8fce" stroke-width="2" stroke-linecap="round" marker-end="url(#ap2)"/>
+          <circle cx="255" cy="58" r="22" fill="#e8a020"/>
+          <text x="255" y="54" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">SHARE-</text>
+          <text x="255" y="64" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">HOLDERS</text>
+          <circle cx="260" cy="120" r="22" fill="#5dade2"/>
+          <text x="260" y="116" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">WORKERS</text>
+          <circle cx="248" cy="178" r="22" fill="#58d68d"/>
+          <text x="248" y="174" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">COMMU-</text>
+          <text x="248" y="184" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">NITY</text>
+          <circle cx="32" cy="55" r="22" fill="#f1948a"/>
+          <text x="32" y="51" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">CUSTO-</text>
+          <text x="32" y="62" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">MERS</text>
+          <circle cx="30" cy="178" r="22" fill="#bb8fce"/>
+          <text x="30" y="174" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">FUTURE</text>
+          <defs>
+            <marker id="ag2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#e8a020"/></marker>
+            <marker id="ab2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#5dade2"/></marker>
+            <marker id="agr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#58d68d"/></marker>
+            <marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f1948a"/></marker>
+            <marker id="ap2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#bb8fce"/></marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="diagram-callout">
+      <p>Notice what's <strong>missing</strong> from Friedman's diagram. Workers, customers, communities, and the future don't appear at all. The video you watched showed what happens when companies take Friedman's idea to its extreme: profit gets extracted today, and everyone else absorbs the consequences later.</p>
+    </div>
+  </div>
+
+  <!-- REVIEW BOX 1: Recall -->
+  <div class="review-section">
+    <div class="section-label">Check Your Understanding</div>
+    <div class="section-title">Memory &amp; Recall</div>
+
+    <div class="review-box recall">
+      <div class="review-box-header">
+        <span class="box-icon">&#128250;</span>
+        <h3>Connecting to the Video</h3>
+        <span class="box-tag">Recall</span>
+      </div>
+      <div class="review-box-body">
+        <p>Use what you learned from the <em>Explained: The Stock Market</em> video to answer these questions.</p>
+        <ol>
+          <li>In one sentence, explain Friedman's philosophy about what corporations owe to society.<br><span class="answer-line"></span><span class="answer-line"></span></li>
+          <li>CEO pay is increasingly tied to stock price. Does this push executives toward <strong>short-term</strong> or <strong>long-term</strong> thinking? Explain why in one sentence.<br><span class="answer-line"></span><span class="answer-line"></span></li>
+          <li>From 2007 to 2016, what did large corporations do with most of their earnings instead of reinvesting them in the business?<br><span class="answer-line"></span><span class="answer-line"></span></li>
+          <li>Look at the two diagrams above. Which one matches Friedman's view? What is the key difference between the two?<br><span class="answer-line"></span><span class="answer-line"></span></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- REVIEW BOX 2: Apply -->
+    <div class="review-box apply">
+      <div class="review-box-header">
+        <span class="box-icon">&#128269;</span>
+        <h3>Apply the Concept</h3>
+        <span class="box-tag">Application</span>
+      </div>
+      <div class="review-box-body">
+        <p>Read the passage below, then answer the questions.</p>
+        <div class="passage-box">
+          In 2005, private equity firms KKR and Bain Capital bought Toys "R" Us for $7.5 billion. Most of that purchase price was borrowed, and the debt was placed on Toys "R" Us itself, not on the firms that bought it. The company spent roughly $400 million a year just on interest payments. When Amazon began competing aggressively in toys, Toys "R" Us had no money left to build a website, upgrade its stores, or adapt. It declared bankruptcy in 2017. About 33,000 workers lost their jobs. KKR and Bain had already collected hundreds of millions in management fees.
+        </div>
+        <ol>
+          <li>Who took on the financial risk in this deal: the private equity firms or Toys "R" Us? How do you know?<br><span class="answer-line"></span><span class="answer-line"></span></li>
+          <li>The video explained that companies stopped reinvesting earnings and started returning cash to shareholders instead. How does the Toys "R" Us story illustrate this same problem?<br><span class="answer-line"></span><span class="answer-line"></span><span class="answer-line"></span></li>
+          <li>Using the stakeholder diagram on this page, identify <strong>two groups</strong> that were harmed by the Toys "R" Us collapse and explain how.<br><span class="answer-line"></span><span class="answer-line"></span><span class="answer-line"></span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTRAST: TRU vs LEGO -->
+  <div class="contrast-section">
+    <div class="section-label">Two Companies, Two Outcomes</div>
+    <div class="section-title">The Short Game vs. The Long Game</div>
+    <p style="margin-bottom:24px; color:var(--mid-gray); font-size:16px;">In the early 2000s, both Toys "R" Us and LEGO were struggling toy companies. One was taken over by investors focused on short-term returns. The other was family-owned and made long-term bets on its own product. The outcomes could not be more different.</p>
+
+    <div class="contrast-grid">
+      <div class="contrast-card tru">
+        <div class="contrast-card-label">Short-Term Extraction</div>
+        <h4>Toys "R" Us</h4>
+        <p>Bought in a leveraged buyout in 2005. Debt was loaded onto the company. Management fees flowed to investors. With no capital left to invest, the company could not compete with Amazon or modernize its stores.</p>
+        <p>When it mattered most, there was no money to adapt. The company was not defeated by the market; it was hollowed out before the fight even started.</p>
+        <span class="contrast-stat">&#10060; Bankrupt 2017 &middot; 33,000 jobs lost</span>
+      </div>
+      <div class="contrast-card lego">
+        <div class="contrast-card-label">Long-Term Reinvestment</div>
+        <h4>LEGO</h4>
+        <p>Also nearly bankrupt in 2003, after chasing licensing deals and rapid expansion. But as a family-owned company, there was no hedge fund demanding a quick payout. Leadership pulled back, reinvested in designers and core products, and trusted the long-term vision.</p>
+        <p>The bet paid off. LEGO did not cut its way to survival; it built its way there.</p>
+        <span class="contrast-stat">&#10003; World's largest toy company today</span>
+      </div>
+    </div>
+
+    <div class="contrast-note">
+      <strong>The key difference was not luck or the market.</strong> It was the time horizon of the people making decisions, and who they felt accountable to.
+    </div>
+  </div>
+
+  <!-- DIAGRAM 2: WHERE DOES THE MONEY GO -->
+  <div class="money-diagram-section">
+    <div class="section-label">Follow the Money</div>
+    <div class="section-title">Where Does Corporate Profit Actually Go?</div>
+    <p class="section-intro">When a company makes money, it has a choice: extract it now, or invest it for later. That single decision shapes whether the company survives, whether workers get raises, and whether a community keeps its jobs.</p>
+
+    <div class="money-diagram-container">
+      <!-- LEFT: Extraction -->
+      <div class="money-panel extraction">
+        <span class="money-panel-label">Shareholder-First Model</span>
+        <div class="money-panel-title" style="color:#e8a020;">Money Flows Out</div>
+        <svg class="money-svg" viewBox="0 0 320 295" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="160" cy="52" rx="56" ry="28" fill="#e8a020"/>
+          <text x="160" y="47" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#1a2744">CORPORATE</text>
+          <text x="160" y="61" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#1a2744">PROFIT</text>
+
+          <line x1="115" y1="70" x2="50" y2="112" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr1)"/>
+          <line x1="138" y1="78" x2="82" y2="158" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr2)"/>
+          <line x1="160" y1="80" x2="160" y2="158" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr3)"/>
+          <line x1="182" y1="78" x2="238" y2="158" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr4)"/>
+          <line x1="205" y1="70" x2="268" y2="112" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr5)"/>
+
+          <rect x="2" y="112" width="100" height="40" rx="3" fill="#c0392b"/>
+          <text x="52" y="128" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">STOCK</text>
+          <text x="52" y="143" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">BUYBACKS</text>
+
+          <rect x="38" y="160" width="92" height="40" rx="3" fill="#c0392b"/>
+          <text x="84" y="176" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">CEO PAY</text>
+          <text x="84" y="191" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">&amp; BONUSES</text>
+
+          <rect x="110" y="160" width="100" height="40" rx="3" fill="#c0392b"/>
+          <text x="160" y="176" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">SHAREHOLDER</text>
+          <text x="160" y="191" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">DIVIDENDS</text>
+
+          <rect x="188" y="160" width="92" height="40" rx="3" fill="#c0392b"/>
+          <text x="234" y="176" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">DEBT</text>
+          <text x="234" y="191" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">SERVICING</text>
+
+          <rect x="216" y="112" width="100" height="40" rx="3" fill="#c0392b"/>
+          <text x="266" y="128" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">MGMT</text>
+          <text x="266" y="143" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">FEES</text>
+
+          <text x="160" y="232" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#e8a020">RESULT:</text>
+          <text x="160" y="252" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="rgba(255,255,255,0.7)">No money left to adapt,</text>
+          <text x="160" y="270" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="rgba(255,255,255,0.7)">innovate, or compete.</text>
+
+          <defs>
+            <marker id="mr1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+            <marker id="mr2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+            <marker id="mr3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+            <marker id="mr4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+            <marker id="mr5" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- RIGHT: Reinvestment -->
+      <div class="money-panel reinvestment">
+        <span class="money-panel-label">Stakeholder Model</span>
+        <div class="money-panel-title" style="color:#2e7d4f;">Money Flows Back In</div>
+        <svg class="money-svg" viewBox="0 0 320 295" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="160" cy="52" rx="56" ry="28" fill="#2e7d4f"/>
+          <text x="160" y="47" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="white">CORPORATE</text>
+          <text x="160" y="61" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="white">PROFIT</text>
+
+          <line x1="115" y1="70" x2="50" y2="112" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg1)"/>
+          <line x1="138" y1="78" x2="82" y2="158" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg2)"/>
+          <line x1="160" y1="80" x2="160" y2="158" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg3)"/>
+          <line x1="182" y1="78" x2="238" y2="158" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg4)"/>
+          <line x1="205" y1="70" x2="268" y2="112" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg5)"/>
+
+          <rect x="2" y="112" width="100" height="40" rx="3" fill="#2e7d4f"/>
+          <text x="52" y="128" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">WORKER</text>
+          <text x="52" y="143" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">WAGES</text>
+
+          <rect x="38" y="160" width="92" height="40" rx="3" fill="#2e7d4f"/>
+          <text x="84" y="176" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">R&amp;D /</text>
+          <text x="84" y="191" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">INNOVATION</text>
+
+          <rect x="110" y="160" width="100" height="40" rx="3" fill="#2e7d4f"/>
+          <text x="160" y="176" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">NEW</text>
+          <text x="160" y="191" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">EQUIPMENT</text>
+
+          <rect x="188" y="160" width="92" height="40" rx="3" fill="#2e7d4f"/>
+          <text x="234" y="176" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">WORKER</text>
+          <text x="234" y="191" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">TRAINING</text>
+
+          <rect x="216" y="112" width="100" height="40" rx="3" fill="#2e7d4f"/>
+          <text x="266" y="128" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">COMMUNITY</text>
+          <text x="266" y="143" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">INVESTMENT</text>
+
+          <text x="160" y="232" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#2e7d4f">RESULT:</text>
+          <text x="160" y="252" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="#444">Stronger company, better jobs,</text>
+          <text x="160" y="270" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="#444">healthier community.</text>
+
+          <defs>
+            <marker id="mg1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+            <marker id="mg2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+            <marker id="mg3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+            <marker id="mg4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+            <marker id="mg5" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="money-callout">
+      <strong>The Boeing number:</strong> In the years before the 737 Max crashes, Boeing spent $43 billion on stock buybacks vs. $15 billion on research and development. That ratio is the extraction model in one statistic. The same logic played out at Toys "R" Us, where debt servicing and management fees consumed what should have been investment capital.
+    </div>
+  </div>
+
+  <!-- BOEING CALLOUT -->
+  <div class="section-label">When It Gets Worse</div>
+  <div class="section-title" style="margin-bottom:16px;">Short-Termism at Its Most Extreme</div>
+  <div class="boeing-callout">
+    <div class="callout-icon">&#9992;&#65039;</div>
+    <div>
+      <h4>Boeing: When Cost-Cutting Kills</h4>
+      <p>You remember the Boeing 737 Max crashes of 2018 and 2019. <strong>346 people died.</strong> Investigations traced the cause to a cost-cutting culture that had taken over Boeing after its 1997 merger with McDonnell Douglas, a company run by financial managers, not engineers.</p>
+      <p>In the years before the crashes, Boeing spent <strong>$43 billion on stock buybacks</strong>, returning cash to shareholders, compared to $15 billion on research and development. The board approved another $20 billion in buybacks just two months after the first crash.</p>
+      <p>Toys "R" Us cost 33,000 people their jobs. Boeing's version of the same logic cost 346 people their lives. The Friedman doctrine does not come with a natural stopping point.</p>
+    </div>
+  </div>
+
+  <!-- DISCUSSION QUESTIONS -->
+  <div class="discussion-section">
+    <div class="discussion-header">
+      <span style="font-size:20px;">&#128172;</span>
+      <h3>Discussion Questions</h3>
+    </div>
+    <div class="discussion-body">
+      <div class="discussion-q">
+        <span class="q-num">1</span>
+        <p>The reading argues that Toys "R" Us was not defeated by the market; it was hollowed out before the fight started. Do you agree? Could the company have survived if it had been managed differently?
+          <em>Think about: what would have had to change, and who would have had to make different decisions?</em>
+        </p>
+      </div>
+      <div class="discussion-q">
+        <span class="q-num">2</span>
+        <p>LEGO and Toys "R" Us were both struggling toy companies at roughly the same time. One was privately owned; one was bought by investors. Is it fair to say the ownership structure caused the difference in outcomes, or are there other explanations?</p>
+      </div>
+      <div class="discussion-q">
+        <span class="q-num">3</span>
+        <p>Look at the money flow diagram. Which destinations on the left panel, if any, could still help a company grow stronger? Which ones simply move money away from the business entirely?
+          <em>Think about: is there any version of the extraction model that is still good for the company's long-term health?</em>
+        </p>
+      </div>
+      <div class="discussion-q">
+        <span class="q-num">4</span>
+        <p>Here's the hard question: <strong>How do you get corporations to take the long view?</strong> If CEO pay tied to stock price encourages short-termism, what would you tie it to instead? Is there a policy answer here, or does it require a cultural shift?
+          <em>There is no clean answer. That's the point.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  Blue Valley Academy &middot; Intro to Economics &middot; Unit 2: Markets &amp; Their Limits
+</div>
+
+</body>
+</html>
