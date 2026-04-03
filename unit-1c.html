@@ -19,6 +19,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'News Cycle', serif; background: var(--cream); color: var(--dark); font-size: 17px; line-height: 1.65; }
 
+  /* HERO */
   .hero { background: var(--navy); color: var(--white); padding: 56px 40px 48px; position: relative; overflow: hidden; }
   .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px); }
   .hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
@@ -28,7 +29,6 @@
   .hero-sub { font-family: 'Barlow', sans-serif; font-size: 17px; color: rgba(255,255,255,0.75); max-width: 600px; line-height: 1.5; border-left: 3px solid var(--gold); padding-left: 16px; }
 
   .main { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
-
   .section-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-bottom: 6px; }
   .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--navy); letter-spacing: 1px; margin-bottom: 20px; line-height: 1; }
   .section-intro { font-size: 16px; color: var(--mid-gray); margin-bottom: 28px; max-width: 700px; }
@@ -66,9 +66,8 @@
   .review-box-body p { margin-bottom: 14px; font-size: 16px; line-height: 1.6; }
   .review-box-body p:last-child { margin-bottom: 0; }
   .review-box-body ol { padding-left: 22px; margin-bottom: 0; }
-  .review-box-body li { margin-bottom: 10px; font-size: 16px; line-height: 1.55; }
+  .review-box-body li { margin-bottom: 8px; font-size: 16px; line-height: 1.55; }
   .review-box-body li:last-child { margin-bottom: 0; }
-  .answer-line { display: block; border-bottom: 1px solid #bbb; height: 26px; margin-top: 4px; margin-bottom: 10px; }
   .passage-box { background: white; border-left: 4px solid var(--red); padding: 16px 18px; margin: 16px 0; border-radius: 2px; font-size: 15px; color: #333; line-height: 1.65; }
 
   /* CONTRAST */
@@ -152,10 +151,21 @@
     <p class="section-intro">In 1970, economist Milton Friedman published a famous essay arguing that corporations have exactly one obligation: maximize profit for their shareholders. That idea reshaped American business. But is it complete?</p>
 
     <div class="diagram-container">
+
+      <!-- FRIEDMAN PANEL -->
+      <!-- 
+        Arrow fix: factory right edge is at x=170 (translate 80 + rect width 80 + margin 10).
+        Shareholder circle center cx=235, r=26, so left edge at x=209.
+        Arrow goes from x=172 to x=207 — 2px clear of both edges.
+      -->
       <div class="diagram-panel friedman">
         <span class="diagram-panel-label">Friedman's View (1970)</span>
         <p class="diagram-panel-quote">"The social responsibility of business is to increase its profits."</p>
         <svg class="diagram-svg" viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ag1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#e8a020"/></marker>
+          </defs>
+          <!-- Factory group: body right edge at x=80+80=160 in local coords, translated to x=80+80=160 absolute -->
           <g transform="translate(80,60)">
             <rect x="10" y="-28" width="14" height="30" fill="#4a7fb5" rx="2"/>
             <rect x="36" y="-18" width="14" height="20" fill="#4a7fb5" rx="2"/>
@@ -170,24 +180,44 @@
             <rect x="33" y="36" width="14" height="21" fill="#1a5276" rx="1"/>
             <rect x="-10" y="57" width="100" height="3" fill="rgba(255,255,255,0.15)" rx="1"/>
           </g>
-          <line x1="170" y1="120" x2="215" y2="100" stroke="#e8a020" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ag1)"/>
-          <circle cx="235" cy="93" r="26" fill="#e8a020"/>
-          <text x="235" y="88" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9" fill="#1a2744">SHARE-</text>
-          <text x="235" y="99" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9" fill="#1a2744">HOLDERS</text>
-          <text x="235" y="112" text-anchor="middle" font-family="Barlow,sans-serif" font-size="9" fill="#1a2744">Profit</text>
-          <text x="30" y="195" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Workers</text>
-          <text x="115" y="208" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Community</text>
-          <text x="210" y="200" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Customers</text>
-          <defs>
-            <marker id="ag1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#e8a020"/></marker>
-          </defs>
+          <!-- Arrow: from right edge of factory (x=162) to left edge of circle (x=209), both y=100 ish -->
+          <line x1="163" y1="105" x2="207" y2="93" stroke="#e8a020" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ag1)"/>
+          <!-- Shareholder circle: cx=235, r=26 -->
+          <circle cx="235" cy="90" r="26" fill="#e8a020"/>
+          <text x="235" y="85" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9" fill="#1a2744">SHARE-</text>
+          <text x="235" y="96" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9" fill="#1a2744">HOLDERS</text>
+          <text x="235" y="108" text-anchor="middle" font-family="Barlow,sans-serif" font-size="9" fill="#1a2744">Profit</text>
+          <!-- Ghost labels for absent stakeholders -->
+          <text x="30" y="192" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Workers</text>
+          <text x="115" y="207" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Community</text>
+          <text x="210" y="198" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10" fill="rgba(255,255,255,0.18)">Customers</text>
         </svg>
       </div>
 
+      <!-- STAKEHOLDER PANEL -->
+      <!--
+        Factory group translated (100,70): body spans local x=0..80, so absolute x=100..180. 
+        Right edge x=182. Left edge x=100.
+        Circles: r=22 each.
+          Shareholders: cx=255, left edge=233. Arrow ends at x=231 (2px buffer).
+          Workers: cx=260, left edge=238. Arrow ends at x=236.
+          Community: cx=248, left edge=226. Arrow ends at x=224.
+          Customers: cx=32, right edge=54. Arrow starts at x=98 (factory left=100, minus 2).
+          Future: cx=30, right edge=52. Arrow starts at x=98.
+        Arrow origins all start 2px outside factory edges.
+      -->
       <div class="diagram-panel stakeholder">
         <span class="diagram-panel-label">The Stakeholder View</span>
         <p class="diagram-panel-quote">"A corporation's decisions affect far more than its investors."</p>
         <svg class="diagram-svg" viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ag2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#e8a020"/></marker>
+            <marker id="ab2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#5dade2"/></marker>
+            <marker id="agr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#58d68d"/></marker>
+            <marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f1948a"/></marker>
+            <marker id="ap2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#bb8fce"/></marker>
+          </defs>
+          <!-- Factory group -->
           <g transform="translate(100,70)">
             <rect x="10" y="-28" width="14" height="30" fill="#4a90d9" rx="2"/>
             <rect x="56" y="-18" width="14" height="20" fill="#4a90d9" rx="2"/>
@@ -201,31 +231,39 @@
             <rect x="33" y="36" width="14" height="21" fill="#1a5276" rx="1"/>
             <rect x="-10" y="57" width="100" height="3" fill="rgba(0,0,0,0.08)" rx="1"/>
           </g>
-          <line x1="190" y1="105" x2="240" y2="68" stroke="#e8a020" stroke-width="2" stroke-linecap="round" marker-end="url(#ag2)"/>
-          <line x1="192" y1="118" x2="248" y2="120" stroke="#5dade2" stroke-width="2" stroke-linecap="round" marker-end="url(#ab2)"/>
-          <line x1="188" y1="132" x2="238" y2="168" stroke="#58d68d" stroke-width="2" stroke-linecap="round" marker-end="url(#agr2)"/>
-          <line x1="100" y1="100" x2="50" y2="65" stroke="#f1948a" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/>
-          <line x1="102" y1="128" x2="44" y2="168" stroke="#bb8fce" stroke-width="2" stroke-linecap="round" marker-end="url(#ap2)"/>
-          <circle cx="255" cy="58" r="22" fill="#e8a020"/>
-          <text x="255" y="54" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">SHARE-</text>
-          <text x="255" y="64" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">HOLDERS</text>
-          <circle cx="260" cy="120" r="22" fill="#5dade2"/>
-          <text x="260" y="116" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">WORKERS</text>
-          <circle cx="248" cy="178" r="22" fill="#58d68d"/>
-          <text x="248" y="174" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">COMMU-</text>
-          <text x="248" y="184" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">NITY</text>
+
+          <!-- Arrows: all start 2px outside factory, end 2px outside target circle -->
+          <!-- Shareholders upper-right: from factory right (x=182, y=95) to circle left (x=231, y=58) -->
+          <line x1="184" y1="96" x2="231" y2="61" stroke="#e8a020" stroke-width="2" stroke-linecap="round" marker-end="url(#ag2)"/>
+          <!-- Workers right: from factory right (x=182, y=115) to circle left (x=236, y=118) -->
+          <line x1="184" y1="115" x2="236" y2="118" stroke="#5dade2" stroke-width="2" stroke-linecap="round" marker-end="url(#ab2)"/>
+          <!-- Community lower-right: from factory right (x=182, y=130) to circle left (x=224, y=168) -->
+          <line x1="184" y1="130" x2="224" y2="166" stroke="#58d68d" stroke-width="2" stroke-linecap="round" marker-end="url(#agr2)"/>
+          <!-- Customers upper-left: from factory left (x=98, y=95) to circle right (x=56, y=58) -->
+          <line x1="98" y1="95" x2="56" y2="61" stroke="#f1948a" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/>
+          <!-- Future lower-left: from factory left (x=98, y=118) to circle right (x=54, y=165) -->
+          <line x1="98" y1="118" x2="54" y2="163" stroke="#bb8fce" stroke-width="2" stroke-linecap="round" marker-end="url(#ap2)"/>
+
+          <!-- Stakeholder circles — drawn AFTER arrows so they sit on top cleanly -->
+          <circle cx="255" cy="55" r="22" fill="#e8a020"/>
+          <text x="255" y="50" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">SHARE-</text>
+          <text x="255" y="61" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">HOLDERS</text>
+
+          <circle cx="260" cy="118" r="22" fill="#5dade2"/>
+          <text x="260" y="113" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">WORKERS</text>
+          <text x="260" y="124" text-anchor="middle" font-family="Barlow,sans-serif" font-size="8" fill="white">&#128119;</text>
+
+          <circle cx="246" cy="178" r="22" fill="#58d68d"/>
+          <text x="246" y="173" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">COMMU-</text>
+          <text x="246" y="184" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="#1a2744">NITY</text>
+
           <circle cx="32" cy="55" r="22" fill="#f1948a"/>
-          <text x="32" y="51" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">CUSTO-</text>
-          <text x="32" y="62" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">MERS</text>
-          <circle cx="30" cy="178" r="22" fill="#bb8fce"/>
-          <text x="30" y="174" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">FUTURE</text>
-          <defs>
-            <marker id="ag2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#e8a020"/></marker>
-            <marker id="ab2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#5dade2"/></marker>
-            <marker id="agr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#58d68d"/></marker>
-            <marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f1948a"/></marker>
-            <marker id="ap2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#bb8fce"/></marker>
-          </defs>
+          <text x="32" y="50" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">CUSTO-</text>
+          <text x="32" y="61" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">MERS</text>
+
+          <circle cx="30" cy="175" r="22" fill="#bb8fce"/>
+          <text x="30" y="170" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="8" fill="white">FUTURE</text>
+          <text x="30" y="181" text-anchor="middle" font-family="Barlow,sans-serif" font-size="8" fill="white">&#127807;</text>
         </svg>
       </div>
     </div>
@@ -249,10 +287,10 @@
       <div class="review-box-body">
         <p>Use what you learned from the <em>Explained: The Stock Market</em> video to answer these questions.</p>
         <ol>
-          <li>In one sentence, explain Friedman's philosophy about what corporations owe to society.<br><span class="answer-line"></span><span class="answer-line"></span></li>
-          <li>CEO pay is increasingly tied to stock price. Does this push executives toward <strong>short-term</strong> or <strong>long-term</strong> thinking? Explain why in one sentence.<br><span class="answer-line"></span><span class="answer-line"></span></li>
-          <li>From 2007 to 2016, what did large corporations do with most of their earnings instead of reinvesting them in the business?<br><span class="answer-line"></span><span class="answer-line"></span></li>
-          <li>Look at the two diagrams above. Which one matches Friedman's view? What is the key difference between the two?<br><span class="answer-line"></span><span class="answer-line"></span></li>
+          <li>In one sentence, explain Friedman's philosophy about what corporations owe to society.</li>
+          <li>CEO pay is increasingly tied to stock price. Does this push executives toward <strong>short-term</strong> or <strong>long-term</strong> thinking? Explain why in one sentence.</li>
+          <li>From 2007 to 2016, what did large corporations do with most of their earnings instead of reinvesting them in the business?</li>
+          <li>Look at the two diagrams above. Which one matches Friedman's view? What is the key difference between the two?</li>
         </ol>
       </div>
     </div>
@@ -267,12 +305,12 @@
       <div class="review-box-body">
         <p>Read the passage below, then answer the questions.</p>
         <div class="passage-box">
-          In 2005, private equity firms KKR and Bain Capital bought Toys "R" Us for $7.5 billion. Most of that purchase price was borrowed, and the debt was placed on Toys "R" Us itself, not on the firms that bought it. The company spent roughly $400 million a year just on interest payments. When Amazon began competing aggressively in toys, Toys "R" Us had no money left to build a website, upgrade its stores, or adapt. It declared bankruptcy in 2017. About 33,000 workers lost their jobs. KKR and Bain had already collected hundreds of millions in management fees.
+          In 2005, private equity firms KKR and Bain Capital bought Toys "R" Us for $6.6 billion. Most of that purchase price was borrowed, and the debt was placed on Toys "R" Us itself, not on the firms that bought it. The company spent between $400 and $500 million a year just on interest payments. When Amazon began competing aggressively in toys, Toys "R" Us had no money left to build a website, upgrade its stores, or adapt. It declared bankruptcy in 2017. About 33,000 workers lost their jobs. KKR and Bain had already collected hundreds of millions in management fees. <em style="font-size:13px; color:#888; display:block; margin-top:8px;">Sources: Bloomberg, 2017; Americans for Financial Reform, 2018; The Week, 2018</em>
         </div>
         <ol>
-          <li>Who took on the financial risk in this deal: the private equity firms or Toys "R" Us? How do you know?<br><span class="answer-line"></span><span class="answer-line"></span></li>
-          <li>The video explained that companies stopped reinvesting earnings and started returning cash to shareholders instead. How does the Toys "R" Us story illustrate this same problem?<br><span class="answer-line"></span><span class="answer-line"></span><span class="answer-line"></span></li>
-          <li>Using the stakeholder diagram on this page, identify <strong>two groups</strong> that were harmed by the Toys "R" Us collapse and explain how.<br><span class="answer-line"></span><span class="answer-line"></span><span class="answer-line"></span></li>
+          <li>Who took on the financial risk in this deal: the private equity firms or Toys "R" Us? How do you know?</li>
+          <li>The video explained that companies stopped reinvesting earnings and started returning cash to shareholders instead. How does the Toys "R" Us story illustrate this same problem?</li>
+          <li>Using the stakeholder diagram on this page, identify <strong>two groups</strong> that were harmed by the Toys "R" Us collapse and explain how.</li>
         </ol>
       </div>
     </div>
@@ -300,7 +338,6 @@
         <span class="contrast-stat">&#10003; World's largest toy company today</span>
       </div>
     </div>
-
     <div class="contrast-note">
       <strong>The key difference was not luck or the market.</strong> It was the time horizon of the people making decisions, and who they felt accountable to.
     </div>
@@ -313,21 +350,43 @@
     <p class="section-intro">When a company makes money, it has a choice: extract it now, or invest it for later. That single decision shapes whether the company survives, whether workers get raises, and whether a community keeps its jobs.</p>
 
     <div class="money-diagram-container">
+
       <!-- LEFT: Extraction -->
+      <!--
+        Ellipse center (160,52) rx=56, so right edge x=216, left edge x=104, bottom y=80.
+        Destination boxes: arrows end 2px above top edge of each box.
+        Box tops: upper boxes y=112 so arrow ends y=110. Lower boxes y=160, ends y=158.
+        Arrow origins: all start at y=80 (bottom of ellipse) with x spread to fan out.
+      -->
       <div class="money-panel extraction">
         <span class="money-panel-label">Shareholder-First Model</span>
         <div class="money-panel-title" style="color:#e8a020;">Money Flows Out</div>
         <svg class="money-svg" viewBox="0 0 320 295" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="mr1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+            <marker id="mr2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+            <marker id="mr3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+            <marker id="mr4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+            <marker id="mr5" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
+          </defs>
+          <!-- Central ellipse -->
           <ellipse cx="160" cy="52" rx="56" ry="28" fill="#e8a020"/>
           <text x="160" y="47" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#1a2744">CORPORATE</text>
           <text x="160" y="61" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#1a2744">PROFIT</text>
 
-          <line x1="115" y1="70" x2="50" y2="112" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr1)"/>
-          <line x1="138" y1="78" x2="82" y2="158" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr2)"/>
+          <!-- Arrows from ellipse bottom, fanning to 5 destinations -->
+          <!-- Far left: to Stock Buybacks box center x=52, top=112 -->
+          <line x1="118" y1="78" x2="52" y2="110" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr1)"/>
+          <!-- Mid-left: to CEO Pay box center x=84, top=160 -->
+          <line x1="142" y1="79" x2="84" y2="158" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr2)"/>
+          <!-- Center: to Dividends box center x=160, top=160 -->
           <line x1="160" y1="80" x2="160" y2="158" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr3)"/>
-          <line x1="182" y1="78" x2="238" y2="158" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr4)"/>
-          <line x1="205" y1="70" x2="268" y2="112" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr5)"/>
+          <!-- Mid-right: to Debt box center x=234, top=160 -->
+          <line x1="178" y1="79" x2="234" y2="158" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr4)"/>
+          <!-- Far right: to Mgmt Fees box center x=266, top=112 -->
+          <line x1="202" y1="78" x2="266" y2="110" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mr5)"/>
 
+          <!-- Destination boxes — drawn after arrows -->
           <rect x="2" y="112" width="100" height="40" rx="3" fill="#c0392b"/>
           <text x="52" y="128" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">STOCK</text>
           <text x="52" y="143" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">BUYBACKS</text>
@@ -348,17 +407,9 @@
           <text x="266" y="128" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">MGMT</text>
           <text x="266" y="143" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">FEES</text>
 
-          <text x="160" y="232" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#e8a020">RESULT:</text>
-          <text x="160" y="252" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="rgba(255,255,255,0.7)">No money left to adapt,</text>
-          <text x="160" y="270" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="rgba(255,255,255,0.7)">innovate, or compete.</text>
-
-          <defs>
-            <marker id="mr1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
-            <marker id="mr2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
-            <marker id="mr3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
-            <marker id="mr4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
-            <marker id="mr5" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c0392b"/></marker>
-          </defs>
+          <text x="160" y="230" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#e8a020">RESULT:</text>
+          <text x="160" y="250" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="rgba(255,255,255,0.7)">No money left to adapt,</text>
+          <text x="160" y="268" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="rgba(255,255,255,0.7)">innovate, or compete.</text>
         </svg>
       </div>
 
@@ -367,16 +418,24 @@
         <span class="money-panel-label">Stakeholder Model</span>
         <div class="money-panel-title" style="color:#2e7d4f;">Money Flows Back In</div>
         <svg class="money-svg" viewBox="0 0 320 295" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="mg1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+            <marker id="mg2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+            <marker id="mg3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+            <marker id="mg4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+            <marker id="mg5" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
+          </defs>
           <ellipse cx="160" cy="52" rx="56" ry="28" fill="#2e7d4f"/>
           <text x="160" y="47" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="white">CORPORATE</text>
           <text x="160" y="61" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="white">PROFIT</text>
 
-          <line x1="115" y1="70" x2="50" y2="112" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg1)"/>
-          <line x1="138" y1="78" x2="82" y2="158" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg2)"/>
+          <line x1="118" y1="78" x2="52" y2="110" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg1)"/>
+          <line x1="142" y1="79" x2="84" y2="158" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg2)"/>
           <line x1="160" y1="80" x2="160" y2="158" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg3)"/>
-          <line x1="182" y1="78" x2="238" y2="158" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg4)"/>
-          <line x1="205" y1="70" x2="268" y2="112" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg5)"/>
+          <line x1="178" y1="79" x2="234" y2="158" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg4)"/>
+          <line x1="202" y1="78" x2="266" y2="110" stroke="#2e7d4f" stroke-width="2.5" stroke-linecap="round" marker-end="url(#mg5)"/>
 
+          <!-- Destination boxes — drawn after arrows -->
           <rect x="2" y="112" width="100" height="40" rx="3" fill="#2e7d4f"/>
           <text x="52" y="128" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">WORKER</text>
           <text x="52" y="143" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">WAGES</text>
@@ -397,23 +456,15 @@
           <text x="266" y="128" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">COMMUNITY</text>
           <text x="266" y="143" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="9.5" fill="white">INVESTMENT</text>
 
-          <text x="160" y="232" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#2e7d4f">RESULT:</text>
-          <text x="160" y="252" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="#444">Stronger company, better jobs,</text>
-          <text x="160" y="270" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="#444">healthier community.</text>
-
-          <defs>
-            <marker id="mg1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
-            <marker id="mg2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
-            <marker id="mg3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
-            <marker id="mg4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
-            <marker id="mg5" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2e7d4f"/></marker>
-          </defs>
+          <text x="160" y="230" text-anchor="middle" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="#2e7d4f">RESULT:</text>
+          <text x="160" y="250" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="#444">Stronger company, better jobs,</text>
+          <text x="160" y="268" text-anchor="middle" font-family="Barlow,sans-serif" font-size="10.5" fill="#444">healthier community.</text>
         </svg>
       </div>
     </div>
 
     <div class="money-callout">
-      <strong>The Boeing number:</strong> In the years before the 737 Max crashes, Boeing spent $43 billion on stock buybacks vs. $15 billion on research and development. That ratio is the extraction model in one statistic. The same logic played out at Toys "R" Us, where debt servicing and management fees consumed what should have been investment capital.
+      <strong>The Boeing number:</strong> In the years before the 737 Max crashes, Boeing spent $43.4 billion on stock buybacks vs. $15.7 billion on research and development. (Fortune, Feb. 2020.) That ratio is the extraction model in one statistic. The same logic played out at Toys "R" Us, where debt servicing and management fees consumed what should have been investment capital.
     </div>
   </div>
 
@@ -425,7 +476,7 @@
     <div>
       <h4>Boeing: When Cost-Cutting Kills</h4>
       <p>You remember the Boeing 737 Max crashes of 2018 and 2019. <strong>346 people died.</strong> Investigations traced the cause to a cost-cutting culture that had taken over Boeing after its 1997 merger with McDonnell Douglas, a company run by financial managers, not engineers.</p>
-      <p>In the years before the crashes, Boeing spent <strong>$43 billion on stock buybacks</strong>, returning cash to shareholders, compared to $15 billion on research and development. The board approved another $20 billion in buybacks just two months after the first crash.</p>
+      <p>In the years before the crashes, Boeing spent <strong>$43.4 billion on stock buybacks</strong>, returning cash to shareholders, compared to $15.7 billion on research and development. The board approved another $20 billion in buybacks just two months after the first crash. (Fortune, Feb. 2020.)</p>
       <p>Toys "R" Us cost 33,000 people their jobs. Boeing's version of the same logic cost 346 people their lives. The Friedman doctrine does not come with a natural stopping point.</p>
     </div>
   </div>
@@ -460,6 +511,16 @@
         </p>
       </div>
     </div>
+  </div>
+
+  <!-- SOURCES -->
+  <div style="border-top: 1px solid #ccc; padding-top: 20px; font-family: 'Barlow', sans-serif; font-size: 13px; color: #888; line-height: 1.7;">
+    <strong style="color:#555; display:block; margin-bottom:6px;">Sources</strong>
+    Bloomberg. "Bain, KKR, Vornado Suffer Wipeout in Toys 'R' Us Bankruptcy." Sept. 19, 2017. &nbsp;|&nbsp;
+    Americans for Financial Reform. "Toys 'R' Us and Taking on Private Equity Predation." 2018. &nbsp;|&nbsp;
+    The Week. "How vulture capitalists ate Toys 'R' Us." March 2018. &nbsp;|&nbsp;
+    History for Operators. "How LEGO Nearly Collapsed and Staged One of the Greatest Turnarounds in Business History." 2025. &nbsp;|&nbsp;
+    Fortune. "Boeing's 737 Max Crisis Was Fueled by a Shareholder-First Company Culture." Feb. 2020.
   </div>
 
 </div>
