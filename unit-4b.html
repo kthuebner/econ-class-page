@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 4 · Interactive Reference — Market Failures</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #f0eeeb;
+    --surface: #ffffff;
+    --surface2: #f5f3f0;
+    --border: #d4cfc8;
+    --border-dark: #b8b0a6;
+    --accent: #ee9334;
+    --accent-dark: #c97620;
+    --text: #1e1e1e;
+    --muted: #5a5450;
+    --muted-light: #8a8480;
+    --green: #1e7a40;
+    --green-light: #27a050;
+    --green-bg: #edf7f0;
+    --red: #9e1c1c;
+    --red-light: #c0392b;
+    --red-bg: #fdf0f0;
+    --blue: #1a5e8a;
+    --blue-light: #2980b9;
+    --charcoal: #2d2d2d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    background-image:
+      radial-gradient(circle, rgba(0,0,0,0.055) 1px, transparent 1px);
+    background-size: 18px 18px;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at top left, rgba(130,120,108,0.38) 0%, transparent 100%),
+      radial-gradient(ellipse 60% 60% at top right, rgba(130,120,108,0.38) 0%, transparent 100%),
+      radial-gradient(ellipse 60% 60% at bottom left, rgba(130,120,108,0.38) 0%, transparent 100%),
+      radial-gradient(ellipse 60% 60% at bottom right, rgba(130,120,108,0.38) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav, .hero, .section, footer { position: relative; z-index: 1; }
+
+  /* NAV */
+  .nav {
+    padding: 12px 32px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(240,238,235,0.94);
+    backdrop-filter: blur(4px);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .nav a { color: var(--muted); text-decoration: none; }
+  .nav a:hover { color: var(--accent-dark); }
+  .nav span { margin: 0 8px; opacity: .4; }
+
+  /* HERO */
+  .hero {
+    background: var(--charcoal);
+    border-bottom: 5px solid var(--accent);
+    padding: 56px 40px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%; transform: translateY(-50%);
+    height: 110px;
+    background: rgba(238,147,52,0.15);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 10px; position: relative; z-index: 2;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 88px);
+    line-height: .92; color: #fff; margin-bottom: 16px;
+    letter-spacing: .02em; position: relative; z-index: 2;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; color: rgba(255,255,255,0.6);
+    max-width: 580px; position: relative; z-index: 2;
+  }
+  .hero-tabs {
+    display: flex; gap: 8px; margin-top: 30px; flex-wrap: wrap; position: relative; z-index: 2;
+  }
+  .hero-tab {
+    padding: 6px 16px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 3px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); cursor: pointer; text-decoration: none; transition: all .2s;
+  }
+  .hero-tab:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* SECTIONS */
+  .section { padding: 60px 40px; max-width: 1100px; margin: 0 auto; }
+  .section + .section { border-top: 1px solid var(--border); }
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: .25em; text-transform: uppercase;
+    color: var(--accent-dark); margin-bottom: 5px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 4vw, 50px); letter-spacing: .03em;
+    color: var(--charcoal); margin-bottom: 4px;
+  }
+  .section-subtitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; color: var(--muted); margin-bottom: 32px; max-width: 660px;
+  }
+
+  /* INTRO GRID */
+  .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+  @media (max-width: 680px) { .intro-grid { grid-template-columns: 1fr; } }
+
+  .intro-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 22px; }
+  .intro-card.good { border-top: 3px solid var(--green); }
+  .intro-card.good h3 { color: var(--green); }
+  .intro-card.bad { border-top: 3px solid var(--red-light); }
+  .intro-card.bad h3 { color: var(--red-light); }
+  .intro-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .04em; margin-bottom: 10px; }
+  .intro-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .pill {
+    padding: 3px 11px; border-radius: 40px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .06em;
+  }
+  .pill.green { background: var(--green-bg); border: 1px solid #9fd4b0; color: var(--green); }
+  .pill.red { background: var(--red-bg); border: 1px solid #dfa0a0; color: var(--red-light); }
+
+  .def-box {
+    background: #fff8f0; border: 1px solid rgba(238,147,52,0.32);
+    border-left: 4px solid var(--accent); border-radius: 5px; padding: 20px 24px;
+  }
+  .def-box .term { font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: .05em; color: var(--accent-dark); margin-bottom: 5px; }
+  .def-box p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+  /* ACCORDION */
+  .accordion-list { display: flex; flex-direction: column; gap: 6px; }
+  .accordion-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden; transition: border-color .2s, box-shadow .2s;
+  }
+  .accordion-item.open { border-color: var(--accent); box-shadow: 0 2px 10px rgba(238,147,52,0.1); }
+  .accordion-trigger {
+    width: 100%; background: none; border: none; padding: 17px 22px;
+    display: flex; align-items: center; gap: 16px; cursor: pointer; text-align: left;
+  }
+  .accordion-trigger:hover { background: var(--surface2); }
+  .accordion-num { font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: var(--accent); min-width: 26px; opacity: .4; }
+  .accordion-item.open .accordion-num { opacity: 1; }
+  .accordion-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .04em; color: var(--charcoal); flex: 1; }
+  .accordion-tag {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: .1em;
+    text-transform: uppercase; padding: 3px 9px; border-radius: 3px;
+    background: var(--surface2); border: 1px solid var(--border); color: var(--muted-light); white-space: nowrap;
+  }
+  .accordion-arrow {
+    width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 11px;
+    color: var(--muted-light); transition: transform .3s, background .2s; flex-shrink: 0;
+  }
+  .accordion-item.open .accordion-arrow { transform: rotate(180deg); background: var(--accent); border-color: var(--accent); color: #fff; }
+  .accordion-body { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+  .accordion-body-inner {
+    padding: 0 22px 22px; border-top: 1px solid var(--border); padding-top: 20px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+  }
+  @media (max-width: 600px) { .accordion-body-inner { grid-template-columns: 1fr; } }
+  .accordion-def { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .accordion-def strong { color: var(--charcoal); }
+  .accordion-examples h4 {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--accent-dark); margin-bottom: 9px;
+  }
+  .example-item {
+    display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;
+    font-size: 13px; color: var(--muted); line-height: 1.5;
+  }
+  .example-item::before { content: '\25B8'; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+
+  /* MARKET STRUCTURES */
+  .structures-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media (max-width: 840px) { .structures-row { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 460px) { .structures-row { grid-template-columns: 1fr; } }
+
+  .struct-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+    cursor: pointer; transition: border-color .2s, box-shadow .2s, transform .15s; overflow: hidden;
+  }
+  .struct-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.07); }
+  .struct-card.open { border-color: var(--accent); border-top: 3px solid var(--accent); }
+  .struct-header { padding: 16px 15px 13px; }
+  .struct-letter { font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: var(--accent); opacity: .2; line-height: 1; margin-bottom: 5px; }
+  .struct-card.open .struct-letter { opacity: .65; }
+  .struct-name { font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: .03em; color: var(--charcoal); margin-bottom: 3px; }
+  .struct-tagline { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; color: var(--muted-light); font-style: italic; }
+  .struct-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+  .struct-body-inner { padding: 0 15px 15px; border-top: 1px solid var(--border); padding-top: 13px; }
+  .struct-row {
+    display: flex; justify-content: space-between; gap: 6px; margin-bottom: 6px;
+    font-size: 12px; line-height: 1.4; border-bottom: 1px solid var(--surface2); padding-bottom: 5px;
+  }
+  .struct-row:last-of-type { border-bottom: none; }
+  .struct-row-label { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em; text-transform: uppercase; font-size: 10px; color: var(--muted-light); }
+  .struct-row-val { color: var(--charcoal); font-size: 12px; text-align: right; font-weight: 500; }
+  .power-meter { display: flex; gap: 4px; margin-top: 10px; align-items: center; }
+  .power-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-light); margin-right: 3px; }
+  .power-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+  .power-dot.lit { background: var(--accent); }
+  .struct-example { margin-top: 10px; padding: 8px 10px; background: #fff8f0; border-radius: 4px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .struct-example strong { color: var(--accent-dark); font-family: 'Barlow Condensed', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+
+  /* EXTERNALITIES */
+  .ext-split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px; }
+  @media (max-width: 600px) { .ext-split { grid-template-columns: 1fr; } }
+  .ext-card { border-radius: 6px; padding: 22px; }
+  .ext-card.negative { background: var(--red-bg); border: 1px solid #dfa0a0; border-top: 3px solid var(--red-light); }
+  .ext-card.positive { background: var(--green-bg); border: 1px solid #9fd4b0; border-top: 3px solid var(--green-light); }
+  .ext-card-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 6px; }
+  .ext-card.negative .ext-card-label { color: var(--red-light); }
+  .ext-card.positive .ext-card-label { color: var(--green); }
+  .ext-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: .04em; margin-bottom: 10px; }
+  .ext-card.negative .ext-card-title { color: var(--red); }
+  .ext-card.positive .ext-card-title { color: var(--green); }
+  .ext-card p { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 14px; }
+  .ext-examples { display: flex; flex-direction: column; gap: 7px; }
+  .ext-example-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .ext-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .negative .ext-dot { background: var(--red-light); }
+  .positive .ext-dot { background: var(--green-light); }
+
+  /* Chain */
+  .chain-section { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 26px; margin-bottom: 28px; }
+  .chain-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .04em; color: var(--charcoal); margin-bottom: 3px; }
+  .chain-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+  .chain-steps { display: flex; align-items: stretch; overflow-x: auto; padding-bottom: 4px; }
+  .chain-step {
+    flex: 1; min-width: 76px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 9px 7px; text-align: center;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; line-height: 1.4; color: var(--muted);
+  }
+  .chain-step.highlight { background: #fff0e0; border-color: rgba(238,147,52,0.55); color: var(--charcoal); }
+  .chain-connector { display: flex; align-items: center; padding: 0 4px; color: var(--border-dark); font-size: 13px; flex-shrink: 0; }
+  .externality-bubble {
+    display: inline-block; margin-top: 5px; padding: 2px 5px;
+    background: #fde8e8; border: 1px solid rgba(192,57,43,0.4); border-radius: 3px;
+    font-size: 9px; color: var(--red-light); letter-spacing: .04em;
+  }
+
+  /* Chart */
+  .chart-container-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 24px; }
+  .chart-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .04em; color: var(--charcoal); margin-bottom: 3px; }
+  .chart-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .chart-toggle-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chart-toggle {
+    padding: 6px 15px; border-radius: 4px; border: 1px solid var(--border);
+    background: var(--surface2); font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer; transition: all .2s;
+  }
+  .chart-toggle.active-supply { background: #fff0e0; border-color: var(--accent); color: var(--accent-dark); }
+  .chart-toggle.active-demand { background: #e6f0f8; border-color: var(--blue-light); color: var(--blue); }
+  .chart-callout {
+    margin-top: 14px; padding: 12px 16px;
+    background: #fff8f0; border: 1px solid rgba(238,147,52,0.22); border-radius: 4px;
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+  }
+  .chart-callout strong { color: var(--accent-dark); }
+
+  /* Fix it */
+  .divider-label { display: flex; align-items: center; gap: 14px; margin: 28px 0 22px; }
+  .divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .divider-label span { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-light); white-space: nowrap; }
+  .fix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .fix-grid { grid-template-columns: 1fr; } }
+  .fix-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 20px; }
+  .fix-card.tax { border-top: 3px solid var(--accent); }
+  .fix-card.reg { border-top: 3px solid var(--blue); }
+  .fix-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: .04em; margin-bottom: 8px; }
+  .fix-card.tax h3 { color: var(--accent-dark); }
+  .fix-card.reg h3 { color: var(--blue); }
+  .fix-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+  /* SCENARIO CARDS */
+  .scenarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .scenarios-grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 480px) { .scenarios-grid { grid-template-columns: 1fr; } }
+
+  .scenario-card { height: 260px; perspective: 1000px; cursor: pointer; }
+  .scenario-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform .5s cubic-bezier(.4,0,.2,1);
+  }
+  .scenario-card.flipped .scenario-inner { transform: rotateY(180deg); }
+  .scenario-front, .scenario-back {
+    position: absolute; inset: 0; backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 6px; padding: 18px;
+    display: flex; flex-direction: column;
+  }
+  .scenario-front { background: var(--surface); border: 1px solid var(--border); justify-content: space-between; }
+  .scenario-back { transform: rotateY(180deg); justify-content: center; align-items: center; text-align: center; padding: 20px; }
+  .scenario-num { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-light); }
+  .scenario-text {
+    font-family: 'Barlow', sans-serif; font-size: 13px; color: var(--muted);
+    line-height: 1.55; flex: 1; display: flex; align-items: center; padding: 8px 0;
+  }
+  .scenario-flip-hint {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--border-dark);
+  }
+  .scenario-flip-hint::before { content: 'flip to reveal'; }
+
+  /* back face colors */
+  .back-public    { background: #1a2e50; border: 1px solid #2a4070; }
+  .back-monopoly  { background: #3d1a10; border: 1px solid #6a2a18; }
+  .back-neg-ext   { background: #3d1010; border: 1px solid #6a1818; }
+  .back-pos-ext   { background: #0f2e1a; border: 1px solid #1a5030; }
+  .back-info      { background: #2a1a40; border: 1px solid #4a2a70; }
+  .back-commons   { background: #2e2210; border: 1px solid #5a4018; }
+
+  .back-failure-type { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 5px; opacity: .7; color: #fff; }
+  .back-failure-name { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: .04em; margin-bottom: 8px; }
+  .back-explanation { font-size: 12px; line-height: 1.5; opacity: .88; color: #fff; max-width: 230px; }
+
+  .back-public .back-failure-name   { color: #7eb8ff; }
+  .back-monopoly .back-failure-name { color: #ffb870; }
+  .back-neg-ext .back-failure-name  { color: #ff9090; }
+  .back-pos-ext .back-failure-name  { color: #80f0a0; }
+  .back-info .back-failure-name     { color: #cc90ff; }
+  .back-commons .back-failure-name  { color: #ffd880; }
+
+  /* FOOTER */
+  .page-footer {
+    padding: 24px 40px; border-top: 1px solid var(--border);
+    background: rgba(240,238,235,0.94);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; color: var(--muted); text-align: center; letter-spacing: .06em;
+  }
+  .page-footer a { color: var(--accent-dark); text-decoration: none; }
+  .page-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 560px) {
+    .section { padding: 40px 16px; }
+    .hero { padding: 36px 16px 28px; }
+    .nav { padding: 10px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html">Course Home</a>
+  <span>/</span>
+  Unit 4
+  <span>/</span>
+  Interactive Reference
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Unit 4 &middot; Interactive Reference</div>
+  <h1>Market<br><em>Failures</em></h1>
+  <p class="hero-sub">Work through the types of market failure, market structures, externalities, and scenario cards below.</p>
+  <div class="hero-tabs">
+    <a href="#section-intro" class="hero-tab">Free Market</a>
+    <a href="#section-failures" class="hero-tab">Types of Failure</a>
+    <a href="#section-structures" class="hero-tab">Market Structures</a>
+    <a href="#section-externalities" class="hero-tab">Externalities</a>
+    <a href="#section-scenarios" class="hero-tab">Scenarios</a>
+  </div>
+</section>
+
+<!-- SECTION 1 -->
+<div id="section-intro" class="section">
+  <div class="section-label">Section 1</div>
+  <div class="section-title">The Free Market</div>
+  <div class="section-subtitle">Markets are incredibly powerful, but they are not perfect.</div>
+
+  <div class="intro-grid">
+    <div class="intro-card good">
+      <h3>When Markets Work</h3>
+      <p>A <strong>free market</strong> is an economic system where buyers and sellers make transactions freely. Prices are set by supply and demand. Producers make what they want, consumers buy what they want, and the government mostly stays out of the way.</p>
+      <div class="pill-list">
+        <span class="pill green">Efficiency</span>
+        <span class="pill green">Innovation</span>
+        <span class="pill green">Growth</span>
+        <span class="pill green">Economic Freedom</span>
+      </div>
+    </div>
+    <div class="intro-card bad">
+      <h3>When Markets Break</h3>
+      <p>Leaving everything to the free market doesn't always produce a good outcome for society. Some things the market simply won't provide, and some situations the market actively makes worse. When this happens, we call it a <strong>market failure</strong>.</p>
+      <div class="pill-list">
+        <span class="pill red">Public Goods Gap</span>
+        <span class="pill red">Monopoly Power</span>
+        <span class="pill red">Externalities</span>
+        <span class="pill red">Bad Information</span>
+        <span class="pill red">Overuse</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="def-box">
+    <div class="term">Market Failure</div>
+    <p>A market failure happens when the free market does not allocate goods and services efficiently. In other words, the market does not produce outcomes that are optimal for society as a whole. The market "breaks" in some way, and the result is either something important not being provided, someone being harmed, or resources being wasted.</p>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div id="section-failures" class="section">
+  <div class="section-label">Section 2</div>
+  <div class="section-title">Types of Market Failure</div>
+  <div class="section-subtitle">Click any category to expand the definition and examples.</div>
+
+  <div class="accordion-list">
+
+    <div class="accordion-item" id="acc-1">
+      <button class="accordion-trigger" onclick="toggleAccordion('acc-1')">
+        <span class="accordion-num">01</span>
+        <span class="accordion-name">Public Goods</span>
+        <span class="accordion-tag">Government Steps In</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body"><div class="accordion-body-inner">
+        <div class="accordion-def">
+          <p>A <strong>public good</strong> is something the public needs, but private businesses can't make profitable, so they won't produce it on their own.</p><br>
+          <p>Public goods have two defining characteristics:</p><br>
+          <p><strong>Non-excludable:</strong> You can't stop people from using or benefiting from it, even if they didn't pay.</p><br>
+          <p><strong>Non-rival:</strong> One person using it doesn't diminish it for anyone else.</p><br>
+          <p>If something is non-excludable, non-rival, and important, the government should generally provide it, because the free market won't.</p>
+        </div>
+        <div class="accordion-examples">
+          <h4>Real Examples</h4>
+          <div class="example-item">Street lights: you can't exclude passersby, and one person using the light doesn't dim it for anyone else.</div>
+          <div class="example-item">National defense: the military protects everyone whether or not they pay taxes. You can't let Russia only bomb the tax cheat's house.</div>
+          <div class="example-item">Public roads and bridges: built for everyone, used by everyone.</div>
+          <div class="example-item">Clean air and water standards: everyone benefits whether they contributed or not.</div>
+          <h4 style="margin-top:13px;">The Free Rider Problem</h4>
+          <div class="example-item">When people can benefit without paying, private firms have no way to profit, so no one builds it. People who benefit without contributing are called <strong style="color:var(--charcoal)">free riders</strong>.</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="accordion-item" id="acc-2">
+      <button class="accordion-trigger" onclick="toggleAccordion('acc-2')">
+        <span class="accordion-num">02</span>
+        <span class="accordion-name">Monopolies</span>
+        <span class="accordion-tag">Lack of Competition</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body"><div class="accordion-body-inner">
+        <div class="accordion-def">
+          <p>The lifeblood of capitalism is <strong>competition</strong>. Businesses provide good products at low prices only because they have to compete. Competition also forces companies to innovate and stay efficient.</p><br>
+          <p>A <strong>monopoly</strong> is when one firm controls the entire market. Without competition, that firm can charge whatever it wants, produce less, and has little reason to improve.</p><br>
+          <p><strong>Price makers</strong> set whatever price they want because there is no alternative for consumers. In a competitive market, firms are price takers and must follow supply and demand.</p><br>
+          <p><strong>Natural Monopolies</strong> are a special case: some industries naturally work better as a single provider. Utilities like water, electricity, and natural gas are examples. Two companies laying separate pipes to every home makes no sense.</p>
+        </div>
+        <div class="accordion-examples">
+          <h4>Real Examples</h4>
+          <div class="example-item">De Beers controlled roughly 80% of the world's diamond supply and could set prices far above what competition would allow.</div>
+          <div class="example-item">Utility companies (electric, water, gas) are legal monopolies because competing infrastructure doesn't make sense.</div>
+          <div class="example-item">Early Standard Oil controlled roughly 90% of U.S. oil refining. Congress eventually broke it up using antitrust laws.</div>
+          <div class="example-item">Airline industry: an oligopoly where a few large firms control most routes, with significant barriers preventing new competitors from entering.</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="accordion-item" id="acc-3">
+      <button class="accordion-trigger" onclick="toggleAccordion('acc-3')">
+        <span class="accordion-num">03</span>
+        <span class="accordion-name">Externalities</span>
+        <span class="accordion-tag">Cost Goes External</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body"><div class="accordion-body-inner">
+        <div class="accordion-def">
+          <p>An <strong>externality</strong> is a cost or benefit caused by a producer that isn't paid for by the producer or consumer. The cost goes external, meaning it is paid by people who had nothing to do with the transaction.</p><br>
+          <p>Almost everything the government does is aimed at either fixing negative externalities or promoting positive ones. Many of the biggest problems society faces, including pollution, public health crises, and climate change, are caused by negative externalities.</p><br>
+          <p>The free market only works properly if all the real costs of producing something are factored into the price. When they aren't, prices are artificially low, leading to <strong>overconsumption</strong> and <strong>overproduction</strong>.</p>
+        </div>
+        <div class="accordion-examples">
+          <h4>Negative Externalities</h4>
+          <div class="example-item">Factory pollution that wipes out a fishing industry: the fishers pay the cost, not the factory.</div>
+          <div class="example-item">Burning fossil fuels: the cost of climate change and healthcare is not included in the price at the pump.</div>
+          <div class="example-item">Fast fashion: cheap prices because environmental cleanup costs are externalized to society.</div>
+          <h4 style="margin-top:12px;">Positive Externalities</h4>
+          <div class="example-item">Vaccines: when you get vaccinated, you protect people around you who didn't pay for your shot.</div>
+          <div class="example-item">Education: a more educated society benefits everyone, not just the student who got the degree.</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="accordion-item" id="acc-4">
+      <button class="accordion-trigger" onclick="toggleAccordion('acc-4')">
+        <span class="accordion-num">04</span>
+        <span class="accordion-name">Information Asymmetry</span>
+        <span class="accordion-tag">Consumers Don't Know</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body"><div class="accordion-body-inner">
+        <div class="accordion-def">
+          <p><strong>Information asymmetry</strong> happens when one party in a transaction has significantly more or better information than the other. This breaks the free market's assumption that buyers and sellers are making informed decisions.</p><br>
+          <p>In a perfect free market, all parties have equal access to information. In reality, sellers almost always know more about the product than buyers, and this can be exploited.</p><br>
+          <p>When consumers can't evaluate what they're getting, they can't make good decisions. People get ripped off, or avoid buying something they actually need because they can't trust what's being sold.</p>
+        </div>
+        <div class="accordion-examples">
+          <h4>Real Examples</h4>
+          <div class="example-item">Used car sales: the seller knows whether the car is a lemon; the buyer usually can't tell. Economist George Akerlof's "Market for Lemons" showed how this can collapse entire markets.</div>
+          <div class="example-item">Healthcare: patients rarely know as much as doctors about what treatments they actually need, making it easy to be over-treated or misled.</div>
+          <div class="example-item">Predatory loans: lenders design confusing terms that borrowers don't understand until it's too late.</div>
+          <div class="example-item">FDA food labeling laws exist precisely to reduce information asymmetry between manufacturers and consumers.</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="accordion-item" id="acc-5">
+      <button class="accordion-trigger" onclick="toggleAccordion('acc-5')">
+        <span class="accordion-num">05</span>
+        <span class="accordion-name">Tragedy of the Commons</span>
+        <span class="accordion-tag">Shared Resource Collapse</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </button>
+      <div class="accordion-body"><div class="accordion-body-inner">
+        <div class="accordion-def">
+          <p>The <strong>Tragedy of the Commons</strong> occurs when a shared resource gets used up because individuals, each acting in their own rational self-interest, overuse it, even though it destroys the resource for everyone in the long run.</p><br>
+          <p>The "commons" refers to any shared resource: fisheries, forests, clean air, groundwater. Each individual has an incentive to use as much as possible before others do. When everyone thinks this way, the resource collapses.</p><br>
+          <p>The free market alone can't solve this. There's no profit incentive to conserve something you don't own. Government regulation or clearly defined property rights are usually required to fix it.</p>
+        </div>
+        <div class="accordion-examples">
+          <h4>Real Examples</h4>
+          <div class="example-item">Atlantic cod fisheries: individual fishermen had every incentive to catch as many fish as possible, leading to catastrophic population collapse in the 1990s.</div>
+          <div class="example-item">Groundwater depletion: farmers pump as much as they can because there's no price signal stopping overuse of a shared aquifer.</div>
+          <div class="example-item">Overfishing in international waters: no single country's regulations apply, so the resource gets overused by all.</div>
+          <div class="example-item">Traffic congestion: every driver adds to everyone's commute time because the road is free to use with no limit.</div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION 2B: MARKET STRUCTURES -->
+<div id="section-structures" class="section">
+  <div class="section-label">Section 2B</div>
+  <div class="section-title">The 4 Market Structures</div>
+  <div class="section-subtitle">How much competition exists? Click each structure to expand. More competition = better outcomes for consumers.</div>
+
+  <div class="structures-row">
+
+    <div class="struct-card" id="struct-1" onclick="toggleStruct('struct-1')">
+      <div class="struct-header">
+        <div class="struct-letter">A</div>
+        <div class="struct-name">Perfect Competition</div>
+        <div class="struct-tagline">The free market ideal</div>
+      </div>
+      <div class="struct-body"><div class="struct-body-inner">
+        <div class="struct-row"><span class="struct-row-label">Firms</span><span class="struct-row-val">Many small</span></div>
+        <div class="struct-row"><span class="struct-row-label">Products</span><span class="struct-row-val">Identical</span></div>
+        <div class="struct-row"><span class="struct-row-label">Pricing</span><span class="struct-row-val">Price takers</span></div>
+        <div class="struct-row"><span class="struct-row-label">Entry</span><span class="struct-row-val">No barriers</span></div>
+        <div class="struct-row"><span class="struct-row-label">Info</span><span class="struct-row-val">Perfect</span></div>
+        <div class="power-meter"><span class="power-label">Market Power</span><span class="power-dot lit"></span><span class="power-dot"></span><span class="power-dot"></span><span class="power-dot"></span></div>
+        <div class="struct-example"><strong>Example:</strong> Agricultural markets. Wheat is wheat. No farmer can charge more than the market price.</div>
+      </div></div>
+    </div>
+
+    <div class="struct-card" id="struct-2" onclick="toggleStruct('struct-2')">
+      <div class="struct-header">
+        <div class="struct-letter">B</div>
+        <div class="struct-name">Monopolistic Competition</div>
+        <div class="struct-tagline">Many sellers, similar but different products</div>
+      </div>
+      <div class="struct-body"><div class="struct-body-inner">
+        <div class="struct-row"><span class="struct-row-label">Firms</span><span class="struct-row-val">Many</span></div>
+        <div class="struct-row"><span class="struct-row-label">Products</span><span class="struct-row-val">Similar, not identical</span></div>
+        <div class="struct-row"><span class="struct-row-label">Pricing</span><span class="struct-row-val">Some control</span></div>
+        <div class="struct-row"><span class="struct-row-label">Entry</span><span class="struct-row-val">Low barriers</span></div>
+        <div class="struct-row"><span class="struct-row-label">Competition</span><span class="struct-row-val">Price + branding</span></div>
+        <div class="power-meter"><span class="power-label">Market Power</span><span class="power-dot lit"></span><span class="power-dot lit"></span><span class="power-dot"></span><span class="power-dot"></span></div>
+        <div class="struct-example"><strong>Example:</strong> Restaurants. There are tons of them, but your burger differs from theirs. Branding gives some pricing power.</div>
+      </div></div>
+    </div>
+
+    <div class="struct-card" id="struct-3" onclick="toggleStruct('struct-3')">
+      <div class="struct-header">
+        <div class="struct-letter">C</div>
+        <div class="struct-name">Oligopoly</div>
+        <div class="struct-tagline">A few big players dominate</div>
+      </div>
+      <div class="struct-body"><div class="struct-body-inner">
+        <div class="struct-row"><span class="struct-row-label">Firms</span><span class="struct-row-val">Few, large</span></div>
+        <div class="struct-row"><span class="struct-row-label">Products</span><span class="struct-row-val">Similar or differentiated</span></div>
+        <div class="struct-row"><span class="struct-row-label">Pricing</span><span class="struct-row-val">Non-price competition</span></div>
+        <div class="struct-row"><span class="struct-row-label">Entry</span><span class="struct-row-val">Significant barriers</span></div>
+        <div class="struct-row"><span class="struct-row-label">Risk</span><span class="struct-row-val">Price collusion</span></div>
+        <div class="power-meter"><span class="power-label">Market Power</span><span class="power-dot lit"></span><span class="power-dot lit"></span><span class="power-dot lit"></span><span class="power-dot"></span></div>
+        <div class="struct-example"><strong>Example:</strong> Airlines. Delta, United, American dominate. Starting a new airline is nearly impossible. They compete on perks, not price.</div>
+      </div></div>
+    </div>
+
+    <div class="struct-card" id="struct-4" onclick="toggleStruct('struct-4')">
+      <div class="struct-header">
+        <div class="struct-letter">D</div>
+        <div class="struct-name">Monopoly</div>
+        <div class="struct-tagline">One firm. No competition. Full control.</div>
+      </div>
+      <div class="struct-body"><div class="struct-body-inner">
+        <div class="struct-row"><span class="struct-row-label">Firms</span><span class="struct-row-val">One</span></div>
+        <div class="struct-row"><span class="struct-row-label">Products</span><span class="struct-row-val">Unique, no substitute</span></div>
+        <div class="struct-row"><span class="struct-row-label">Pricing</span><span class="struct-row-val">Price makers</span></div>
+        <div class="struct-row"><span class="struct-row-label">Entry</span><span class="struct-row-val">Very high barriers</span></div>
+        <div class="struct-row"><span class="struct-row-label">Output</span><span class="struct-row-val">Full control</span></div>
+        <div class="power-meter"><span class="power-label">Market Power</span><span class="power-dot lit"></span><span class="power-dot lit"></span><span class="power-dot lit"></span><span class="power-dot lit"></span></div>
+        <div class="struct-example"><strong>Example:</strong> De Beers controlled roughly 80% of world diamonds. Utilities are legal monopolies. Competition disappears entirely.</div>
+      </div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION 2C: EXTERNALITIES -->
+<div id="section-externalities" class="section">
+  <div class="section-label">Section 2C</div>
+  <div class="section-title">Externalities</div>
+  <div class="section-subtitle">A cost or benefit that goes to people outside the transaction. The wrong people pay, or the wrong people benefit.</div>
+
+  <div class="ext-split">
+    <div class="ext-card negative">
+      <div class="ext-card-label">Negative Externality</div>
+      <div class="ext-card-title">Cost Goes External</div>
+      <p>When producing or consuming a good creates costs for third parties who had nothing to do with the transaction. The producer doesn't pay for the damage; someone else does.</p>
+      <div class="ext-examples">
+        <div class="ext-example-item"><span class="ext-dot"></span>Factory pollutes a river; fishermen lose their livelihood</div>
+        <div class="ext-example-item"><span class="ext-dot"></span>Burning gas; healthcare and climate costs borne by society</div>
+        <div class="ext-example-item"><span class="ext-dot"></span>Fast fashion; environmental cleanup not in the price tag</div>
+        <div class="ext-example-item"><span class="ext-dot"></span>Cigarette smoke; bystanders bear health costs</div>
+      </div>
+    </div>
+    <div class="ext-card positive">
+      <div class="ext-card-label">Positive Externality</div>
+      <div class="ext-card-title">Benefit Goes External</div>
+      <p>When an individual's or firm's actions create benefits for others who didn't pay for them. The producer isn't compensated for the full benefit they create, so the market tends to underproduce.</p>
+      <div class="ext-examples">
+        <div class="ext-example-item"><span class="ext-dot"></span>Vaccines; herd immunity protects people who weren't vaccinated</div>
+        <div class="ext-example-item"><span class="ext-dot"></span>Education; a more educated society benefits everyone</div>
+        <div class="ext-example-item"><span class="ext-dot"></span>Research and innovation; discoveries benefit far beyond the inventor</div>
+        <div class="ext-example-item"><span class="ext-dot"></span>Beekeeping; neighboring farms get free pollination</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chain-section">
+    <div class="chain-title">How a Cost Goes External</div>
+    <div class="chain-sub">The t-shirt example: every step of production is factored into the final price, except the pollution.</div>
+    <div class="chain-steps">
+      <div class="chain-step">Cotton<br>Raw Material</div>
+      <div class="chain-connector">&#8594;</div>
+      <div class="chain-step">Harvesting &amp; Processing</div>
+      <div class="chain-connector">&#8594;</div>
+      <div class="chain-step highlight">Manufacturing<br><span class="externality-bubble">pollution!</span></div>
+      <div class="chain-connector">&#8594;</div>
+      <div class="chain-step">Storage &amp; Transport</div>
+      <div class="chain-connector">&#8594;</div>
+      <div class="chain-step">Retail</div>
+      <div class="chain-connector">&#8594;</div>
+      <div class="chain-step">Consumer<br>$15.00</div>
+    </div>
+    <div style="margin-top:14px; font-size:13px; color:var(--muted); line-height:1.65;">
+      The pollution from manufacturing wiped out a whole fishing industry. That cost was <strong style="color:var(--charcoal)">NOT</strong> factored into the $15 price of the shirt. The fishers paid the cost, people who had nothing to do with the t-shirt. Why should they lose money so someone else can have cheap clothes?
+    </div>
+  </div>
+
+  <div class="chart-container-wrap">
+    <div class="chart-title">How Externalities Distort Markets</div>
+    <div class="chart-sub">When costs go external, prices are artificially low, which means more is demanded and more is produced than is actually good for society.</div>
+    <div class="chart-toggle-row">
+      <button class="chart-toggle active-demand" id="btn-demand" onclick="toggleChart('demand')">Demand Shift: Overconsumption</button>
+      <button class="chart-toggle" id="btn-supply" onclick="toggleChart('supply')">Supply Shift: Overproduction</button>
+    </div>
+    <canvas id="extChart" height="280"></canvas>
+    <div class="chart-callout" id="chart-callout">
+      <strong>Overconsumption:</strong> Because the price of gas doesn't include the costs of climate change and healthcare, the price at the pump is artificially low. Consumers demand more gas than they would if they were paying the true cost. The demand curve shifts right and quantity demanded goes up.
+    </div>
+  </div>
+
+  <div class="divider-label"><span>How do you fix a negative externality?</span></div>
+  <div class="fix-grid">
+    <div class="fix-card tax">
+      <h3>Pigouvian Tax</h3>
+      <p>A tax placed directly on the negative externality, usually pollution. The goal is to make the producer pay the true cost of their output so it gets factored into the price. This uses market forces and the profit incentive to solve the problem efficiently, without an outright ban.</p>
+    </div>
+    <div class="fix-card reg">
+      <h3>Regulation</h3>
+      <p>The government simply bans or limits the negative externality. A hard cap on emissions, for example. The advantage is that it stops the harm from happening at all. The downside is that it can be less flexible than a tax-based approach.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: SCENARIOS -->
+<div id="section-scenarios" class="section">
+  <div class="section-label">Section 3</div>
+  <div class="section-title">Scenario Cards</div>
+  <div class="section-subtitle">Read the scenario. Identify the market failure. Flip the card to check your answer.</div>
+
+  <div class="scenarios-grid">
+
+    <div class="scenario-card" id="sc-1" onclick="flipCard('sc-1')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 01</span>
+          <div class="scenario-text">A town's shared underground aquifer supplies all the local farms. Every farmer pumps as much water as possible because there is no price or limit on usage. The aquifer is depleting faster each year.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-commons">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Tragedy of the Commons</div>
+          <div class="back-explanation">A shared resource is overused by individuals each acting rationally in their own self-interest, depleting it for everyone.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="sc-2" onclick="flipCard('sc-2')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 02</span>
+          <div class="scenario-text">A pharmaceutical company is the only producer of a life-saving medication. There are no generic alternatives and no competing products. They charge $500 per pill.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-monopoly">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Monopoly</div>
+          <div class="back-explanation">With no competition, the firm is a price maker. Consumers have no alternatives, so the market fails to produce a fair outcome.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="sc-3" onclick="flipCard('sc-3')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 03</span>
+          <div class="scenario-text">A city wants to build new streetlights in a neighborhood. A private company declines: there is no way to charge people for walking under them at night.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-public">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Public Good</div>
+          <div class="back-explanation">Streetlights are non-excludable and non-rival. No profit motive exists, so the government must step in to provide them.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="sc-4" onclick="flipCard('sc-4')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 04</span>
+          <div class="scenario-text">A coal plant operates near a small town. Children in the area have significantly higher asthma rates, but the cost of treating their illness isn't included in the price of the electricity the plant sells.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-neg-ext">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Negative Externality</div>
+          <div class="back-explanation">Health costs are paid by the townspeople, not the coal plant. The cost went external. Prices are artificially low and the plant overproduces.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="sc-5" onclick="flipCard('sc-5')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 05</span>
+          <div class="scenario-text">A man buys a used car from a private seller. The seller knows the transmission is failing. The buyer has no way to find this out and pays full price. The car breaks down a week later.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-info">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Information Asymmetry</div>
+          <div class="back-explanation">The seller has information the buyer doesn't. This is the classic "Market for Lemons" problem. When buyers can't tell quality from junk, the market breaks down.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="sc-6" onclick="flipCard('sc-6')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 06</span>
+          <div class="scenario-text">A city is considering free vaccinations for all residents. Without the program, many low-income residents won't get vaccinated, putting the broader community at risk even if they personally got the shot.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-pos-ext">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Positive Externality</div>
+          <div class="back-explanation">Vaccines create benefits for people who didn't pay for them (herd immunity). The free market underproduces, so the government subsidizes them.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="sc-7" onclick="flipCard('sc-7')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 07</span>
+          <div class="scenario-text">Three airlines control 80% of domestic routes. When one raises baggage fees, the others do the same within days. Prices rarely drop even when jet fuel gets cheaper.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-monopoly">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Oligopoly</div>
+          <div class="back-explanation">With so few competitors, firms act like price makers and can informally coordinate pricing. Insufficient competition is the market failure.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="sc-8" onclick="flipCard('sc-8')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 08</span>
+          <div class="scenario-text">An ocean fishery is open to all boats with no catch limits. Every company expands its fleet to maximize its haul before competitors take the fish. Within a decade, the fish population collapses.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-commons">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Tragedy of the Commons</div>
+          <div class="back-explanation">Each firm acted rationally: maximize catch now. But collectively, they destroyed the shared resource. This is exactly what happened to Atlantic cod in the 1990s.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="sc-9" onclick="flipCard('sc-9')">
+      <div class="scenario-inner">
+        <div class="scenario-front">
+          <span class="scenario-num">Scenario 09</span>
+          <div class="scenario-text">A lender offers mortgages with a low teaser interest rate that resets sharply upward after two years. The terms are buried in dozens of pages of fine print most borrowers never read.</div>
+          <span class="scenario-flip-hint"></span>
+        </div>
+        <div class="scenario-back back-info">
+          <div class="back-failure-type">Market Failure Type</div>
+          <div class="back-failure-name">Information Asymmetry</div>
+          <div class="back-explanation">The lender knows exactly what the loan terms mean. The borrower doesn't. This type of gap, deliberately exploited, played a major role in the 2008 financial crisis.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="page-footer">
+  Intro to Economics &nbsp;&middot;&nbsp; Blue Valley Academy &nbsp;&middot;&nbsp;
+  <a href="unit-4.html">Opioid Crisis Case Study</a> &nbsp;&middot;&nbsp;
+  <a href="index.html">Course Home</a>
+</footer>
+
+<script>
+// ACCORDION
+function toggleAccordion(id) {
+  const item = document.getElementById(id);
+  const body = item.querySelector('.accordion-body');
+  const inner = item.querySelector('.accordion-body-inner');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.accordion-item').forEach(function(el) {
+    el.classList.remove('open');
+    el.querySelector('.accordion-body').style.maxHeight = '0';
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    body.style.maxHeight = inner.scrollHeight + 'px';
+  }
+}
+
+// MARKET STRUCTURES
+function toggleStruct(id) {
+  const card = document.getElementById(id);
+  const body = card.querySelector('.struct-body');
+  const inner = card.querySelector('.struct-body-inner');
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.struct-card').forEach(function(el) {
+    el.classList.remove('open');
+    el.querySelector('.struct-body').style.maxHeight = '0';
+  });
+  if (!isOpen) {
+    card.classList.add('open');
+    body.style.maxHeight = inner.scrollHeight + 'px';
+  }
+}
+
+// FLIP CARDS
+function flipCard(id) {
+  document.getElementById(id).classList.toggle('flipped');
+}
+
+// CHART
+var extChart = null;
+
+function getChartData(mode) {
+  if (mode === 'demand') {
+    return {
+      datasets: [
+        {
+          label: 'Supply',
+          data: [{x:1,y:9},{x:3,y:7},{x:5,y:5},{x:7,y:3},{x:9,y:1}],
+          borderColor: '#c97620',
+          borderWidth: 2.5,
+          showLine: true,
+          tension: 0,
+          pointRadius: 0,
+          fill: false,
+        },
+        {
+          label: 'True Demand (full cost factored in)',
+          data: [{x:1,y:1},{x:3,y:3},{x:5,y:5},{x:7,y:7},{x:9,y:9}],
+          borderColor: '#1a5e8a',
+          borderWidth: 2,
+          borderDash: [6,4],
+          showLine: true,
+          tension: 0,
+          pointRadius: 0,
+          fill: false,
+        },
+        {
+          label: 'Demand with externality (price artificially low)',
+          data: [{x:1,y:2},{x:3,y:4},{x:5,y:6},{x:7,y:8},{x:9,y:10}],
+          borderColor: '#2980b9',
+          borderWidth: 2.5,
+          showLine: true,
+          tension: 0,
+          pointRadius: 0,
+          fill: false,
+        }
+      ]
+    };
+  } else {
+    return {
+      datasets: [
+        {
+          label: 'Demand',
+          data: [{x:1,y:9},{x:3,y:7},{x:5,y:5},{x:7,y:3},{x:9,y:1}],
+          borderColor: '#1a5e8a',
+          borderWidth: 2.5,
+          showLine: true,
+          tension: 0,
+          pointRadius: 0,
+          fill: false,
+        },
+        {
+          label: 'True Supply (full cost factored in)',
+          data: [{x:1,y:1},{x:3,y:3},{x:5,y:5},{x:7,y:7},{x:9,y:9}],
+          borderColor: '#c97620',
+          borderWidth: 2,
+          borderDash: [6,4],
+          showLine: true,
+          tension: 0,
+          pointRadius: 0,
+          fill: false,
+        },
+        {
+          label: 'Supply with externality (cost artificially low)',
+          data: [{x:1,y:0},{x:3,y:2},{x:5,y:4},{x:7,y:6},{x:9,y:8}],
+          borderColor: '#ee9334',
+          borderWidth: 2.5,
+          showLine: true,
+          tension: 0,
+          pointRadius: 0,
+          fill: false,
+        }
+      ]
+    };
+  }
+}
+
+var callouts = {
+  demand: '<strong>Overconsumption:</strong> Because the price of gas does not include the costs of climate change and healthcare, the price at the pump is artificially low. Consumers demand more than they would if paying the true cost. The demand curve shifts right and quantity demanded goes up.',
+  supply: '<strong>Overproduction:</strong> When producers do not pay for the damage they cause (pollution cleanup, health costs), their cost to produce is artificially low. So they produce more than is socially optimal. The supply curve shifts right, lowering the price and increasing quantity even further.'
+};
+
+function buildChart(mode) {
+  var canvas = document.getElementById('extChart');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  if (extChart) {
+    extChart.destroy();
+    extChart = null;
+  }
+  extChart = new Chart(ctx, {
+    type: 'scatter',
+    data: getChartData(mode),
+    options: {
+      responsive: true,
+      animation: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#5a5450',
+            font: { family: 'Barlow Condensed', size: 12 },
+            boxWidth: 20,
+            padding: 12,
+          }
+        },
+        tooltip: {
+          backgroundColor: '#fff',
+          borderColor: '#d4cfc8',
+          borderWidth: 1,
+          titleColor: '#1e1e1e',
+          bodyColor: '#5a5450',
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          title: { display: true, text: 'QUANTITY', color: '#8a8480', font: { family: 'Barlow Condensed', size: 11 } },
+          ticks: { color: '#8a8480', font: { family: 'Barlow Condensed', size: 11 } },
+          grid: { color: '#ede9e4' },
+          border: { color: '#d4cfc8' },
+          min: 0, max: 10,
+        },
+        y: {
+          title: { display: true, text: 'PRICE', color: '#8a8480', font: { family: 'Barlow Condensed', size: 11 } },
+          ticks: { color: '#8a8480', font: { family: 'Barlow Condensed', size: 11 } },
+          grid: { color: '#ede9e4' },
+          border: { color: '#d4cfc8' },
+          min: 0, max: 11,
+        }
+      }
+    }
+  });
+}
+
+function toggleChart(mode) {
+  document.getElementById('btn-demand').className = 'chart-toggle' + (mode === 'demand' ? ' active-demand' : '');
+  document.getElementById('btn-supply').className = 'chart-toggle' + (mode === 'supply' ? ' active-supply' : '');
+  document.getElementById('chart-callout').innerHTML = callouts[mode];
+  buildChart(mode);
+}
+
+window.addEventListener('load', function() {
+  buildChart('demand');
+});
+</script>
+</body>
+</html>
