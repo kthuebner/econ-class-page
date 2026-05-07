@@ -100,7 +100,7 @@
   .fb-title { font-weight: 600; margin-bottom: 4px; font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; letter-spacing: 0.5px; }
   .fb-body { color: var(--text-dim); }
 
-  .action-footer { padding: 14px 22px; display: flex; gap: 10px; margin-top: auto; }
+  .action-footer { padding: 14px 22px; display: flex; gap: 10px; position: sticky; bottom: 0; background: var(--navy-mid); border-top: 1px solid var(--border); }
   .submit-btn { flex: 1; background: var(--gold); color: var(--navy); border: none; border-radius: 6px; padding: 12px; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; transition: background 0.15s; }
   .submit-btn:hover:not(:disabled) { background: #f5cd72; }
   .submit-btn:disabled { background: var(--navy-light); color: var(--text-dim); cursor: not-allowed; }
@@ -115,6 +115,38 @@
   .score-breakdown .sb-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-dim); padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
   .score-breakdown .sb-row:last-child { border-bottom: none; }
   .score-breakdown .sb-val { font-family: 'DM Mono', monospace; color: var(--text); }
+
+  .realworld-box {
+    display: none;
+    margin: 0 22px 0 22px;
+    border: 1px solid rgba(91,155,213,0.35);
+    border-left: 3px solid var(--blue);
+    border-radius: 6px;
+    background: rgba(91,155,213,0.07);
+    padding: 12px 14px;
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .rw-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 5px;
+  }
+  .rw-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .rw-body {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
 </style>
 </head>
 <body>
@@ -205,9 +237,15 @@
         <div class="fb-body" id="fb-body"></div>
       </div>
 
+      <div class="realworld-box" id="realworld-box">
+        <div class="rw-eyebrow">Real World Example</div>
+        <div class="rw-title" id="rw-title"></div>
+        <div class="rw-body" id="rw-body"></div>
+      </div>
+
       <div class="action-footer">
         <button class="submit-btn" id="submit-btn" disabled onclick="submitAnswer()">Submit</button>
-        <button class="next-btn" id="next-btn" onclick="nextRound()">Next Round &rarr;</button>
+        <button class="next-btn" id="next-btn">Next Round &rarr;</button>
       </div>
     </div>
 
@@ -271,7 +309,9 @@ const SCENARIOS = [
     ],
     comprehensionCorrectIndex: 0,
     feedbackCorrect: "Cutting interest rates is expansionary monetary policy. Cheaper borrowing encourages businesses to invest and consumers to spend, which pushes aggregate demand up and brings unemployment down.",
-    feedbackIncorrect: "When unemployment is rising and growth is slowing, the economy needs a boost. Raising rates or cutting spending would pull aggregate demand down further, deepening the slowdown."
+    feedbackIncorrect: "When unemployment is rising and growth is slowing, the economy needs a boost. Raising rates or cutting spending would pull aggregate demand down further, deepening the slowdown.",
+    realWorldTitle: "The Fed's Rate Cuts of 2019",
+    realWorldBody: "In mid-2019, the U.S. economy was slowing and trade war uncertainty was weighing on business investment. The Federal Reserve cut its benchmark rate three times between July and October, describing the moves as a \"mid-cycle adjustment\" to keep the expansion going. Unemployment remained near historic lows through early 2020, suggesting the cuts helped extend the recovery."
   },
 
   // ROUND 2 — Inflation heating up
@@ -314,7 +354,9 @@ const SCENARIOS = [
     ],
     comprehensionCorrectIndex: 1,
     feedbackCorrect: "Raising rates is contractionary monetary policy. Higher borrowing costs reduce consumer spending and business investment, cooling aggregate demand and putting downward pressure on prices.",
-    feedbackIncorrect: "When inflation is well above target, the economy is running too hot. Adding more stimulus through rate cuts or spending increases would pour fuel on the fire, pushing prices even higher."
+    feedbackIncorrect: "When inflation is well above target, the economy is running too hot. Adding more stimulus through rate cuts or spending increases would pour fuel on the fire, pushing prices even higher.",
+    realWorldTitle: "The Fed's Rate Hike Campaign of 2022 to 2023",
+    realWorldBody: "After inflation surged to 9.1% in mid-2022, the highest in 40 years, the Federal Reserve raised interest rates 11 times in 16 months, bringing the federal funds rate from near zero to over 5%. By late 2023, inflation had fallen back toward 3% without triggering a recession, a result economists called a \"soft landing.\""
   },
 
   // ROUND 3 — Recession territory
@@ -357,7 +399,9 @@ const SCENARIOS = [
     ],
     comprehensionCorrectIndex: 3,
     feedbackCorrect: "Increasing government spending is expansionary fiscal policy. It injects demand directly into the economy, supporting jobs and output when private spending has collapsed.",
-    feedbackIncorrect: "In a recession, the economy needs demand to increase. Raising taxes, cutting spending, or tightening monetary policy all reduce aggregate demand, which would deepen the downturn."
+    feedbackIncorrect: "In a recession, the economy needs demand to increase. Raising taxes, cutting spending, or tightening monetary policy all reduce aggregate demand, which would deepen the downturn.",
+    realWorldTitle: "The American Recovery and Reinvestment Act of 2009",
+    realWorldBody: "After the 2008 financial crisis sent unemployment soaring toward 10%, Congress passed a $787 billion stimulus package in February 2009. It funded infrastructure projects, extended unemployment benefits, and cut taxes for working families. Most economists credit it with shortening the recession, though debate continues about whether it was large enough."
   },
 
   // ROUND 4 — WILDCARD: Oil price shock
@@ -400,7 +444,9 @@ const SCENARIOS = [
     ],
     comprehensionCorrectIndex: 2,
     feedbackCorrect: "Stagflation is the nightmare scenario for policymakers. The tools that fight inflation tend to slow growth, and the tools that boost growth tend to worsen inflation. A modest rate increase tries to keep inflation expectations from spiraling while limiting economic damage.",
-    feedbackIncorrect: "Stagflation is uniquely difficult because stimulating the economy makes inflation worse, while fighting inflation makes the recession worse. Cutting rates or adding spending in this environment would send inflation higher. Doing nothing lets inflation expectations become unanchored."
+    feedbackIncorrect: "Stagflation is uniquely difficult because stimulating the economy makes inflation worse, while fighting inflation makes the recession worse. Cutting rates or adding spending in this environment would send inflation higher. Doing nothing lets inflation expectations become unanchored.",
+    realWorldTitle: "The 1973 Oil Embargo and Stagflation",
+    realWorldBody: "When OPEC cut off oil exports to the United States in 1973, energy prices quadrupled almost overnight. The U.S. economy entered a period of stagflation: inflation above 10% alongside a contracting economy and rising unemployment. The Fed under Chairman Arthur Burns hesitated to raise rates aggressively, and inflation became entrenched for the rest of the decade. It took the severe rate hikes of Fed Chair Paul Volcker in 1980 to finally break it."
   },
 
   // ROUND 5 — Dual mandate tension
@@ -443,7 +489,9 @@ const SCENARIOS = [
     ],
     comprehensionCorrectIndex: 1,
     feedbackCorrect: "The dual mandate asks the Fed to pursue both maximum employment and stable prices. When inflation runs above target, a gradual rate increase tries to bring prices down without causing a large spike in unemployment.",
-    feedbackIncorrect: "The Fed's dual mandate requires balancing employment and price stability. When both are close to target but inflation is drifting up, the right move is a careful tightening, not more stimulus that would push prices further from the 2% goal."
+    feedbackIncorrect: "The Fed's dual mandate requires balancing employment and price stability. When both are close to target but inflation is drifting up, the right move is a careful tightening, not more stimulus that would push prices further from the 2% goal.",
+    realWorldTitle: "The Fed's Gradual Tightening Cycle of 2015 to 2018",
+    realWorldBody: "With unemployment near 5% and inflation beginning to stir, the Federal Reserve began raising rates in December 2015 for the first time since 2006. It moved slowly, raising rates just once in 2016 and signaling patience throughout. By 2018, unemployment had reached 3.7% while inflation stayed close to 2%, a near-textbook example of the dual mandate in balance."
   },
 
   // ROUND 6 — Tax cut proposal (fiscal focus)
@@ -486,7 +534,9 @@ const SCENARIOS = [
     ],
     comprehensionCorrectIndex: 2,
     feedbackCorrect: "Tax cuts are expansionary fiscal policy. By leaving more money in households' pockets, the government increases disposable income, which tends to boost consumer spending and lift aggregate demand.",
-    feedbackIncorrect: "Tax policy is fiscal policy, controlled by Congress and the President. A tax cut raises after-tax income and increases spending, which is expansionary. Raising taxes does the opposite, reducing demand."
+    feedbackIncorrect: "Tax policy is fiscal policy, controlled by Congress and the President. A tax cut raises after-tax income and increases spending, which is expansionary. Raising taxes does the opposite, reducing demand.",
+    realWorldTitle: "The Bush Tax Cuts of 2001",
+    realWorldBody: "After the dot-com bust slowed the economy in 2001, President Bush signed the Economic Growth and Tax Relief Reconciliation Act, which cut income tax rates across all brackets and added a $300 to $600 per-person rebate check. The cuts were targeted broadly but provided the largest dollar benefits to higher earners. The episode remains a touchstone debate in economics about who benefits most from tax-based stimulus."
   },
 
   // ROUND 7 — WILDCARD: Pandemic shock
@@ -529,7 +579,9 @@ const SCENARIOS = [
     ],
     comprehensionCorrectIndex: 2,
     feedbackCorrect: "When a shock is severe enough, monetary and fiscal policy are most powerful when deployed together. The Fed's rate cuts lower borrowing costs while government spending directly replaces lost private demand. Used in coordination, they can prevent a sharp recession from becoming a depression.",
-    feedbackIncorrect: "A sudden demand collapse needs aggressive, coordinated action. Rate cuts alone often cannot reach people who have lost jobs. Waiting or raising rates in a collapsing economy would allow a bad situation to spiral into something far worse."
+    feedbackIncorrect: "A sudden demand collapse needs aggressive, coordinated action. Rate cuts alone often cannot reach people who have lost jobs. Waiting or raising rates in a collapsing economy would allow a bad situation to spiral into something far worse.",
+    realWorldTitle: "The COVID-19 Response of 2020",
+    realWorldBody: "In March 2020, the Federal Reserve cut rates to near zero and launched emergency lending programs within days of pandemic shutdowns. Congress followed with the CARES Act, a $2.2 trillion package that included $1,200 direct payments to most Americans, expanded unemployment insurance, and forgivable loans to small businesses. The coordinated response was the largest peacetime fiscal and monetary intervention in U.S. history. GDP rebounded sharply in the second half of 2020."
   },
 
   // ROUND 8 — Recovery and normalization
@@ -572,7 +624,9 @@ const SCENARIOS = [
     ],
     comprehensionCorrectIndex: 1,
     feedbackCorrect: "When the economy recovers and inflation runs above target, it is time to normalize policy. Tapering bond purchases and gradually raising rates removes the emergency stimulus that is no longer needed, cooling demand and bringing inflation back toward the 2% target without crashing the economy.",
-    feedbackIncorrect: "Keeping emergency-level stimulus in a booming economy pours fuel on an already hot fire. Inflation at 5.8% is a sign that aggregate demand is outpacing supply. The risk of doing too much for too long is that inflation becomes entrenched and requires much more painful treatment later."
+    feedbackIncorrect: "Keeping emergency-level stimulus in a booming economy pours fuel on an already hot fire. Inflation at 5.8% is a sign that aggregate demand is outpacing supply. The risk of doing too much for too long is that inflation becomes entrenched and requires much more painful treatment later.",
+    realWorldTitle: "The Fed's Taper and Liftoff After the 2020 Recession",
+    realWorldBody: "After holding rates near zero through the pandemic recovery, the Federal Reserve began tapering its bond-buying program in November 2021 and raised rates for the first time in March 2022. Fed Chair Jerome Powell later acknowledged the Fed waited too long to begin tightening, allowing inflation to reach 9.1% by June 2022. The episode became a key case study in the risks of keeping emergency stimulus in place past the point of necessity."
   }
 ];
 
@@ -695,6 +749,7 @@ function loadRound() {
 
   // Reset feedback, buttons
   document.getElementById('feedback-box').style.display = 'none';
+  document.getElementById('realworld-box').style.display = 'none';
   document.getElementById('submit-btn').disabled = true;
   document.getElementById('submit-btn').style.display = '';
   document.getElementById('next-btn').style.display = 'none';
@@ -776,6 +831,16 @@ function submitAnswer() {
   document.getElementById('hud-quarter').textContent = qlabel;
   pushChart(qlabel);
   updateReadings(prev);
+
+  // Real world box
+  const rw = document.getElementById('realworld-box');
+  if (policyCorrect && s.realWorldTitle) {
+    document.getElementById('rw-title').textContent = s.realWorldTitle;
+    document.getElementById('rw-body').textContent = s.realWorldBody;
+    rw.style.display = 'block';
+  } else {
+    rw.style.display = 'none';
+  }
 
   document.getElementById('submit-btn').style.display = 'none';
   document.getElementById('next-btn').style.display = '';
