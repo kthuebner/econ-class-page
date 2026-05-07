@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Policy Room</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1623;
+    --navy-mid: #1a2535;
+    --navy-light: #243147;
+    --gold: #e8b84b;
+    --gold-dim: #a07d28;
+    --green: #4caf7d;
+    --red: #e05252;
+    --blue: #5b9bd5;
+    --text: #d4dce8;
+    --text-dim: #7a8fa8;
+    --border: rgba(232,184,75,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--navy); color: var(--text); font-family: 'Barlow', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+  header { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid var(--border); background: var(--navy-mid); }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 3px; color: var(--gold); }
+  .logo span { color: var(--text-dim); font-size: 0.9rem; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; display: block; margin-top: -4px; }
+  .hud { display: flex; gap: 28px; align-items: center; }
+  .hud-stat { text-align: center; }
+  .hud-stat .val { font-family: 'DM Mono', monospace; font-size: 1.2rem; font-weight: 500; color: var(--gold); }
+  .hud-stat .lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); }
+  .score-badge { background: var(--navy-light); border: 1px solid var(--border); border-radius: 8px; padding: 8px 18px; text-align: center; }
+  .score-badge .val { font-size: 1.5rem; color: var(--green); font-family: 'DM Mono', monospace; font-weight: 500; }
+
+  main { display: grid; grid-template-columns: 1fr 420px; flex: 1; min-height: 0; }
+
+  .chart-panel { padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; border-right: 1px solid var(--border); }
+  .panel-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
+  .chart-wrap { flex: 1; position: relative; min-height: 260px; }
+  .legend { display: flex; gap: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-dim); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .readings { display: flex; gap: 16px; }
+  .reading-card { flex: 1; background: var(--navy-mid); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .reading-card .r-val { font-family: 'DM Mono', monospace; font-size: 1.4rem; font-weight: 500; }
+  .reading-card .r-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-top: 2px; }
+  .reading-card .r-delta { font-size: 0.7rem; margin-top: 4px; }
+  .up { color: var(--red); }
+  .down { color: var(--green); }
+  .neutral { color: var(--text-dim); }
+
+  .policy-panel { display: flex; flex-direction: column; background: var(--navy-mid); overflow-y: auto; }
+
+  #start-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px 32px; text-align: center; gap: 20px; }
+  #start-screen h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--gold); letter-spacing: 2px; }
+  #start-screen p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; max-width: 300px; }
+  .objectives { background: var(--navy-light); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; text-align: left; width: 100%; }
+  .objectives .obj-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+  .objectives li { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; list-style: none; padding-left: 12px; position: relative; }
+  .objectives li::before { content: ''; position: absolute; left: 0; top: 9px; width: 4px; height: 4px; background: var(--gold-dim); border-radius: 50%; }
+
+  .action-btn { background: var(--gold); color: var(--navy); border: none; border-radius: 6px; padding: 14px 36px; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; cursor: pointer; transition: background 0.15s, transform 0.1s; margin-top: 8px; }
+  .action-btn:hover { background: #f5cd72; transform: translateY(-1px); }
+  .action-btn:disabled { background: var(--navy-light); color: var(--text-dim); cursor: not-allowed; transform: none; }
+
+  #game-ui { display: none; flex-direction: column; height: 100%; }
+
+  .situation-box { padding: 20px 22px; border-bottom: 1px solid var(--border); }
+  .round-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 6px; }
+  .wildcard-tag { display: inline-block; background: var(--red); color: #fff; font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; margin-bottom: 8px; }
+  .situation-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+  .situation-box p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+
+  .choices-section { padding: 16px 22px; border-bottom: 1px solid var(--border); }
+  .sect-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 10px; }
+  .choice-btn { width: 100%; text-align: left; background: var(--navy); border: 1px solid var(--border); border-radius: 6px; padding: 11px 14px; margin-bottom: 8px; cursor: pointer; font-family: 'Barlow', sans-serif; font-size: 0.82rem; color: var(--text); line-height: 1.4; transition: border-color 0.15s, background 0.15s; }
+  .choice-btn:last-child { margin-bottom: 0; }
+  .choice-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--navy-light); }
+  .choice-btn.selected { border-color: var(--gold); background: rgba(232,184,75,0.08); }
+  .choice-btn.correct-reveal { border-color: var(--green); background: rgba(76,175,125,0.08); }
+  .choice-btn.wrong-reveal { border-color: var(--red); background: rgba(224,82,82,0.06); opacity: 0.7; }
+  .choice-btn:disabled { cursor: not-allowed; }
+  .choice-letter { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--gold-dim); margin-right: 6px; }
+
+  .comp-section { padding: 14px 22px; border-bottom: 1px solid var(--border); }
+  .comp-section p { font-size: 0.84rem; color: var(--text); margin-bottom: 10px; line-height: 1.45; }
+  .comp-options { display: flex; flex-direction: column; gap: 6px; }
+  .comp-btn { background: var(--navy); border: 1px solid var(--border); border-radius: 5px; padding: 8px 14px; font-family: 'Barlow', sans-serif; font-size: 0.8rem; color: var(--text); cursor: pointer; text-align: left; transition: border-color 0.15s, background 0.15s; }
+  .comp-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--navy-light); }
+  .comp-btn.selected { border-color: var(--gold); background: rgba(232,184,75,0.08); }
+  .comp-btn.correct-reveal { border-color: var(--green); background: rgba(76,175,125,0.08); color: var(--green); }
+  .comp-btn.wrong-reveal { border-color: var(--red); opacity: 0.6; }
+  .comp-btn:disabled { cursor: not-allowed; }
+
+  .feedback-box { padding: 12px 22px; border-bottom: 1px solid var(--border); font-size: 0.82rem; line-height: 1.55; display: none; }
+  .feedback-box.correct { background: rgba(76,175,125,0.08); border-left: 3px solid var(--green); }
+  .feedback-box.incorrect { background: rgba(224,82,82,0.08); border-left: 3px solid var(--red); }
+  .feedback-box.partial { background: rgba(232,184,75,0.07); border-left: 3px solid var(--gold); }
+  .fb-title { font-weight: 600; margin-bottom: 4px; font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; letter-spacing: 0.5px; }
+  .fb-body { color: var(--text-dim); }
+
+  .action-footer { padding: 14px 22px; display: flex; gap: 10px; margin-top: auto; }
+  .submit-btn { flex: 1; background: var(--gold); color: var(--navy); border: none; border-radius: 6px; padding: 12px; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; transition: background 0.15s; }
+  .submit-btn:hover:not(:disabled) { background: #f5cd72; }
+  .submit-btn:disabled { background: var(--navy-light); color: var(--text-dim); cursor: not-allowed; }
+  .next-btn { flex: 1; background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 6px; padding: 12px; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; display: none; transition: background 0.15s; }
+  .next-btn:hover { background: rgba(232,184,75,0.1); }
+
+  #end-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px 28px; text-align: center; gap: 16px; height: 100%; }
+  #end-screen h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; }
+  .final-score { font-family: 'DM Mono', monospace; font-size: 3rem; color: var(--gold); }
+  #end-screen p { color: var(--text-dim); font-size: 0.88rem; max-width: 310px; line-height: 1.65; }
+  .score-breakdown { background: var(--navy-light); border: 1px solid var(--border); border-radius: 8px; padding: 14px 20px; width: 100%; }
+  .score-breakdown .sb-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-dim); padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .score-breakdown .sb-row:last-child { border-bottom: none; }
+  .score-breakdown .sb-val { font-family: 'DM Mono', monospace; color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    The Policy Room
+    <span>Monetary and Fiscal Policy Simulation</span>
+  </div>
+  <div class="hud">
+    <div class="hud-stat">
+      <div class="val" id="hud-round">1 / 8</div>
+      <div class="lbl">Round</div>
+    </div>
+    <div class="hud-stat">
+      <div class="val" id="hud-quarter">Q1 2024</div>
+      <div class="lbl">Period</div>
+    </div>
+    <div class="score-badge">
+      <div class="val" id="hud-score">0</div>
+      <div class="lbl">Score</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="chart-panel">
+    <div class="panel-label">Economic Indicators</div>
+    <div class="readings">
+      <div class="reading-card">
+        <div class="r-val" id="r-gdp" style="color:var(--green)">2.4%</div>
+        <div class="r-lbl">GDP Growth</div>
+        <div class="r-delta neutral" id="d-gdp">--</div>
+      </div>
+      <div class="reading-card">
+        <div class="r-val" id="r-inf" style="color:var(--gold)">2.8%</div>
+        <div class="r-lbl">Inflation</div>
+        <div class="r-delta neutral" id="d-inf">--</div>
+      </div>
+      <div class="reading-card">
+        <div class="r-val" id="r-unemp" style="color:var(--blue)">4.0%</div>
+        <div class="r-lbl">Unemployment</div>
+        <div class="r-delta neutral" id="d-unemp">--</div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="econ-chart"></canvas>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> GDP Growth</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Inflation</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> Unemployment</div>
+    </div>
+  </div>
+
+  <div class="policy-panel">
+    <div id="start-screen">
+      <h2>Ready to Set Policy?</h2>
+      <p>You are an economic advisor to the President and the Federal Reserve. Each round, you will read a briefing, choose a policy response, and answer a follow-up question. Keep the economy healthy for eight quarters.</p>
+      <div class="objectives">
+        <div class="obj-title">Learning Objectives</div>
+        <ul>
+          <li>Monetary vs. fiscal policy</li>
+          <li>Expansionary vs. contractionary tools</li>
+          <li>The Fed's dual mandate</li>
+          <li>Tradeoffs: inflation, unemployment, and growth</li>
+        </ul>
+      </div>
+      <button class="action-btn" onclick="startGame()">Start Simulation</button>
+    </div>
+
+    <div id="game-ui">
+      <div class="situation-box" id="situation-box"></div>
+
+      <div class="choices-section" id="choices-section">
+        <div class="sect-label">Choose a Policy Response</div>
+        <div id="choices-list"></div>
+      </div>
+
+      <div class="comp-section" id="comp-section" style="display:none">
+        <div class="sect-label">Comprehension Check</div>
+        <p id="comp-question"></p>
+        <div class="comp-options" id="comp-options"></div>
+      </div>
+
+      <div class="feedback-box" id="feedback-box">
+        <div class="fb-title" id="fb-title"></div>
+        <div class="fb-body" id="fb-body"></div>
+      </div>
+
+      <div class="action-footer">
+        <button class="submit-btn" id="submit-btn" disabled onclick="submitAnswer()">Submit</button>
+        <button class="next-btn" id="next-btn" onclick="nextRound()">Next Round &rarr;</button>
+      </div>
+    </div>
+
+    <div id="end-screen">
+      <h2 id="end-title">Simulation Complete</h2>
+      <div class="final-score" id="final-score">0 / 80</div>
+      <div class="score-breakdown" id="score-breakdown"></div>
+      <p id="end-summary"></p>
+      <button class="action-btn" onclick="resetGame()">Play Again</button>
+    </div>
+  </div>
+</main>
+
+<script>
+// ── SCENARIO BANK ─────────────────────────────────────────────────────────────
+// Each scenario has:
+//   headline, situation (no em dashes), isWildcard, choices (4),
+//   comprehensionQuestion, comprehensionOptions, comprehensionCorrectIndex,
+//   feedbackCorrect, feedbackIncorrect
+// choices: label, description, isCorrect, gdpEffect, inflationEffect, unemploymentEffect
+// Only ONE choice has isCorrect: true
+
+const SCENARIOS = [
+  // ROUND 1 — Slowing economy, unemployment rising
+  {
+    headline: "Jobs Report Raises Alarms",
+    situation: "The latest jobs report shows unemployment has climbed to 4.8%, up from 4.0% three months ago. GDP growth has slowed to 1.2%, well below the healthy range of 2 to 3%. Inflation is running at a manageable 2.4%, just above the Fed's 2% target. The economy appears to be losing momentum.",
+    isWildcard: false,
+    choices: [
+      {
+        label: "Lower the federal funds rate",
+        description: "The Federal Reserve cuts its benchmark interest rate, making borrowing cheaper for businesses and consumers.",
+        isCorrect: true,
+        gdpEffect: 1.2, inflationEffect: 0.5, unemploymentEffect: -0.7
+      },
+      {
+        label: "Raise the federal funds rate",
+        description: "The Federal Reserve increases its benchmark interest rate, making borrowing more expensive across the economy.",
+        isCorrect: false,
+        gdpEffect: -1.0, inflationEffect: -0.4, unemploymentEffect: 0.6
+      },
+      {
+        label: "Cut federal spending",
+        description: "Congress reduces government expenditures on programs, infrastructure, and services.",
+        isCorrect: false,
+        gdpEffect: -0.8, inflationEffect: -0.3, unemploymentEffect: 0.5
+      },
+      {
+        label: "Take no action",
+        description: "Policymakers hold current settings and monitor incoming data before deciding.",
+        isCorrect: false,
+        gdpEffect: -0.3, inflationEffect: 0.0, unemploymentEffect: 0.2
+      }
+    ],
+    comprehensionQuestion: "What type of policy did you choose?",
+    comprehensionOptions: [
+      "Expansionary monetary policy",
+      "Contractionary monetary policy",
+      "Expansionary fiscal policy",
+      "Contractionary fiscal policy"
+    ],
+    comprehensionCorrectIndex: 0,
+    feedbackCorrect: "Cutting interest rates is expansionary monetary policy. Cheaper borrowing encourages businesses to invest and consumers to spend, which pushes aggregate demand up and brings unemployment down.",
+    feedbackIncorrect: "When unemployment is rising and growth is slowing, the economy needs a boost. Raising rates or cutting spending would pull aggregate demand down further, deepening the slowdown."
+  },
+
+  // ROUND 2 — Inflation heating up
+  {
+    headline: "Inflation Hits a Four-Year High",
+    situation: "Consumer prices are rising at 5.2% annually, well above the Federal Reserve's 2% target. The economy has been growing at a brisk 3.8%, fueled partly by strong consumer spending. Unemployment is low at 3.6%. The Fed is under pressure to act before inflation becomes entrenched in wage and price expectations.",
+    isWildcard: false,
+    choices: [
+      {
+        label: "Raise the federal funds rate",
+        description: "The Federal Reserve increases its benchmark interest rate, cooling borrowing and spending.",
+        isCorrect: true,
+        gdpEffect: -0.7, inflationEffect: -1.4, unemploymentEffect: 0.4
+      },
+      {
+        label: "Lower the federal funds rate",
+        description: "The Federal Reserve cuts its benchmark interest rate, making credit cheaper.",
+        isCorrect: false,
+        gdpEffect: 0.8, inflationEffect: 1.2, unemploymentEffect: -0.3
+      },
+      {
+        label: "Increase government spending",
+        description: "Congress passes a new stimulus package, injecting money into the economy.",
+        isCorrect: false,
+        gdpEffect: 0.9, inflationEffect: 1.3, unemploymentEffect: -0.4
+      },
+      {
+        label: "Take no action",
+        description: "Policymakers hold current settings and wait to see if inflation cools on its own.",
+        isCorrect: false,
+        gdpEffect: 0.2, inflationEffect: 0.6, unemploymentEffect: 0.0
+      }
+    ],
+    comprehensionQuestion: "Raising interest rates to bring down inflation is an example of what?",
+    comprehensionOptions: [
+      "Expansionary fiscal policy",
+      "Contractionary monetary policy",
+      "Expansionary monetary policy",
+      "Contractionary fiscal policy"
+    ],
+    comprehensionCorrectIndex: 1,
+    feedbackCorrect: "Raising rates is contractionary monetary policy. Higher borrowing costs reduce consumer spending and business investment, cooling aggregate demand and putting downward pressure on prices.",
+    feedbackIncorrect: "When inflation is well above target, the economy is running too hot. Adding more stimulus through rate cuts or spending increases would pour fuel on the fire, pushing prices even higher."
+  },
+
+  // ROUND 3 — Recession territory
+  {
+    headline: "Two Consecutive Quarters of Negative Growth",
+    situation: "GDP has contracted for two straight quarters, meeting the technical definition of a recession. Unemployment has jumped to 6.2%. Inflation has dropped to 1.1%, below the Fed's target, as consumer demand has weakened significantly. Businesses are cutting investment and consumer confidence is near a decade low.",
+    isWildcard: false,
+    choices: [
+      {
+        label: "Pass a federal stimulus package",
+        description: "Congress approves new government spending on infrastructure, unemployment benefits, and direct payments to households.",
+        isCorrect: true,
+        gdpEffect: 1.8, inflationEffect: 0.7, unemploymentEffect: -1.1
+      },
+      {
+        label: "Raise income taxes",
+        description: "Congress increases tax rates on individuals and businesses to reduce the deficit.",
+        isCorrect: false,
+        gdpEffect: -1.2, inflationEffect: -0.5, unemploymentEffect: 0.7
+      },
+      {
+        label: "Raise the federal funds rate",
+        description: "The Federal Reserve tightens monetary policy by increasing its benchmark rate.",
+        isCorrect: false,
+        gdpEffect: -1.0, inflationEffect: -0.6, unemploymentEffect: 0.6
+      },
+      {
+        label: "Cut government spending",
+        description: "Congress reduces spending to balance the budget during the downturn.",
+        isCorrect: false,
+        gdpEffect: -1.1, inflationEffect: -0.4, unemploymentEffect: 0.8
+      }
+    ],
+    comprehensionQuestion: "A stimulus package that increases government spending is what type of policy?",
+    comprehensionOptions: [
+      "Contractionary fiscal policy",
+      "Contractionary monetary policy",
+      "Expansionary monetary policy",
+      "Expansionary fiscal policy"
+    ],
+    comprehensionCorrectIndex: 3,
+    feedbackCorrect: "Increasing government spending is expansionary fiscal policy. It injects demand directly into the economy, supporting jobs and output when private spending has collapsed.",
+    feedbackIncorrect: "In a recession, the economy needs demand to increase. Raising taxes, cutting spending, or tightening monetary policy all reduce aggregate demand, which would deepen the downturn."
+  },
+
+  // ROUND 4 — WILDCARD: Oil price shock
+  {
+    headline: "Oil Prices Spike 60% After Pipeline Attack",
+    situation: "A coordinated attack on a major Middle Eastern oil pipeline has sent crude oil prices surging 60% in two weeks. Energy costs are rippling through the entire economy. Inflation has jumped to 6.8% and is climbing. At the same time, higher transportation and production costs are forcing businesses to cut output and reduce hiring. Unemployment is ticking up.",
+    isWildcard: true,
+    choices: [
+      {
+        label: "Raise rates modestly, accept a slowdown",
+        description: "The Fed nudges interest rates up slightly to keep inflation expectations anchored, while acknowledging some economic pain is unavoidable.",
+        isCorrect: true,
+        gdpEffect: -0.6, inflationEffect: -1.0, unemploymentEffect: 0.4
+      },
+      {
+        label: "Cut rates aggressively to prevent recession",
+        description: "The Fed slashes interest rates to keep the economy from tipping into recession.",
+        isCorrect: false,
+        gdpEffect: 0.5, inflationEffect: 1.8, unemploymentEffect: -0.2
+      },
+      {
+        label: "Launch a major spending stimulus",
+        description: "Congress passes a large spending bill to offset the economic drag from higher energy prices.",
+        isCorrect: false,
+        gdpEffect: 0.7, inflationEffect: 1.6, unemploymentEffect: -0.3
+      },
+      {
+        label: "Take no action and wait",
+        description: "Policymakers hold all settings, betting the oil shock is temporary and self-correcting.",
+        isCorrect: false,
+        gdpEffect: -0.4, inflationEffect: 0.9, unemploymentEffect: 0.5
+      }
+    ],
+    comprehensionQuestion: "This scenario describes stagflation. Which combination is correct?",
+    comprehensionOptions: [
+      "High growth and high inflation",
+      "Low unemployment and high GDP growth",
+      "High inflation and a slowing economy at the same time",
+      "Low inflation and rising unemployment"
+    ],
+    comprehensionCorrectIndex: 2,
+    feedbackCorrect: "Stagflation is the nightmare scenario for policymakers. The tools that fight inflation tend to slow growth, and the tools that boost growth tend to worsen inflation. A modest rate increase tries to keep inflation expectations from spiraling while limiting economic damage.",
+    feedbackIncorrect: "Stagflation is uniquely difficult because stimulating the economy makes inflation worse, while fighting inflation makes the recession worse. Cutting rates or adding spending in this environment would send inflation higher. Doing nothing lets inflation expectations become unanchored."
+  },
+
+  // ROUND 5 — Dual mandate tension
+  {
+    headline: "Full Employment, But Prices Are Creeping Up",
+    situation: "Unemployment has fallen to 3.4%, essentially the lowest it can go without triggering wage-price spirals. Workers are seeing real wage gains, which is good news. However, inflation has risen to 3.6%, above the Fed's 2% target. GDP growth is a solid 2.9%. The Fed faces a direct tension between its two mandates: maximum employment and stable prices.",
+    isWildcard: false,
+    choices: [
+      {
+        label: "Raise rates gradually",
+        description: "The Fed slowly increases interest rates over several meetings, aiming to cool inflation without triggering significant job losses.",
+        isCorrect: true,
+        gdpEffect: -0.4, inflationEffect: -1.0, unemploymentEffect: 0.3
+      },
+      {
+        label: "Cut rates to protect employment",
+        description: "The Fed lowers rates to keep unemployment low, prioritizing the jobs side of its dual mandate.",
+        isCorrect: false,
+        gdpEffect: 0.5, inflationEffect: 1.1, unemploymentEffect: -0.1
+      },
+      {
+        label: "Increase government spending on jobs programs",
+        description: "Congress funds new employment initiatives to push unemployment even lower.",
+        isCorrect: false,
+        gdpEffect: 0.6, inflationEffect: 1.2, unemploymentEffect: -0.2
+      },
+      {
+        label: "Take no action",
+        description: "The Fed holds rates steady, betting inflation will come down on its own as supply chains normalize.",
+        isCorrect: false,
+        gdpEffect: 0.1, inflationEffect: 0.5, unemploymentEffect: 0.0
+      }
+    ],
+    comprehensionQuestion: "The Federal Reserve's dual mandate requires it to balance which two goals?",
+    comprehensionOptions: [
+      "Low taxes and high GDP growth",
+      "Maximum employment and stable prices",
+      "A balanced budget and low interest rates",
+      "High wages and low inflation"
+    ],
+    comprehensionCorrectIndex: 1,
+    feedbackCorrect: "The dual mandate asks the Fed to pursue both maximum employment and stable prices. When inflation runs above target, a gradual rate increase tries to bring prices down without causing a large spike in unemployment.",
+    feedbackIncorrect: "The Fed's dual mandate requires balancing employment and price stability. When both are close to target but inflation is drifting up, the right move is a careful tightening, not more stimulus that would push prices further from the 2% goal."
+  },
+
+  // ROUND 6 — Tax cut proposal (fiscal focus)
+  {
+    headline: "Congress Considers Sweeping Tax Cuts",
+    situation: "The economy is growing at 2.1%, unemployment is at 4.4%, and inflation is back near 2.3%. Growth is moderate but unspectacular. A faction in Congress is proposing large across-the-board income tax cuts, arguing it will spur investment and consumer spending. Critics argue the timing is wrong. You advise the President on whether to support the proposal.",
+    isWildcard: false,
+    choices: [
+      {
+        label: "Support targeted tax cuts for lower incomes",
+        description: "Endorse tax relief focused on households with lower and middle incomes, who are more likely to spend the extra money.",
+        isCorrect: true,
+        gdpEffect: 0.8, inflationEffect: 0.4, unemploymentEffect: -0.4
+      },
+      {
+        label: "Support across-the-board large tax cuts",
+        description: "Back the full proposal, cutting taxes at all income levels by a significant margin.",
+        isCorrect: false,
+        gdpEffect: 0.9, inflationEffect: 1.1, unemploymentEffect: -0.3
+      },
+      {
+        label: "Raise taxes to reduce the federal deficit",
+        description: "Recommend increasing tax rates to close the budget gap.",
+        isCorrect: false,
+        gdpEffect: -0.9, inflationEffect: -0.3, unemploymentEffect: 0.5
+      },
+      {
+        label: "Oppose any tax changes and maintain current policy",
+        description: "Recommend no change, arguing the economy is stable and intervention could disrupt it.",
+        isCorrect: false,
+        gdpEffect: 0.0, inflationEffect: 0.0, unemploymentEffect: 0.0
+      }
+    ],
+    comprehensionQuestion: "A tax cut that increases consumer spending is an example of what?",
+    comprehensionOptions: [
+      "Contractionary fiscal policy",
+      "Expansionary monetary policy",
+      "Expansionary fiscal policy",
+      "Contractionary monetary policy"
+    ],
+    comprehensionCorrectIndex: 2,
+    feedbackCorrect: "Tax cuts are expansionary fiscal policy. By leaving more money in households' pockets, the government increases disposable income, which tends to boost consumer spending and lift aggregate demand.",
+    feedbackIncorrect: "Tax policy is fiscal policy, controlled by Congress and the President. A tax cut raises after-tax income and increases spending, which is expansionary. Raising taxes does the opposite, reducing demand."
+  },
+
+  // ROUND 7 — WILDCARD: Pandemic shock
+  {
+    headline: "A New Respiratory Virus Spreads Rapidly",
+    situation: "A fast-moving respiratory virus has prompted voluntary social distancing and business closures. Consumer spending has plunged. GDP is contracting sharply, and unemployment has spiked to 8.1% in just six weeks. Inflation has temporarily dropped to 0.8% as demand collapses. The government must respond quickly before the shock becomes a prolonged depression.",
+    isWildcard: true,
+    choices: [
+      {
+        label: "Emergency spending plus rate cuts",
+        description: "Congress passes emergency relief spending and the Fed simultaneously cuts rates to near zero.",
+        isCorrect: true,
+        gdpEffect: 2.2, inflationEffect: 0.9, unemploymentEffect: -1.8
+      },
+      {
+        label: "Rate cuts only",
+        description: "The Fed cuts rates aggressively, but Congress holds off on direct spending.",
+        isCorrect: false,
+        gdpEffect: 0.8, inflationEffect: 0.3, unemploymentEffect: -0.5
+      },
+      {
+        label: "Wait for the virus to pass",
+        description: "Policymakers hold current settings, betting the disruption will be brief and self-correcting.",
+        isCorrect: false,
+        gdpEffect: -2.0, inflationEffect: -0.8, unemploymentEffect: 1.4
+      },
+      {
+        label: "Raise rates to prevent future inflation",
+        description: "The Fed tightens policy preemptively, fearing that emergency spending will cause inflation later.",
+        isCorrect: false,
+        gdpEffect: -1.8, inflationEffect: -0.5, unemploymentEffect: 1.2
+      }
+    ],
+    comprehensionQuestion: "Using both fiscal spending and monetary easing at the same time is sometimes called what?",
+    comprehensionOptions: [
+      "Stagflation",
+      "A liquidity trap",
+      "A coordinated policy response",
+      "Quantitative tightening"
+    ],
+    comprehensionCorrectIndex: 2,
+    feedbackCorrect: "When a shock is severe enough, monetary and fiscal policy are most powerful when deployed together. The Fed's rate cuts lower borrowing costs while government spending directly replaces lost private demand. Used in coordination, they can prevent a sharp recession from becoming a depression.",
+    feedbackIncorrect: "A sudden demand collapse needs aggressive, coordinated action. Rate cuts alone often cannot reach people who have lost jobs. Waiting or raising rates in a collapsing economy would allow a bad situation to spiral into something far worse."
+  },
+
+  // ROUND 8 — Recovery and normalization
+  {
+    headline: "Recovery Underway, But Overheating Risks Loom",
+    situation: "Eighteen months after the pandemic shock, the economy has bounced back strongly. GDP growth is running at 4.5%, unemployment has fallen back to 3.9%, but inflation has risen to 5.8% as supply chains struggle to keep up with surging demand. Emergency stimulus measures are still in place. The question now is when and how to begin pulling them back.",
+    isWildcard: false,
+    choices: [
+      {
+        label: "Begin tapering stimulus and raising rates",
+        description: "The Fed signals it will slow its bond purchases and begin gradually raising interest rates over the coming year.",
+        isCorrect: true,
+        gdpEffect: -0.8, inflationEffect: -1.6, unemploymentEffect: 0.3
+      },
+      {
+        label: "Keep all emergency measures in place",
+        description: "Policymakers hold current stimulus levels, fearing that withdrawing too early could derail the recovery.",
+        isCorrect: false,
+        gdpEffect: 0.6, inflationEffect: 1.4, unemploymentEffect: -0.2
+      },
+      {
+        label: "Pass additional stimulus spending",
+        description: "Congress adds another round of economic support spending on top of existing measures.",
+        isCorrect: false,
+        gdpEffect: 0.9, inflationEffect: 2.0, unemploymentEffect: -0.3
+      },
+      {
+        label: "Raise rates sharply all at once",
+        description: "The Fed aggressively hikes rates by a large amount in a single move to crush inflation immediately.",
+        isCorrect: false,
+        gdpEffect: -2.2, inflationEffect: -2.5, unemploymentEffect: 1.4
+      }
+    ],
+    comprehensionQuestion: "Gradually withdrawing stimulus and raising rates during a recovery is an example of what?",
+    comprehensionOptions: [
+      "Expansionary fiscal policy",
+      "Moving toward contractionary policy to prevent overheating",
+      "The Fed exercising its lender of last resort function",
+      "Expansionary monetary policy"
+    ],
+    comprehensionCorrectIndex: 1,
+    feedbackCorrect: "When the economy recovers and inflation runs above target, it is time to normalize policy. Tapering bond purchases and gradually raising rates removes the emergency stimulus that is no longer needed, cooling demand and bringing inflation back toward the 2% target without crashing the economy.",
+    feedbackIncorrect: "Keeping emergency-level stimulus in a booming economy pours fuel on an already hot fire. Inflation at 5.8% is a sign that aggregate demand is outpacing supply. The risk of doing too much for too long is that inflation becomes entrenched and requires much more painful treatment later."
+  }
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const TOTAL_ROUNDS = SCENARIOS.length;
+let round = 0;
+let score = 0;
+let policyPoints = 0;
+let compPoints = 0;
+let selectedChoice = null;
+let selectedComp = null;
+let submitted = false;
+
+let econ = { gdp: 2.4, inflation: 2.8, unemployment: 4.0 };
+let histLabels = ['Start'];
+let histGdp = [2.4], histInf = [2.8], histUnemp = [4.0];
+
+const quarters = ['Q1 2024','Q2 2024','Q3 2024','Q4 2024','Q1 2025','Q2 2025','Q3 2025','Q4 2025','Q1 2026'];
+let qIdx = 0;
+
+// ── CHART ─────────────────────────────────────────────────────────────────────
+const ctx = document.getElementById('econ-chart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: histLabels,
+    datasets: [
+      { label: 'GDP Growth', data: histGdp, borderColor: '#4caf7d', tension: 0.4, pointRadius: 4, pointBackgroundColor: '#4caf7d', fill: false },
+      { label: 'Inflation', data: histInf, borderColor: '#e8b84b', tension: 0.4, pointRadius: 4, pointBackgroundColor: '#e8b84b', fill: false },
+      { label: 'Unemployment', data: histUnemp, borderColor: '#5b9bd5', tension: 0.4, pointRadius: 4, pointBackgroundColor: '#5b9bd5', fill: false }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#7a8fa8', font: { family: 'DM Mono', size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } },
+      y: { min: -4, max: 14, ticks: { color: '#7a8fa8', font: { family: 'DM Mono', size: 10 }, callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } }
+    }
+  }
+});
+
+function pushChart(label) {
+  histLabels.push(label);
+  histGdp.push(parseFloat(econ.gdp.toFixed(1)));
+  histInf.push(parseFloat(econ.inflation.toFixed(1)));
+  histUnemp.push(parseFloat(econ.unemployment.toFixed(1)));
+  chart.data.labels = histLabels;
+  chart.data.datasets[0].data = histGdp;
+  chart.data.datasets[1].data = histInf;
+  chart.data.datasets[2].data = histUnemp;
+  chart.update('active');
+}
+
+function updateReadings(prev) {
+  document.getElementById('r-gdp').textContent = econ.gdp.toFixed(1) + '%';
+  document.getElementById('r-inf').textContent = econ.inflation.toFixed(1) + '%';
+  document.getElementById('r-unemp').textContent = econ.unemployment.toFixed(1) + '%';
+  setDelta('d-gdp', econ.gdp, prev.gdp, true); // true = up is good
+  setDelta('d-inf', econ.inflation, prev.inflation, false); // up is bad
+  setDelta('d-unemp', econ.unemployment, prev.unemployment, false); // up is bad
+}
+
+function setDelta(id, curr, prev, upIsGood) {
+  const diff = curr - prev;
+  const el = document.getElementById(id);
+  if (Math.abs(diff) < 0.05) { el.textContent = 'unchanged'; el.className = 'r-delta neutral'; return; }
+  const sign = diff > 0 ? '+' : '';
+  el.textContent = sign + diff.toFixed(1) + '%';
+  const isGood = upIsGood ? diff > 0 : diff < 0;
+  el.className = 'r-delta ' + (isGood ? 'down' : 'up'); // down=green class name
+}
+
+// ── GAME FLOW ─────────────────────────────────────────────────────────────────
+function startGame() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-ui').style.display = 'flex';
+  document.getElementById('game-ui').style.flexDirection = 'column';
+  loadRound();
+}
+
+function loadRound() {
+  submitted = false; selectedChoice = null; selectedComp = null;
+  const s = SCENARIOS[round];
+
+  document.getElementById('hud-round').textContent = (round + 1) + ' / ' + TOTAL_ROUNDS;
+  document.getElementById('hud-quarter').textContent = quarters[qIdx] || 'End';
+
+  // Situation
+  const sb = document.getElementById('situation-box');
+  let html = `<div class="round-tag">Round ${round + 1} of ${TOTAL_ROUNDS}</div>`;
+  if (s.isWildcard) html += `<div class="wildcard-tag">Wildcard Event</div>`;
+  html += `<h3>${s.headline}</h3><p>${s.situation}</p>`;
+  sb.innerHTML = html;
+
+  // Choices
+  const cl = document.getElementById('choices-list');
+  cl.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  s.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="choice-letter">${letters[i]}.</span> <strong>${c.label}:</strong> ${c.description}`;
+    btn.onclick = () => selectChoice(i, btn);
+    cl.appendChild(btn);
+  });
+
+  // Comprehension (hidden until choice made)
+  document.getElementById('comp-section').style.display = 'none';
+  document.getElementById('comp-question').textContent = s.comprehensionQuestion;
+  const co = document.getElementById('comp-options');
+  co.innerHTML = '';
+  s.comprehensionOptions.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'comp-btn';
+    btn.textContent = opt;
+    btn.onclick = () => selectComp(i, btn);
+    co.appendChild(btn);
+  });
+
+  // Reset feedback, buttons
+  document.getElementById('feedback-box').style.display = 'none';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+}
+
+function selectChoice(idx, btn) {
+  if (submitted) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  // Reveal comprehension question once a policy is selected
+  document.getElementById('comp-section').style.display = '';
+  checkReady();
+}
+
+function selectComp(idx, btn) {
+  if (submitted) return;
+  selectedComp = idx;
+  document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  checkReady();
+}
+
+function checkReady() {
+  document.getElementById('submit-btn').disabled = (selectedChoice === null || selectedComp === null);
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || selectedComp === null) return;
+  submitted = true;
+  const s = SCENARIOS[round];
+  const choice = s.choices[selectedChoice];
+  const policyCorrect = choice.isCorrect;
+  const compCorrect = selectedComp === s.comprehensionCorrectIndex;
+  const earned = (policyCorrect ? 5 : 0) + (compCorrect ? 5 : 0);
+  score += earned;
+  if (policyCorrect) policyPoints += 5;
+  if (compCorrect) compPoints += 5;
+  document.getElementById('hud-score').textContent = score;
+
+  // Reveal correct/wrong choices
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (s.choices[i].isCorrect) b.classList.add('correct-reveal');
+    else if (i === selectedChoice && !s.choices[i].isCorrect) b.classList.add('wrong-reveal');
+  });
+
+  // Reveal correct comp option
+  const cbtns = document.querySelectorAll('.comp-btn');
+  cbtns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === s.comprehensionCorrectIndex) b.classList.add('correct-reveal');
+    else if (i === selectedComp && i !== s.comprehensionCorrectIndex) b.classList.add('wrong-reveal');
+  });
+
+  // Feedback
+  const fb = document.getElementById('feedback-box');
+  fb.style.display = 'block';
+  if (policyCorrect && compCorrect) {
+    fb.className = 'feedback-box correct';
+    document.getElementById('fb-title').textContent = 'Strong work. +' + earned + ' points';
+  } else if (!policyCorrect && !compCorrect) {
+    fb.className = 'feedback-box incorrect';
+    document.getElementById('fb-title').textContent = 'Missed both. +' + earned + ' points';
+  } else {
+    fb.className = 'feedback-box partial';
+    document.getElementById('fb-title').textContent = 'Partial credit. +' + earned + ' points';
+  }
+  document.getElementById('fb-body').textContent = policyCorrect ? s.feedbackCorrect : s.feedbackIncorrect;
+
+  // Apply economic effects
+  const prev = { ...econ };
+  econ.gdp = Math.min(8, Math.max(-4, econ.gdp + choice.gdpEffect));
+  econ.inflation = Math.min(14, Math.max(0, econ.inflation + choice.inflationEffect));
+  econ.unemployment = Math.min(12, Math.max(1.5, econ.unemployment + choice.unemploymentEffect));
+  qIdx++;
+  const qlabel = quarters[qIdx] || 'End';
+  document.getElementById('hud-quarter').textContent = qlabel;
+  pushChart(qlabel);
+  updateReadings(prev);
+
+  document.getElementById('submit-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+
+  if (round >= TOTAL_ROUNDS - 1) {
+    document.getElementById('next-btn').textContent = 'See Results';
+    document.getElementById('next-btn').onclick = showEnd;
+  } else {
+    document.getElementById('next-btn').onclick = nextRound;
+  }
+}
+
+function nextRound() {
+  round++;
+  document.getElementById('next-btn').style.display = 'none';
+  loadRound();
+}
+
+function showEnd() {
+  document.getElementById('game-ui').style.display = 'none';
+  const es = document.getElementById('end-screen');
+  es.style.display = 'flex';
+  document.getElementById('final-score').textContent = score + ' / 80';
+
+  // Breakdown
+  const sb = document.getElementById('score-breakdown');
+  sb.innerHTML = `
+    <div class="sb-row"><span>Policy decisions (8 rounds)</span><span class="sb-val">${policyPoints} / 40</span></div>
+    <div class="sb-row"><span>Comprehension checks (8 rounds)</span><span class="sb-val">${compPoints} / 40</span></div>
+    <div class="sb-row"><span>Total</span><span class="sb-val">${score} / 80</span></div>
+  `;
+
+  let title, summary, color;
+  if (score >= 70) { title = 'Outstanding Policy Work'; color = 'var(--green)'; summary = 'You made strong policy decisions and understood the theory behind them. The dual mandate is in good hands.'; }
+  else if (score >= 50) { title = 'Solid Performance'; color = 'var(--gold)'; summary = 'Mostly sound decisions with a few costly tradeoffs. Review the Phillips Curve and the difference between fiscal and monetary tools.'; }
+  else { title = 'The Economy Survived'; color = 'var(--red)'; summary = 'Some turbulent quarters. Review when to use expansionary versus contractionary policy, and what the Fed can and cannot control.'; }
+
+  document.getElementById('end-title').textContent = title;
+  document.getElementById('end-title').style.color = color;
+  document.getElementById('end-summary').textContent = summary;
+}
+
+function resetGame() {
+  round = 0; score = 0; policyPoints = 0; compPoints = 0; qIdx = 0;
+  econ = { gdp: 2.4, inflation: 2.8, unemployment: 4.0 };
+  histLabels = ['Start']; histGdp = [2.4]; histInf = [2.8]; histUnemp = [4.0];
+  chart.data.labels = histLabels;
+  chart.data.datasets[0].data = histGdp;
+  chart.data.datasets[1].data = histInf;
+  chart.data.datasets[2].data = histUnemp;
+  chart.update();
+  document.getElementById('hud-score').textContent = '0';
+  document.getElementById('end-screen').style.display = 'none';
+  document.getElementById('game-ui').style.display = 'flex';
+  document.getElementById('game-ui').style.flexDirection = 'column';
+  // Reset delta displays
+  ['d-gdp','d-inf','d-unemp'].forEach(id => {
+    const el = document.getElementById(id);
+    el.textContent = '--'; el.className = 'r-delta neutral';
+  });
+  loadRound();
+}
+</script>
+</body>
+</html>
