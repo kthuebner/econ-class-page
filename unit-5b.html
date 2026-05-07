@@ -271,21 +271,22 @@
 const SCENARIOS = [
   // ROUND 1 — Slowing economy, unemployment rising
   {
+    startingEcon: { gdp: 1.2, inflation: 2.4, unemployment: 4.8 },
     headline: "Jobs Report Raises Alarms",
     situation: "The latest jobs report shows unemployment has climbed to 4.8%, up from 4.0% three months ago. GDP growth has slowed to 1.2%, well below the healthy range of 2 to 3%. Inflation is running at a manageable 2.4%, just above the Fed's 2% target. The economy appears to be losing momentum.",
     isWildcard: false,
     choices: [
       {
-        label: "Lower the federal funds rate",
-        description: "The Federal Reserve cuts its benchmark interest rate, making borrowing cheaper for businesses and consumers.",
-        isCorrect: true,
-        gdpEffect: 1.2, inflationEffect: 0.5, unemploymentEffect: -0.7
-      },
-      {
         label: "Raise the federal funds rate",
         description: "The Federal Reserve increases its benchmark interest rate, making borrowing more expensive across the economy.",
         isCorrect: false,
         gdpEffect: -1.0, inflationEffect: -0.4, unemploymentEffect: 0.6
+      },
+      {
+        label: "Lower the federal funds rate",
+        description: "The Federal Reserve cuts its benchmark interest rate, making borrowing cheaper for businesses and consumers.",
+        isCorrect: true,
+        gdpEffect: 1.2, inflationEffect: 0.5, unemploymentEffect: -0.7
       },
       {
         label: "Cut federal spending",
@@ -316,16 +317,11 @@ const SCENARIOS = [
 
   // ROUND 2 — Inflation heating up
   {
+    startingEcon: { gdp: 3.8, inflation: 5.2, unemployment: 3.6 },
     headline: "Inflation Hits a Four-Year High",
     situation: "Consumer prices are rising at 5.2% annually, well above the Federal Reserve's 2% target. The economy has been growing at a brisk 3.8%, fueled partly by strong consumer spending. Unemployment is low at 3.6%. The Fed is under pressure to act before inflation becomes entrenched in wage and price expectations.",
     isWildcard: false,
     choices: [
-      {
-        label: "Raise the federal funds rate",
-        description: "The Federal Reserve increases its benchmark interest rate, cooling borrowing and spending.",
-        isCorrect: true,
-        gdpEffect: -0.7, inflationEffect: -1.4, unemploymentEffect: 0.4
-      },
       {
         label: "Lower the federal funds rate",
         description: "The Federal Reserve cuts its benchmark interest rate, making credit cheaper.",
@@ -337,6 +333,12 @@ const SCENARIOS = [
         description: "Congress passes a new stimulus package, injecting money into the economy.",
         isCorrect: false,
         gdpEffect: 0.9, inflationEffect: 1.3, unemploymentEffect: -0.4
+      },
+      {
+        label: "Raise the federal funds rate",
+        description: "The Federal Reserve increases its benchmark interest rate, cooling borrowing and spending.",
+        isCorrect: true,
+        gdpEffect: -0.7, inflationEffect: -1.4, unemploymentEffect: 0.4
       },
       {
         label: "Take no action",
@@ -361,16 +363,11 @@ const SCENARIOS = [
 
   // ROUND 3 — Recession territory
   {
+    startingEcon: { gdp: -1.2, inflation: 1.1, unemployment: 6.2 },
     headline: "Two Consecutive Quarters of Negative Growth",
     situation: "GDP has contracted for two straight quarters, meeting the technical definition of a recession. Unemployment has jumped to 6.2%. Inflation has dropped to 1.1%, below the Fed's target, as consumer demand has weakened significantly. Businesses are cutting investment and consumer confidence is near a decade low.",
     isWildcard: false,
     choices: [
-      {
-        label: "Pass a federal stimulus package",
-        description: "Congress approves new government spending on infrastructure, unemployment benefits, and direct payments to households.",
-        isCorrect: true,
-        gdpEffect: 1.8, inflationEffect: 0.7, unemploymentEffect: -1.1
-      },
       {
         label: "Raise income taxes",
         description: "Congress increases tax rates on individuals and businesses to reduce the deficit.",
@@ -388,6 +385,12 @@ const SCENARIOS = [
         description: "Congress reduces spending to balance the budget during the downturn.",
         isCorrect: false,
         gdpEffect: -1.1, inflationEffect: -0.4, unemploymentEffect: 0.8
+      },
+      {
+        label: "Pass a federal stimulus package",
+        description: "Congress approves new government spending on infrastructure, unemployment benefits, and direct payments to households.",
+        isCorrect: true,
+        gdpEffect: 1.8, inflationEffect: 0.7, unemploymentEffect: -1.1
       }
     ],
     comprehensionQuestion: "A stimulus package that increases government spending is what type of policy?",
@@ -406,21 +409,22 @@ const SCENARIOS = [
 
   // ROUND 4 — WILDCARD: Oil price shock
   {
+    startingEcon: { gdp: 1.4, inflation: 6.8, unemployment: 4.6 },
     headline: "Oil Prices Spike 60% After Pipeline Attack",
     situation: "A coordinated attack on a major Middle Eastern oil pipeline has sent crude oil prices surging 60% in two weeks. Energy costs are rippling through the entire economy. Inflation has jumped to 6.8% and is climbing. At the same time, higher transportation and production costs are forcing businesses to cut output and reduce hiring. Unemployment is ticking up.",
     isWildcard: true,
     choices: [
       {
-        label: "Raise rates modestly, accept a slowdown",
-        description: "The Fed nudges interest rates up slightly to keep inflation expectations anchored, while acknowledging some economic pain is unavoidable.",
-        isCorrect: true,
-        gdpEffect: -0.6, inflationEffect: -1.0, unemploymentEffect: 0.4
-      },
-      {
         label: "Cut rates aggressively to prevent recession",
         description: "The Fed slashes interest rates to keep the economy from tipping into recession.",
         isCorrect: false,
         gdpEffect: 0.5, inflationEffect: 1.8, unemploymentEffect: -0.2
+      },
+      {
+        label: "Raise rates modestly, accept a slowdown",
+        description: "The Fed nudges interest rates up slightly to keep inflation expectations anchored, while acknowledging some economic pain is unavoidable.",
+        isCorrect: true,
+        gdpEffect: -0.6, inflationEffect: -1.0, unemploymentEffect: 0.4
       },
       {
         label: "Launch a major spending stimulus",
@@ -451,16 +455,11 @@ const SCENARIOS = [
 
   // ROUND 5 — Dual mandate tension
   {
+    startingEcon: { gdp: 2.9, inflation: 3.6, unemployment: 3.4 },
     headline: "Full Employment, But Prices Are Creeping Up",
     situation: "Unemployment has fallen to 3.4%, essentially the lowest it can go without triggering wage-price spirals. Workers are seeing real wage gains, which is good news. However, inflation has risen to 3.6%, above the Fed's 2% target. GDP growth is a solid 2.9%. The Fed faces a direct tension between its two mandates: maximum employment and stable prices.",
     isWildcard: false,
     choices: [
-      {
-        label: "Raise rates gradually",
-        description: "The Fed slowly increases interest rates over several meetings, aiming to cool inflation without triggering significant job losses.",
-        isCorrect: true,
-        gdpEffect: -0.4, inflationEffect: -1.0, unemploymentEffect: 0.3
-      },
       {
         label: "Cut rates to protect employment",
         description: "The Fed lowers rates to keep unemployment low, prioritizing the jobs side of its dual mandate.",
@@ -472,6 +471,12 @@ const SCENARIOS = [
         description: "Congress funds new employment initiatives to push unemployment even lower.",
         isCorrect: false,
         gdpEffect: 0.6, inflationEffect: 1.2, unemploymentEffect: -0.2
+      },
+      {
+        label: "Raise rates gradually",
+        description: "The Fed slowly increases interest rates over several meetings, aiming to cool inflation without triggering significant job losses.",
+        isCorrect: true,
+        gdpEffect: -0.4, inflationEffect: -1.0, unemploymentEffect: 0.3
       },
       {
         label: "Take no action",
@@ -496,16 +501,11 @@ const SCENARIOS = [
 
   // ROUND 6 — Tax cut proposal (fiscal focus)
   {
+    startingEcon: { gdp: 2.1, inflation: 2.3, unemployment: 4.4 },
     headline: "Congress Considers Sweeping Tax Cuts",
     situation: "The economy is growing at 2.1%, unemployment is at 4.4%, and inflation is back near 2.3%. Growth is moderate but unspectacular. A faction in Congress is proposing large across-the-board income tax cuts, arguing it will spur investment and consumer spending. Critics argue the timing is wrong. You advise the President on whether to support the proposal.",
     isWildcard: false,
     choices: [
-      {
-        label: "Support targeted tax cuts for lower incomes",
-        description: "Endorse tax relief focused on households with lower and middle incomes, who are more likely to spend the extra money.",
-        isCorrect: true,
-        gdpEffect: 0.8, inflationEffect: 0.4, unemploymentEffect: -0.4
-      },
       {
         label: "Support across-the-board large tax cuts",
         description: "Back the full proposal, cutting taxes at all income levels by a significant margin.",
@@ -523,6 +523,12 @@ const SCENARIOS = [
         description: "Recommend no change, arguing the economy is stable and intervention could disrupt it.",
         isCorrect: false,
         gdpEffect: 0.0, inflationEffect: 0.0, unemploymentEffect: 0.0
+      },
+      {
+        label: "Support targeted tax cuts for lower incomes",
+        description: "Endorse tax relief focused on households with lower and middle incomes, who are more likely to spend the extra money.",
+        isCorrect: true,
+        gdpEffect: 0.8, inflationEffect: 0.4, unemploymentEffect: -0.4
       }
     ],
     comprehensionQuestion: "A tax cut that increases consumer spending is an example of what?",
@@ -541,6 +547,7 @@ const SCENARIOS = [
 
   // ROUND 7 — WILDCARD: Pandemic shock
   {
+    startingEcon: { gdp: -3.5, inflation: 0.8, unemployment: 8.1 },
     headline: "A New Respiratory Virus Spreads Rapidly",
     situation: "A fast-moving respiratory virus has prompted voluntary social distancing and business closures. Consumer spending has plunged. GDP is contracting sharply, and unemployment has spiked to 8.1% in just six weeks. Inflation has temporarily dropped to 0.8% as demand collapses. The government must respond quickly before the shock becomes a prolonged depression.",
     isWildcard: true,
@@ -586,16 +593,11 @@ const SCENARIOS = [
 
   // ROUND 8 — Recovery and normalization
   {
+    startingEcon: { gdp: 4.5, inflation: 5.8, unemployment: 3.9 },
     headline: "Recovery Underway, But Overheating Risks Loom",
     situation: "Eighteen months after the pandemic shock, the economy has bounced back strongly. GDP growth is running at 4.5%, unemployment has fallen back to 3.9%, but inflation has risen to 5.8% as supply chains struggle to keep up with surging demand. Emergency stimulus measures are still in place. The question now is when and how to begin pulling them back.",
     isWildcard: false,
     choices: [
-      {
-        label: "Begin tapering stimulus and raising rates",
-        description: "The Fed signals it will slow its bond purchases and begin gradually raising interest rates over the coming year.",
-        isCorrect: true,
-        gdpEffect: -0.8, inflationEffect: -1.6, unemploymentEffect: 0.3
-      },
       {
         label: "Keep all emergency measures in place",
         description: "Policymakers hold current stimulus levels, fearing that withdrawing too early could derail the recovery.",
@@ -607,6 +609,12 @@ const SCENARIOS = [
         description: "Congress adds another round of economic support spending on top of existing measures.",
         isCorrect: false,
         gdpEffect: 0.9, inflationEffect: 2.0, unemploymentEffect: -0.3
+      },
+      {
+        label: "Begin tapering stimulus and raising rates",
+        description: "The Fed signals it will slow its bond purchases and begin gradually raising interest rates over the coming year.",
+        isCorrect: true,
+        gdpEffect: -0.8, inflationEffect: -1.6, unemploymentEffect: 0.3
       },
       {
         label: "Raise rates sharply all at once",
@@ -711,6 +719,16 @@ function startGame() {
 function loadRound() {
   submitted = false; selectedChoice = null; selectedComp = null;
   const s = SCENARIOS[round];
+
+  // Set indicators to match this scenario's starting conditions
+  econ = { ...s.startingEcon };
+  document.getElementById('r-gdp').textContent = econ.gdp.toFixed(1) + '%';
+  document.getElementById('r-inf').textContent = econ.inflation.toFixed(1) + '%';
+  document.getElementById('r-unemp').textContent = econ.unemployment.toFixed(1) + '%';
+  ['d-gdp','d-inf','d-unemp'].forEach(id => {
+    const el = document.getElementById(id);
+    el.textContent = '--'; el.className = 'r-delta neutral';
+  });
 
   document.getElementById('hud-round').textContent = (round + 1) + ' / ' + TOTAL_ROUNDS;
   document.getElementById('hud-quarter').textContent = quarters[qIdx] || 'End';
@@ -843,7 +861,7 @@ function submitAnswer() {
   }
 
   document.getElementById('submit-btn').style.display = 'none';
-  document.getElementById('next-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'flex';
 
   if (round >= TOTAL_ROUNDS - 1) {
     document.getElementById('next-btn').textContent = 'See Results';
@@ -885,7 +903,6 @@ function showEnd() {
 
 function resetGame() {
   round = 0; score = 0; policyPoints = 0; compPoints = 0; qIdx = 0;
-  econ = { gdp: 2.4, inflation: 2.8, unemployment: 4.0 };
   histLabels = ['Start']; histGdp = [2.4]; histInf = [2.8]; histUnemp = [4.0];
   chart.data.labels = histLabels;
   chart.data.datasets[0].data = histGdp;
