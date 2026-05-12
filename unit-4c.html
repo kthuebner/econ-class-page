@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Failures: The Game · Unit 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   CSS VARIABLES & RESET
+══════════════════════════════════════════════ */
+:root {
+  --orange: #ee9334;
+  --orange-dark: #c97820;
+  --charcoal: #2a2a2a;
+  --charcoal-mid: #3d3d3d;
+  --bg: #f0eeeb;
+  --card-bg: #ffffff;
+  --text: #2a2a2a;
+  --text-muted: #666;
+  --green: #2d8a4e;
+  --green-light: #e8f5ee;
+  --red: #c0392b;
+  --red-light: #fdf0ee;
+  --blue: #2563a8;
+  --blue-light: #e8f0fb;
+  --purple: #6b3fa0;
+  --purple-light: #f0eafa;
+  --teal: #1a7a6e;
+  --teal-light: #e6f4f2;
+  --radius: 10px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.10);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.16);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(0,0,0,0.07) 0%, transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(0,0,0,0.07) 0%, transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(0,0,0,0.07) 0%, transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(0,0,0,0.07) 0%, transparent 55%),
+    radial-gradient(#00000011 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 18px 18px;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════════
+   HERO / HEADER
+══════════════════════════════════════════════ */
+.hero {
+  background: var(--charcoal);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero-accent {
+  background: var(--orange);
+  height: 8px;
+  width: 100%;
+}
+.hero-inner {
+  padding: 2rem 2rem 1.8rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 0.4rem;
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 6vw, 4.2rem);
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.hero-sub {
+  color: #aaa;
+  font-size: 1rem;
+  font-weight: 400;
+  max-width: 540px;
+}
+
+/* Player strip */
+.player-strip {
+  background: var(--charcoal-mid);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.player-strip-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.player-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+.player-name-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  color: var(--orange);
+  letter-spacing: 0.06em;
+}
+#change-player-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid #555;
+  color: #888;
+  padding: 0.25rem 0.7rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#change-player-btn:hover { border-color: var(--orange); color: var(--orange); }
+.leaderboard-link {
+  margin-left: auto;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.leaderboard-link:hover { color: var(--orange); }
+
+/* ══════════════════════════════════════════════
+   SCREENS (show/hide)
+══════════════════════════════════════════════ */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ══════════════════════════════════════════════
+   NAME ENTRY SCREEN
+══════════════════════════════════════════════ */
+#screen-name {
+  max-width: 480px;
+  margin: 4rem auto;
+  padding: 2.5rem;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+#screen-name h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.05em;
+  color: var(--charcoal);
+  margin-bottom: 0.5rem;
+}
+#screen-name p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+#name-input {
+  font-family: 'Barlow', sans-serif;
+  font-size: 1.2rem;
+  padding: 0.7rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: var(--radius);
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+#name-input:focus { outline: none; border-color: var(--orange); }
+
+/* ══════════════════════════════════════════════
+   HUB / MENU
+══════════════════════════════════════════════ */
+#screen-hub {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+.hub-intro {
+  margin-bottom: 2rem;
+}
+.hub-intro h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.04em;
+  color: var(--charcoal);
+  margin-bottom: 0.3rem;
+}
+.hub-intro p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+  gap: 1.2rem;
+}
+.level-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.6rem 1.8rem;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  border-left: 5px solid var(--orange);
+  position: relative;
+  overflow: hidden;
+}
+.level-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+.level-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  background: var(--orange);
+  opacity: 0.05;
+  border-radius: 50%;
+  transform: translate(20px, -20px);
+}
+.level-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 0.25rem;
+}
+.level-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.7rem;
+  letter-spacing: 0.04em;
+  color: var(--charcoal);
+  margin-bottom: 0.4rem;
+}
+.level-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+.level-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.level-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: #f0eeeb;
+  color: #777;
+}
+.level-best {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+.level-best span {
+  font-weight: 700;
+  color: var(--orange);
+}
+.play-btn {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--orange);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.4rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.play-btn:hover { background: var(--orange-dark); }
+
+/* ══════════════════════════════════════════════
+   GAME CHROME (shared header for all levels)
+══════════════════════════════════════════════ */
+.game-chrome {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+}
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.back-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid #ccc;
+  color: var(--text-muted);
+  padding: 0.35rem 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.back-btn:hover { border-color: var(--charcoal); color: var(--charcoal); }
+.game-title-bar {
+  flex: 1;
+}
+.game-title-bar h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem;
+  letter-spacing: 0.04em;
+  color: var(--charcoal);
+  line-height: 1;
+}
+.game-title-bar p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.stat-pills {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.stat-pill {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  background: var(--charcoal);
+  color: white;
+  min-width: 60px;
+  text-align: center;
+}
+.stat-pill.lives { background: #c0392b; }
+.stat-pill.score { background: var(--orange); }
+.stat-pill.timer { background: var(--blue); }
+.stat-pill.streak { background: var(--purple); }
+
+/* Progress bar */
+.progress-bar-wrap {
+  background: #e0deda;
+  border-radius: 4px;
+  height: 6px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  background: var(--orange);
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* ══════════════════════════════════════════════
+   LEVEL 1: IDENTIFY THE FAILURE
+══════════════════════════════════════════════ */
+.scenario-box {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+.scenario-num-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 0.6rem;
+}
+.scenario-text {
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--charcoal);
+}
+.choices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 520px) { .choices-grid { grid-template-columns: 1fr; } }
+.choice-btn {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.85rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--charcoal);
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: left;
+  line-height: 1.3;
+}
+.choice-btn:hover:not(:disabled) {
+  border-color: var(--orange);
+  background: #fdf6ed;
+}
+.choice-btn.correct {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+}
+.choice-btn.wrong {
+  border-color: var(--red);
+  background: var(--red-light);
+  color: var(--red);
+}
+.choice-btn:disabled { cursor: default; }
+.feedback-box {
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin-top: 1rem;
+  font-size: 0.93rem;
+  line-height: 1.55;
+  display: none;
+}
+.feedback-box.correct {
+  background: var(--green-light);
+  border-left: 4px solid var(--green);
+  color: #1a5c33;
+  display: block;
+}
+.feedback-box.wrong {
+  background: var(--red-light);
+  border-left: 4px solid var(--red);
+  color: #8b1a1a;
+  display: block;
+}
+.feedback-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.next-btn {
+  display: block;
+  margin: 1.2rem auto 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--charcoal);
+  color: white;
+  border: none;
+  padding: 0.7rem 2.2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.next-btn:hover { background: var(--orange); }
+
+/* ══════════════════════════════════════════════
+   LEVEL 2: DRAG TO STRUCTURE
+══════════════════════════════════════════════ */
+.drag-instructions {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+}
+.structures-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+}
+@media (max-width: 700px) {
+  .structures-row { grid-template-columns: repeat(2, 1fr); }
+}
+.drop-bucket {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: 2px dashed #ccc;
+  padding: 0.8rem;
+  min-height: 200px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.drop-bucket.drag-over {
+  border-color: var(--orange);
+  background: #fdf6ed;
+}
+.bucket-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  color: var(--charcoal);
+  border-bottom: 2px solid var(--orange);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
+  line-height: 1.2;
+}
+.bucket-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  font-style: italic;
+}
+.dropped-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  margin-bottom: 0.4rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.dropped-tag.correct {
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid #a8d5bc;
+}
+.dropped-tag.wrong {
+  background: var(--red-light);
+  color: var(--red);
+  border: 1px solid #f5bab4;
+}
+.dropped-tag.pending {
+  background: #f0eeeb;
+  color: var(--charcoal);
+  border: 1px solid #ccc;
+}
+.drag-pool-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+.drag-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  min-height: 60px;
+}
+.drag-chip {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.9rem;
+  background: var(--charcoal);
+  color: white;
+  border-radius: 20px;
+  cursor: grab;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  user-select: none;
+}
+.drag-chip:hover { transform: scale(1.04); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.drag-chip.dragging { opacity: 0.4; }
+.check-drag-btn {
+  display: block;
+  margin: 1.2rem auto 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--orange);
+  color: white;
+  border: none;
+  padding: 0.7rem 2.2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.check-drag-btn:hover { background: var(--orange-dark); }
+
+/* ══════════════════════════════════════════════
+   LEVEL 3: FIX IT
+══════════════════════════════════════════════ */
+.failure-tag {
+  display: inline-block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.7rem;
+  border-radius: 4px;
+  margin-bottom: 0.7rem;
+  background: var(--red-light);
+  color: var(--red);
+  border: 1px solid #f5bab4;
+}
+.policy-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+.policy-btn {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.45;
+  padding: 0.9rem 1.1rem;
+  border: 2px solid #ddd;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--charcoal);
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: left;
+}
+.policy-btn:hover:not(:disabled) {
+  border-color: var(--blue);
+  background: var(--blue-light);
+}
+.policy-btn.correct {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+}
+.policy-btn.wrong {
+  border-color: var(--red);
+  background: var(--red-light);
+  color: var(--red);
+}
+.policy-btn.reveal-correct {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+}
+.policy-btn:disabled { cursor: default; }
+
+/* ══════════════════════════════════════════════
+   LEVEL 4: SPEED ROUND
+══════════════════════════════════════════════ */
+.timer-ring-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.timer-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  color: var(--charcoal);
+  text-align: center;
+  line-height: 1;
+  transition: color 0.3s;
+}
+.timer-display.urgent { color: var(--red); }
+.streak-display {
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  letter-spacing: 0.06em;
+}
+.streak-display span {
+  font-weight: 700;
+  color: var(--purple);
+  font-size: 1.2rem;
+}
+.speed-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+@media (max-width: 500px) { .speed-choices { grid-template-columns: 1fr; } }
+.speed-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.8rem 0.6rem;
+  border: 2px solid #ddd;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--charcoal);
+  cursor: pointer;
+  transition: all 0.14s;
+  text-align: center;
+}
+.speed-btn:hover:not(:disabled) {
+  border-color: var(--orange);
+  background: #fdf6ed;
+  transform: scale(1.02);
+}
+.speed-btn.flash-correct {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+}
+.speed-btn.flash-wrong {
+  border-color: var(--red);
+  background: var(--red-light);
+  color: var(--red);
+}
+.speed-btn:disabled { cursor: default; }
+.speed-start-btn {
+  display: block;
+  margin: 1.5rem auto;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.1em;
+  background: var(--orange);
+  color: white;
+  border: none;
+  padding: 0.8rem 3rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s;
+}
+.speed-start-btn:hover { background: var(--orange-dark); transform: scale(1.03); }
+
+/* ══════════════════════════════════════════════
+   RESULTS SCREEN
+══════════════════════════════════════════════ */
+#screen-results {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+.results-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.5rem;
+  text-align: center;
+}
+.results-level-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 0.5rem;
+}
+.results-score-big {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--charcoal);
+  margin-bottom: 0.2rem;
+}
+.results-score-big span { color: var(--orange); }
+.results-label {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+.results-grade {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+.results-msg {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+.results-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.results-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.5rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: none;
+  transition: all 0.18s;
+}
+.results-btn.primary { background: var(--orange); color: white; }
+.results-btn.primary:hover { background: var(--orange-dark); }
+.results-btn.secondary { background: #e8e6e3; color: var(--charcoal); }
+.results-btn.secondary:hover { background: #d8d6d3; }
+.posting-status {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.8rem;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════════════
+   LEADERBOARD SCREEN
+══════════════════════════════════════════════ */
+#screen-leaderboard {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+}
+.lb-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.lb-header h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+.lb-filter {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+.lb-filter-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  border: 2px solid #ddd;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lb-filter-btn.active {
+  border-color: var(--orange);
+  background: var(--orange);
+  color: white;
+}
+.lb-table {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.lb-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 100px 80px;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  border-bottom: 1px solid #f0eeeb;
+  transition: background 0.15s;
+}
+.lb-row:last-child { border-bottom: none; }
+.lb-row:hover { background: #fdf6ed; }
+.lb-row.header {
+  background: var(--charcoal);
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.lb-rank {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  color: var(--orange);
+}
+.lb-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.lb-level {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.lb-score {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--charcoal);
+  text-align: right;
+}
+.lb-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+.lb-loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--charcoal);
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.7rem 1.5rem;
+  border-radius: 30px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ══════════════════════════════════════════════
+   BUTTON BASE
+══════════════════════════════════════════════ */
+button { font-family: inherit; }
+
+/* ══════════════════════════════════════════════
+   SPEED ROUND PRE-START
+══════════════════════════════════════════════ */
+.speed-intro {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  text-align: center;
+}
+.speed-intro h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.8rem;
+}
+.speed-intro p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 420px;
+  margin: 0 auto 1.2rem;
+}
+.speed-rules {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.speed-rule-chip {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  background: #f0eeeb;
+  color: var(--charcoal);
+  border: 1px solid #ddd;
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-accent"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Unit 4 · Market Failures</div>
+    <h1>The Market Failures Game</h1>
+    <p class="hero-sub">Four levels. Scenarios, structures, policies, and a speed round. How well do you know your failures?</p>
+  </div>
+  <div class="player-strip">
+    <div class="player-strip-inner">
+      <span class="player-label">Playing as</span>
+      <span class="player-name-display" id="player-name-display">---</span>
+      <button id="change-player-btn" onclick="showScreen('name')">Change</button>
+      <a class="leaderboard-link" onclick="showLeaderboard()">Class Leaderboard &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     NAME ENTRY SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-name" class="screen">
+  <div style="max-width:480px;margin:4rem auto;padding:2.5rem;background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);text-align:center;">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:0.05em;margin-bottom:0.5rem;">Who Are You?</h2>
+    <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:0.95rem;">Enter your name or initials. This shows up on the class leaderboard.</p>
+    <input type="text" id="name-input" placeholder="YOUR NAME" maxlength="20" autocomplete="off">
+    <button class="play-btn" style="width:100%;padding:0.75rem;font-size:1rem;" onclick="submitName()">Let's Go</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     HUB SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-hub" class="screen">
+  <div class="hub-intro">
+    <h2>Choose a Level</h2>
+    <p>All levels are available. Complete them in any order. Your best scores are saved.</p>
+  </div>
+  <div class="level-grid">
+
+    <div class="level-card" onclick="startLevel1()">
+      <div class="level-num">Level 1</div>
+      <div class="level-title">Identify the Failure</div>
+      <div class="level-desc">Read a real-world scenario. Pick which type of market failure it represents. 3 lives, 9 rounds.</div>
+      <div class="level-meta">
+        <span class="level-badge">9 Scenarios</span>
+        <span class="level-badge">3 Lives</span>
+        <span class="level-best">Best: <span id="best-l1">--</span></span>
+      </div>
+      <button class="play-btn">Play</button>
+    </div>
+
+    <div class="level-card" onclick="startLevel2()">
+      <div class="level-num">Level 2</div>
+      <div class="level-title">Sort the Structures</div>
+      <div class="level-desc">Drag 12 real industries into the correct market structure bucket. How many can you place correctly?</div>
+      <div class="level-meta">
+        <span class="level-badge">12 Examples</span>
+        <span class="level-badge">Drag & Drop</span>
+        <span class="level-best">Best: <span id="best-l2">--</span></span>
+      </div>
+      <button class="play-btn">Play</button>
+    </div>
+
+    <div class="level-card" onclick="startLevel3()">
+      <div class="level-num">Level 3</div>
+      <div class="level-title">Fix It</div>
+      <div class="level-desc">A market is broken. Three policy options are on the table. Pick the best government response.</div>
+      <div class="level-meta">
+        <span class="level-badge">5 Scenarios</span>
+        <span class="level-badge">Policy Choices</span>
+        <span class="level-best">Best: <span id="best-l3">--</span></span>
+      </div>
+      <button class="play-btn">Play</button>
+    </div>
+
+    <div class="level-card" onclick="startLevel4()">
+      <div class="level-num">Level 4</div>
+      <div class="level-title">Speed Round</div>
+      <div class="level-desc">30 seconds. Scenarios fire one at a time. Click the failure type as fast as you can. Streak multiplier active.</div>
+      <div class="level-meta">
+        <span class="level-badge">30 Seconds</span>
+        <span class="level-badge">Streak Bonus</span>
+        <span class="level-best">Best: <span id="best-l4">--</span></span>
+      </div>
+      <button class="play-btn">Play</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LEVEL 1 SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-l1" class="screen">
+  <div class="game-chrome">
+    <div class="game-header">
+      <button class="back-btn" onclick="goHub()">← Menu</button>
+      <div class="game-title-bar">
+        <h2>Identify the Failure</h2>
+        <p>What kind of market failure is this?</p>
+      </div>
+      <div class="stat-pills">
+        <div class="stat-pill lives" id="l1-lives">❤️❤️❤️</div>
+        <div class="stat-pill score" id="l1-score">0 / 9</div>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="l1-progress" style="width:0%"></div>
+    </div>
+    <div class="scenario-box">
+      <div class="scenario-num-label" id="l1-scenario-num">Scenario 1 of 9</div>
+      <div class="scenario-text" id="l1-scenario-text"></div>
+    </div>
+    <div class="choices-grid" id="l1-choices"></div>
+    <div class="feedback-box" id="l1-feedback">
+      <div class="feedback-label" id="l1-feedback-label"></div>
+      <div id="l1-feedback-text"></div>
+    </div>
+    <button class="next-btn" id="l1-next-btn" style="display:none;" onclick="l1Next()">Next Scenario &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LEVEL 2 SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-l2" class="screen">
+  <div class="game-chrome">
+    <div class="game-header">
+      <button class="back-btn" onclick="goHub()">← Menu</button>
+      <div class="game-title-bar">
+        <h2>Sort the Structures</h2>
+        <p>Drag each industry to its correct market structure.</p>
+      </div>
+      <div class="stat-pills">
+        <div class="stat-pill score" id="l2-score">0 / 12</div>
+      </div>
+    </div>
+    <p class="drag-instructions">Drag the chips below into the correct bucket. Click "Check Answers" when you're done. Chips in the wrong bucket can be dragged back to the pool.</p>
+    <div class="structures-row" id="l2-buckets"></div>
+    <div class="drag-pool-label">Drag these into the buckets above:</div>
+    <div class="drag-pool" id="l2-pool"></div>
+    <button class="check-drag-btn" id="l2-check-btn" onclick="checkDrag()">Check Answers</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LEVEL 3 SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-l3" class="screen">
+  <div class="game-chrome">
+    <div class="game-header">
+      <button class="back-btn" onclick="goHub()">← Menu</button>
+      <div class="game-title-bar">
+        <h2>Fix It</h2>
+        <p>Pick the best government response to this market failure.</p>
+      </div>
+      <div class="stat-pills">
+        <div class="stat-pill score" id="l3-score">0 / 5</div>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="l3-progress" style="width:0%"></div>
+    </div>
+    <div class="scenario-box">
+      <div class="scenario-num-label" id="l3-scenario-num">Scenario 1 of 5</div>
+      <div class="failure-tag" id="l3-failure-tag"></div>
+      <div class="scenario-text" id="l3-scenario-text"></div>
+      <div class="policy-choices" id="l3-choices"></div>
+      <div class="feedback-box" id="l3-feedback">
+        <div class="feedback-label" id="l3-feedback-label"></div>
+        <div id="l3-feedback-text"></div>
+      </div>
+    </div>
+    <button class="next-btn" id="l3-next-btn" style="display:none;" onclick="l3Next()">Next Scenario &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LEVEL 4 SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-l4" class="screen">
+  <div class="game-chrome">
+    <div class="game-header">
+      <button class="back-btn" onclick="goHub()">← Menu</button>
+      <div class="game-title-bar">
+        <h2>Speed Round</h2>
+        <p>Click the correct market failure as fast as you can.</p>
+      </div>
+      <div class="stat-pills">
+        <div class="stat-pill timer" id="l4-timer">30</div>
+        <div class="stat-pill score" id="l4-score">0</div>
+        <div class="stat-pill streak" id="l4-streak">x1</div>
+      </div>
+    </div>
+
+    <div id="l4-intro" class="speed-intro">
+      <h3>Speed Round</h3>
+      <p>You have 30 seconds. Scenarios fire one at a time. Click the correct market failure type as fast as you can. Build a streak for a score multiplier.</p>
+      <div class="speed-rules">
+        <span class="speed-rule-chip">30 Seconds</span>
+        <span class="speed-rule-chip">Streak x2 at 3 in a row</span>
+        <span class="speed-rule-chip">Streak x3 at 6 in a row</span>
+      </div>
+      <button class="speed-start-btn" onclick="startSpeedRound()">Start</button>
+    </div>
+
+    <div id="l4-game" style="display:none;">
+      <div class="scenario-box" style="margin-bottom:1rem;">
+        <div class="scenario-num-label" id="l4-q-num">Question 1</div>
+        <div class="scenario-text" id="l4-scenario-text"></div>
+      </div>
+      <div class="speed-choices" id="l4-choices"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     RESULTS SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-results" class="screen">
+  <div class="results-card">
+    <div class="results-level-label" id="res-level-label">Level 1</div>
+    <div class="results-score-big" id="res-score-big">8<span>/9</span></div>
+    <div class="results-label" id="res-score-label">Correct answers</div>
+    <div class="results-grade" id="res-grade"></div>
+    <div class="results-msg" id="res-msg"></div>
+    <div class="results-actions">
+      <button class="results-btn primary" id="res-retry-btn">Try Again</button>
+      <button class="results-btn secondary" onclick="goHub()">Menu</button>
+      <button class="results-btn secondary" onclick="showLeaderboard()">Leaderboard</button>
+    </div>
+    <div class="posting-status" id="res-posting-status"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LEADERBOARD SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-leaderboard" class="screen">
+  <div id="screen-leaderboard-inner">
+    <div class="lb-header">
+      <button class="back-btn" onclick="goHub()">← Menu</button>
+      <h2>Class Leaderboard</h2>
+    </div>
+    <div class="lb-filter" id="lb-filter">
+      <button class="lb-filter-btn active" onclick="filterLB('all', this)">All Levels</button>
+      <button class="lb-filter-btn" onclick="filterLB('Level 1', this)">Level 1</button>
+      <button class="lb-filter-btn" onclick="filterLB('Level 2', this)">Level 2</button>
+      <button class="lb-filter-btn" onclick="filterLB('Level 3', this)">Level 3</button>
+      <button class="lb-filter-btn" onclick="filterLB('Level 4', this)">Level 4</button>
+    </div>
+    <div class="lb-table">
+      <div class="lb-row header">
+        <div>#</div>
+        <div>Name</div>
+        <div>Level</div>
+        <div style="text-align:right;">Score</div>
+      </div>
+      <div id="lb-body"><div class="lb-loading">Loading leaderboard...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+
+/* ─────────────────────────────────────────────
+   CONFIG: Replace SHEET_URL with your Apps Script URL
+───────────────────────────────────────────── */
+const SHEET_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+/* ─────────────────────────────────────────────
+   GAME DATA
+───────────────────────────────────────────── */
+
+const FAILURE_TYPES = [
+  'Negative Externality',
+  'Positive Externality',
+  'Public Good',
+  'Monopoly / Oligopoly',
+  'Information Asymmetry',
+  'Tragedy of the Commons'
+];
+
+const L1_SCENARIOS = [
+  {
+    text: "A chemical plant on the edge of town releases pollutants into a nearby river. The plant is profitable. The fishing families downstream aren't compensated for the damage to their livelihoods. Nobody asked them.",
+    answer: 'Negative Externality',
+    feedback: "The plant is producing a cost that goes external, paid by people who had nothing to do with the transaction. That's a textbook negative externality."
+  },
+  {
+    text: "A man buys a used car from a private seller. The seller knows the transmission is failing. The buyer has no way to find this out before the sale and pays full price. The car breaks down a week later.",
+    answer: 'Information Asymmetry',
+    feedback: "The seller has information the buyer doesn't. This is the classic 'Market for Lemons' problem. When buyers can't tell quality from junk, the whole market breaks down."
+  },
+  {
+    text: "Three airlines control 80% of domestic routes. When one raises baggage fees, the others follow within days. Prices rarely drop, even when jet fuel gets significantly cheaper.",
+    answer: 'Monopoly / Oligopoly',
+    feedback: "With so few competitors, firms act like price makers and can informally coordinate pricing. This is oligopoly behavior, a form of market failure where competition collapses."
+  },
+  {
+    text: "A city considers offering free vaccinations to all residents. Without the program, many people won't get vaccinated, putting the broader community at risk even for those who did pay for a shot.",
+    answer: 'Positive Externality',
+    feedback: "Vaccines create benefits for people who didn't pay for them (herd immunity). The free market underproduces goods with positive externalities, so the government steps in with subsidies."
+  },
+  {
+    text: "A mortgage company offers a loan with terms buried in 40 pages of fine print. The annual interest rate is printed in size 6 font on page 31. Most borrowers sign without understanding what they've agreed to.",
+    answer: 'Information Asymmetry',
+    feedback: "The lender knows exactly what those terms mean for the borrower. The borrower doesn't. This kind of information gap, deliberately exploited, played a major role in the 2008 financial crisis."
+  },
+  {
+    text: "One company controls 90% of the global diamond supply. They decide how many diamonds enter the market each year, artificially keeping prices high. There are no real competitors.",
+    answer: 'Monopoly / Oligopoly',
+    feedback: "De Beers ran a near-total monopoly on diamonds for decades. A single firm controlling supply and price is the definition of monopoly power, and a market failure for consumers."
+  },
+  {
+    text: "A shared ocean fishing ground has no ownership. Every fishing company catches as much as it can before others do. Within a decade, the fish population collapses. No one individual caused it, but everyone contributed.",
+    answer: 'Tragedy of the Commons',
+    feedback: "No single actor owns the resource, so no one has an incentive to conserve it. When everyone acts in their self-interest with a shared resource, the resource gets destroyed. Tragedy of the Commons."
+  },
+  {
+    text: "A rural county needs roads, street lights, and flood control infrastructure. No private company will build these because they can't charge people for using a road, and it's impossible to exclude anyone from benefiting.",
+    answer: 'Public Good',
+    feedback: "Public goods are non-excludable (you can't stop people from using them) and non-rival (one person using them doesn't reduce availability for others). Private markets won't produce them profitably, so government must."
+  },
+  {
+    text: "A coal plant produces electricity cheaply. The price of electricity doesn't include the health costs of asthma treatment in nearby neighborhoods, the acid rain damaging forests, or the long-term climate effects.",
+    answer: 'Negative Externality',
+    feedback: "The cost has gone external. Society pays for the pollution in healthcare and environmental damage, while the company and its customers pay an artificially low price. Classic negative externality."
+  }
+];
+
+const L2_STRUCTURES = {
+  'Perfect Competition': {
+    hint: 'Many sellers, identical products, no pricing power',
+    items: ['Wheat farmers', 'Corn growers', 'T-shirt manufacturers']
+  },
+  'Monopolistic Competition': {
+    hint: 'Many sellers, similar but differentiated products',
+    items: ['Coffee shops', 'Restaurants', 'Hair salons']
+  },
+  'Oligopoly': {
+    hint: 'Few large firms dominate the market',
+    items: ['Major airlines', 'Big 3 automakers', 'Major cell carriers']
+  },
+  'Monopoly': {
+    hint: 'One firm controls the entire market',
+    items: ['Local water utility', 'De Beers diamonds', 'Local electric company']
+  }
+};
+
+const L3_SCENARIOS = [
+  {
+    failure: 'Negative Externality',
+    text: "A coal plant produces electricity at low cost but releases CO2 and sulfur dioxide that damage forests, cause acid rain, and drive up healthcare costs in surrounding communities. The damage is real but not included in the price of electricity.",
+    options: [
+      { text: "Impose a carbon tax or Pigouvian tax on emissions, forcing the plant to internalize the cost it's creating for society.", correct: true },
+      { text: "Offer the plant a government subsidy to keep electricity prices low and protect consumer access.", correct: false },
+      { text: "Break the plant up under antitrust law to create more competition in the energy market.", correct: false }
+    ],
+    feedback: "A Pigouvian tax adds the external cost directly to the price of the polluting activity. This is the textbook market-based solution: instead of banning pollution, you make polluters pay for it. Acid rain regulations in the 1990s used a cap-and-trade version of this approach with major success."
+  },
+  {
+    failure: 'Tragedy of the Commons',
+    text: "Pacific tuna populations are collapsing because fishing fleets from multiple countries race to catch as much as possible. No country owns the ocean, and every fleet has an incentive to catch more before others do. At current rates, tuna could be commercially extinct within decades.",
+    options: [
+      { text: "Establish a cap-and-trade system with fishing quotas: set a total catch limit and let fishing rights be bought and sold among fleets.", correct: true },
+      { text: "Subsidize the fishing industry to help fleets modernize and catch fish more efficiently.", correct: false },
+      { text: "Require all fishing companies to publicly disclose their annual catch totals.", correct: false }
+    ],
+    feedback: "Cap-and-trade creates property rights over the shared resource. By capping total catch and letting quotas trade, you give fishers a financial stake in the resource's survival. This is a market-based solution that converts an open-access commons into something with ownership and therefore conservation incentive."
+  },
+  {
+    failure: 'Monopoly / Oligopoly',
+    text: "Four pharmaceutical companies control the market for a critical insulin medication. When one raises prices 400%, the others follow. Generic manufacturers can't enter the market due to patent protections and high barriers to entry. Diabetic patients ration their medication.",
+    options: [
+      { text: "Enforce antitrust laws, investigate price coordination, and push for patent reform to allow generic competition to enter the market.", correct: true },
+      { text: "Impose a Pigouvian tax on pharmaceutical profits to capture the excess revenue for public use.", correct: false },
+      { text: "Nationalize insulin production and distribute it as a public good.", correct: false }
+    ],
+    feedback: "Antitrust enforcement is the primary tool for restoring competition to concentrated markets. Patent reform addresses the barrier to entry that keeps generics out. While nationalization could work in theory, the market-based fix is restoring competition, which is exactly what antitrust law was designed to do."
+  },
+  {
+    failure: 'Positive Externality',
+    text: "Many low-income families skip childhood vaccines because of cost or inconvenience. Their children may be fine, but unvaccinated individuals weaken herd immunity, putting immunocompromised people, infants, and cancer patients at serious risk.",
+    options: [
+      { text: "Subsidize or provide vaccines for free through public health programs, since the benefits to non-payers (herd immunity) justify public investment.", correct: true },
+      { text: "Tax unvaccinated individuals to recover the cost they impose on the healthcare system.", correct: false },
+      { text: "Break up pharmaceutical companies that charge high prices for vaccines to increase access.", correct: false }
+    ],
+    feedback: "When positive externalities exist, the free market underproduces the good because private buyers don't capture all the benefits. The subsidy aligns private cost with social value. This is why most countries provide free childhood vaccines: the return to society is massive relative to the cost."
+  },
+  {
+    failure: 'Information Asymmetry',
+    text: "Used car sellers know far more about their cars than buyers do. Buyers can't tell a well-maintained car from a lemon without expensive inspections. As a result, buyers pay low prices to protect themselves, and sellers of genuinely good cars can't get fair value. Quality cars leave the market.",
+    options: [
+      { text: "Require mandatory disclosure laws: sellers must provide inspection reports, and dealers must offer a minimum warranty period.", correct: true },
+      { text: "Subsidize used car purchases to stimulate demand and bring more buyers into the market.", correct: false },
+      { text: "Apply antitrust law to break up large used car dealer networks that dominate local markets.", correct: false }
+    ],
+    feedback: "Disclosure requirements directly attack the information gap. When buyers have access to the same information sellers do, the market works. Mandatory inspections and lemon laws are real-world examples: they don't eliminate the market, they fix the condition causing it to fail."
+  }
+];
+
+// All scenarios for speed round (pool from L1 + extras)
+const SPEED_POOL = [
+  { text: "A factory dumps waste into a river. Cleanup costs are paid by the city, not the factory.", answer: 'Negative Externality' },
+  { text: "A buyer purchases a used laptop. The seller knows the battery lasts 20 minutes. The buyer finds out after the sale.", answer: 'Information Asymmetry' },
+  { text: "Two airlines control 90% of flights out of a regional airport. Fares never drop, even off-peak.", answer: 'Monopoly / Oligopoly' },
+  { text: "A city builds a public park. No one can be charged for enjoying it.", answer: 'Public Good' },
+  { text: "A company with patents on a drug charges 1000x the manufacturing cost with no competition.", answer: 'Monopoly / Oligopoly' },
+  { text: "Getting a flu shot protects people who never paid for one.", answer: 'Positive Externality' },
+  { text: "Groundwater from a shared aquifer is being drained by neighboring farms faster than it recharges.", answer: 'Tragedy of the Commons' },
+  { text: "A payday lender uses confusing APR calculations that borrowers consistently underestimate.", answer: 'Information Asymmetry' },
+  { text: "Secondhand smoke from a restaurant affects neighboring diners who chose a smoke-free section.", answer: 'Negative Externality' },
+  { text: "A lighthouse is built. All ships benefit, regardless of who paid for it.", answer: 'Public Good' },
+  { text: "A local pond is overfished by residents until no fish remain.", answer: 'Tragedy of the Commons' },
+  { text: "A tutoring company improves students' outcomes beyond the individual student, raising community literacy.", answer: 'Positive Externality' },
+  { text: "Three major streaming services raised prices in the same month by the same amount.", answer: 'Monopoly / Oligopoly' },
+  { text: "A homebuyer discovers the house has foundation damage that only the seller knew about.", answer: 'Information Asymmetry' },
+  { text: "A city's streetlights benefit every pedestrian whether they pay taxes or not.", answer: 'Public Good' }
+];
+
+/* ─────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────── */
+let playerName = localStorage.getItem('mf_player') || '';
+let bestScores = JSON.parse(localStorage.getItem('mf_best') || '{}');
+
+// L1
+let l1Index = 0, l1Score = 0, l1Lives = 3, l1Answered = false;
+
+// L2
+let l2Placements = {}; // chipId -> bucketId
+
+// L3
+let l3Index = 0, l3Score = 0, l3Answered = false;
+
+// L4
+let l4Score = 0, l4Streak = 0, l4Multiplier = 1, l4Timer = 30, l4Interval = null, l4QNum = 0, l4Active = false;
+let l4Pool = [];
+
+// Leaderboard
+let lbAllData = [];
+let lbFilter = 'all';
+
+/* ─────────────────────────────────────────────
+   UTILS
+───────────────────────────────────────────── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function showToast(msg, duration = 2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function saveBest(level, score) {
+  const key = 'L' + level;
+  if (!bestScores[key] || score > bestScores[key]) {
+    bestScores[key] = score;
+    localStorage.setItem('mf_best', JSON.stringify(bestScores));
+    updateHubBests();
+  }
+}
+
+function updateHubBests() {
+  ['1','2','3','4'].forEach(n => {
+    const el = document.getElementById('best-l' + n);
+    if (el) el.textContent = bestScores['L' + n] !== undefined ? bestScores['L' + n] : '--';
+  });
+}
+
+function goHub() {
+  // Stop speed round if running
+  if (l4Interval) { clearInterval(l4Interval); l4Interval = null; l4Active = false; }
+  showScreen('hub');
+  updateHubBests();
+}
+
+/* ─────────────────────────────────────────────
+   NAME
+───────────────────────────────────────────── */
+function submitName() {
+  const val = document.getElementById('name-input').value.trim().toUpperCase();
+  if (!val) { showToast('Enter your name first.'); return; }
+  playerName = val;
+  localStorage.setItem('mf_player', playerName);
+  document.getElementById('player-name-display').textContent = playerName;
+  goHub();
+}
+
+document.getElementById('name-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitName();
+});
+
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+function init() {
+  updateHubBests();
+  if (!playerName) {
+    showScreen('name');
+  } else {
+    document.getElementById('player-name-display').textContent = playerName;
+    showScreen('hub');
+  }
+}
+
+/* ─────────────────────────────────────────────
+   LEVEL 1
+───────────────────────────────────────────── */
+let l1Shuffled = [];
+
+function startLevel1() {
+  l1Index = 0; l1Score = 0; l1Lives = 3; l1Answered = false;
+  l1Shuffled = shuffle(L1_SCENARIOS);
+  showScreen('l1');
+  renderL1();
+}
+
+function renderL1() {
+  if (l1Index >= l1Shuffled.length) { endLevel1(); return; }
+  const s = l1Shuffled[l1Index];
+  document.getElementById('l1-scenario-num').textContent = `Scenario ${l1Index + 1} of ${l1Shuffled.length}`;
+  document.getElementById('l1-scenario-text').textContent = s.text;
+  document.getElementById('l1-progress').style.width = (l1Index / l1Shuffled.length * 100) + '%';
+  document.getElementById('l1-score').textContent = `${l1Score} / ${l1Shuffled.length}`;
+  document.getElementById('l1-lives').textContent = '❤️'.repeat(l1Lives) + '🖤'.repeat(3 - l1Lives);
+  const fb = document.getElementById('l1-feedback');
+  fb.className = 'feedback-box';
+  fb.style.display = 'none';
+  document.getElementById('l1-next-btn').style.display = 'none';
+  l1Answered = false;
+
+  // Build choices: correct + 4 random wrong
+  const wrong = shuffle(FAILURE_TYPES.filter(f => f !== s.answer)).slice(0, 4);
+  const choices = shuffle([s.answer, ...wrong]);
+
+  const grid = document.getElementById('l1-choices');
+  grid.innerHTML = '';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => l1Answer(c, s);
+    grid.appendChild(btn);
+  });
+}
+
+function l1Answer(choice, scenario) {
+  if (l1Answered) return;
+  l1Answered = true;
+  const correct = choice === scenario.answer;
+  if (correct) l1Score++;
+  else { l1Lives--; }
+
+  // Color buttons
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === scenario.answer) btn.classList.add('correct');
+    else if (btn.textContent === choice && !correct) btn.classList.add('wrong');
+  });
+
+  // Feedback
+  const fb = document.getElementById('l1-feedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback-box ' + (correct ? 'correct' : 'wrong');
+  document.getElementById('l1-feedback-label').textContent = correct ? 'Correct.' : 'Not quite.';
+  document.getElementById('l1-feedback-text').textContent = scenario.feedback;
+
+  document.getElementById('l1-score').textContent = `${l1Score} / ${l1Shuffled.length}`;
+  document.getElementById('l1-lives').textContent = '❤️'.repeat(Math.max(0,l1Lives)) + '🖤'.repeat(3 - Math.max(0,l1Lives));
+
+  if (l1Lives <= 0 && !correct) {
+    // Game over
+    setTimeout(() => endLevel1(true), 1200);
+    return;
+  }
+  document.getElementById('l1-next-btn').style.display = 'block';
+}
+
+function l1Next() {
+  l1Index++;
+  if (l1Index >= l1Shuffled.length) { endLevel1(); return; }
+  renderL1();
+}
+
+function endLevel1(outOfLives = false) {
+  const max = l1Shuffled.length;
+  const displayScore = l1Score + ' / ' + max;
+  saveBest(1, l1Score);
+  postScore('Level 1', l1Score);
+  showResults('Level 1', displayScore, l1Score, max, () => startLevel1(), outOfLives ? 'Out of lives!' : null);
+}
+
+/* ─────────────────────────────────────────────
+   LEVEL 2
+───────────────────────────────────────────── */
+let l2DragItem = null;
+
+function startLevel2() {
+  l2Placements = {};
+  showScreen('l2');
+  renderL2();
+}
+
+function renderL2() {
+  const bucketsDiv = document.getElementById('l2-buckets');
+  const poolDiv = document.getElementById('l2-pool');
+  bucketsDiv.innerHTML = '';
+  poolDiv.innerHTML = '';
+  document.getElementById('l2-score').textContent = '0 / 12';
+  document.getElementById('l2-check-btn').style.display = 'block';
+
+  // Build buckets
+  Object.entries(L2_STRUCTURES).forEach(([name, data]) => {
+    const bucket = document.createElement('div');
+    bucket.className = 'drop-bucket';
+    bucket.id = 'bucket-' + name.replace(/\s/g,'_').replace('/','_');
+    bucket.innerHTML = `<div class="bucket-header">${name}</div><div class="bucket-hint">${data.hint}</div>`;
+    bucket.addEventListener('dragover', e => { e.preventDefault(); bucket.classList.add('drag-over'); });
+    bucket.addEventListener('dragleave', () => bucket.classList.remove('drag-over'));
+    bucket.addEventListener('drop', e => { e.preventDefault(); bucket.classList.remove('drag-over'); dropToBucket(bucket.id, name); });
+    bucketsDiv.appendChild(bucket);
+  });
+
+  // Build pool with all chips shuffled
+  const allChips = [];
+  Object.entries(L2_STRUCTURES).forEach(([structure, data]) => {
+    data.items.forEach(item => {
+      allChips.push({ item, structure });
+    });
+  });
+  shuffle(allChips).forEach(({ item, structure }) => {
+    const chip = createChip(item, structure);
+    poolDiv.appendChild(chip);
+  });
+}
+
+function createChip(item, structure) {
+  const chip = document.createElement('div');
+  chip.className = 'drag-chip';
+  chip.textContent = item;
+  chip.draggable = true;
+  chip.id = 'chip-' + item.replace(/\s/g,'_');
+  chip.dataset.structure = structure;
+  chip.addEventListener('dragstart', e => {
+    l2DragItem = chip;
+    chip.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+  chip.addEventListener('click', () => returnChipToPool(chip));
+  return chip;
+}
+
+function dropToBucket(bucketId, bucketName) {
+  if (!l2DragItem) return;
+  const bucket = document.getElementById(bucketId);
+  // Remove pending tags for this chip if already placed
+  document.querySelectorAll('.dropped-tag[data-chip="' + l2DragItem.id + '"]').forEach(t => t.remove());
+  // Add as tag in bucket
+  const tag = document.createElement('div');
+  tag.className = 'dropped-tag pending';
+  tag.textContent = l2DragItem.textContent;
+  tag.dataset.chip = l2DragItem.id;
+  tag.dataset.structure = l2DragItem.dataset.structure;
+  tag.addEventListener('click', () => {
+    tag.remove();
+    delete l2Placements[l2DragItem ? l2DragItem.id : tag.dataset.chip];
+    returnChipToPoolById(tag.dataset.chip, tag.dataset.structure, tag.textContent);
+  });
+  bucket.appendChild(tag);
+  l2Placements[l2DragItem.id] = bucketName;
+  // Hide chip from pool
+  l2DragItem.style.display = 'none';
+  l2DragItem = null;
+}
+
+function returnChipToPool(chip) {
+  // If chip is in pool (visible), nothing to do
+  document.querySelectorAll('.dropped-tag[data-chip="' + chip.id + '"]').forEach(t => t.remove());
+  delete l2Placements[chip.id];
+  chip.style.display = '';
+  document.getElementById('l2-pool').appendChild(chip);
+}
+
+function returnChipToPoolById(chipId, structure, label) {
+  const pool = document.getElementById('l2-pool');
+  let chip = document.getElementById(chipId);
+  if (chip) { chip.style.display = ''; pool.appendChild(chip); }
+  else {
+    chip = createChip(label, structure);
+    pool.appendChild(chip);
+  }
+  delete l2Placements[chipId];
+}
+
+function checkDrag() {
+  let correct = 0;
+  let total = 0;
+  // Check all placed tags
+  document.querySelectorAll('.dropped-tag').forEach(tag => {
+    total++;
+    const bucketEl = tag.closest('.drop-bucket');
+    const bucketName = Object.keys(L2_STRUCTURES).find(k =>
+      'bucket-' + k.replace(/\s/g,'_').replace('/','_') === bucketEl.id
+    );
+    const isCorrect = tag.dataset.structure === bucketName;
+    tag.className = 'dropped-tag ' + (isCorrect ? 'correct' : 'wrong');
+    if (isCorrect) correct++;
+  });
+  // Make all chips in pool visible and non-draggable to show incomplete
+  document.getElementById('l2-score').textContent = `${correct} / 12`;
+  document.getElementById('l2-check-btn').style.display = 'none';
+  saveBest(2, correct);
+  postScore('Level 2', correct);
+  showToast(correct === 12 ? 'Perfect score!' : `${correct} out of 12 correct.`);
+  // Show retry/results after brief delay
+  setTimeout(() => {
+    showResults('Level 2', correct + ' / 12', correct, 12, () => startLevel2());
+  }, 1800);
+}
+
+/* ─────────────────────────────────────────────
+   LEVEL 3
+───────────────────────────────────────────── */
+let l3Shuffled = [];
+
+function startLevel3() {
+  l3Index = 0; l3Score = 0; l3Answered = false;
+  l3Shuffled = shuffle(L3_SCENARIOS);
+  showScreen('l3');
+  renderL3();
+}
+
+function renderL3() {
+  if (l3Index >= l3Shuffled.length) { endLevel3(); return; }
+  const s = l3Shuffled[l3Index];
+  document.getElementById('l3-scenario-num').textContent = `Scenario ${l3Index + 1} of ${l3Shuffled.length}`;
+  document.getElementById('l3-failure-tag').textContent = s.failure;
+  document.getElementById('l3-scenario-text').textContent = s.text;
+  document.getElementById('l3-progress').style.width = (l3Index / l3Shuffled.length * 100) + '%';
+  document.getElementById('l3-score').textContent = `${l3Score} / ${l3Shuffled.length}`;
+  const fb = document.getElementById('l3-feedback');
+  fb.className = 'feedback-box';
+  fb.style.display = 'none';
+  document.getElementById('l3-next-btn').style.display = 'none';
+  l3Answered = false;
+
+  const choices = document.getElementById('l3-choices');
+  choices.innerHTML = '';
+  shuffle(s.options).forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'policy-btn';
+    btn.textContent = opt.text;
+    btn.onclick = () => l3Answer(opt, s);
+    choices.appendChild(btn);
+  });
+}
+
+function l3Answer(opt, scenario) {
+  if (l3Answered) return;
+  l3Answered = true;
+  if (opt.correct) l3Score++;
+
+  document.querySelectorAll('.policy-btn').forEach(btn => {
+    btn.disabled = true;
+    const matchOpt = scenario.options.find(o => o.text === btn.textContent);
+    if (matchOpt && matchOpt.correct) btn.classList.add('reveal-correct');
+    else if (btn.textContent === opt.text && !opt.correct) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('l3-feedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback-box ' + (opt.correct ? 'correct' : 'wrong');
+  document.getElementById('l3-feedback-label').textContent = opt.correct ? 'Good call.' : 'Not the best option.';
+  document.getElementById('l3-feedback-text').textContent = scenario.feedback;
+  document.getElementById('l3-score').textContent = `${l3Score} / ${l3Shuffled.length}`;
+  document.getElementById('l3-next-btn').style.display = 'block';
+}
+
+function l3Next() {
+  l3Index++;
+  if (l3Index >= l3Shuffled.length) { endLevel3(); return; }
+  renderL3();
+}
+
+function endLevel3() {
+  const max = l3Shuffled.length;
+  saveBest(3, l3Score);
+  postScore('Level 3', l3Score);
+  showResults('Level 3', l3Score + ' / ' + max, l3Score, max, () => startLevel3());
+}
+
+/* ─────────────────────────────────────────────
+   LEVEL 4
+───────────────────────────────────────────── */
+function startLevel4() {
+  showScreen('l4');
+  document.getElementById('l4-intro').style.display = 'block';
+  document.getElementById('l4-game').style.display = 'none';
+  document.getElementById('l4-timer').textContent = '30';
+  document.getElementById('l4-score').textContent = '0';
+  document.getElementById('l4-streak').textContent = 'x1';
+}
+
+function startSpeedRound() {
+  l4Score = 0; l4Streak = 0; l4Multiplier = 1; l4Timer = 30; l4QNum = 0; l4Active = true;
+  l4Pool = shuffle([...SPEED_POOL]);
+  document.getElementById('l4-intro').style.display = 'none';
+  document.getElementById('l4-game').style.display = 'block';
+  document.getElementById('l4-timer').textContent = '30';
+  document.getElementById('l4-score').textContent = '0';
+  document.getElementById('l4-streak').textContent = 'x1';
+
+  l4Interval = setInterval(() => {
+    l4Timer--;
+    const timerEl = document.getElementById('l4-timer');
+    timerEl.textContent = l4Timer;
+    timerEl.className = 'stat-pill timer' + (l4Timer <= 10 ? ' urgent' : '');
+    if (l4Timer <= 0) endSpeedRound();
+  }, 1000);
+
+  renderL4();
+}
+
+function renderL4() {
+  if (!l4Active) return;
+  if (l4QNum >= l4Pool.length) l4Pool = shuffle([...SPEED_POOL]);
+  const s = l4Pool[l4QNum % l4Pool.length];
+  document.getElementById('l4-q-num').textContent = `Question ${l4QNum + 1}`;
+  document.getElementById('l4-scenario-text').textContent = s.text;
+
+  const choices = document.getElementById('l4-choices');
+  choices.innerHTML = '';
+  const wrong = shuffle(FAILURE_TYPES.filter(f => f !== s.answer)).slice(0, 3);
+  shuffle([s.answer, ...wrong]).forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'speed-btn';
+    btn.textContent = c;
+    btn.onclick = () => l4Answer(c, s, btn);
+    choices.appendChild(btn);
+  });
+}
+
+function l4Answer(choice, scenario, btn) {
+  if (!l4Active) return;
+  const correct = choice === scenario.answer;
+  const buttons = document.querySelectorAll('.speed-btn');
+  buttons.forEach(b => b.disabled = true);
+
+  if (correct) {
+    l4Streak++;
+    if (l4Streak >= 6) l4Multiplier = 3;
+    else if (l4Streak >= 3) l4Multiplier = 2;
+    l4Score += l4Multiplier;
+    btn.classList.add('flash-correct');
+  } else {
+    l4Streak = 0;
+    l4Multiplier = 1;
+    btn.classList.add('flash-wrong');
+    // Briefly show correct
+    buttons.forEach(b => { if (b.textContent === scenario.answer) b.classList.add('flash-correct'); });
+  }
+
+  document.getElementById('l4-score').textContent = l4Score;
+  document.getElementById('l4-streak').textContent = 'x' + l4Multiplier;
+  l4QNum++;
+
+  setTimeout(() => {
+    if (l4Active) renderL4();
+  }, 420);
+}
+
+function endSpeedRound() {
+  clearInterval(l4Interval);
+  l4Interval = null;
+  l4Active = false;
+  saveBest(4, l4Score);
+  postScore('Level 4', l4Score);
+  showResults('Level 4', l4Score + ' pts', l4Score, null, () => startLevel4());
+}
+
+/* ─────────────────────────────────────────────
+   RESULTS
+───────────────────────────────────────────── */
+function showResults(levelLabel, scoreDisplay, score, max, retryFn, extraNote = null) {
+  document.getElementById('res-level-label').textContent = levelLabel;
+  document.getElementById('res-score-big').innerHTML = score + (max ? '<span> / ' + max + '</span>' : '<span> pts</span>');
+  document.getElementById('res-score-label').textContent = max ? 'Correct answers' : 'Points scored';
+  document.getElementById('res-posting-status').textContent = extraNote || '';
+
+  let grade = '', msg = '';
+  if (max) {
+    const pct = score / max;
+    if (pct === 1) { grade = 'Perfect'; msg = 'Flawless. You know your market failures.'; }
+    else if (pct >= 0.8) { grade = 'Strong'; msg = 'Solid work. A few slipped through, but you have the concepts.'; }
+    else if (pct >= 0.6) { grade = 'Getting There'; msg = 'You know the basics. Go back and review the ones you missed.'; }
+    else { grade = 'Keep Practicing'; msg = 'This is what the game is for. Try again and see where you improve.'; }
+  } else {
+    if (score >= 20) { grade = 'Elite Speed'; msg = 'That\'s fast and accurate. Respect.'; }
+    else if (score >= 12) { grade = 'Solid Run'; msg = 'Good speed. Keep the streak up next time for the multiplier.'; }
+    else { grade = 'Keep Practicing'; msg = 'Speed comes with repetition. Try again.'; }
+  }
+
+  document.getElementById('res-grade').textContent = grade;
+  document.getElementById('res-msg').textContent = msg;
+
+  const retryBtn = document.getElementById('res-retry-btn');
+  retryBtn.onclick = retryFn;
+
+  showScreen('results');
+}
+
+/* ─────────────────────────────────────────────
+   LEADERBOARD
+───────────────────────────────────────────── */
+function showLeaderboard() {
+  showScreen('leaderboard');
+  loadLeaderboard();
+}
+
+async function loadLeaderboard() {
+  const body = document.getElementById('lb-body');
+  body.innerHTML = '<div class="lb-loading">Loading scores...</div>';
+
+  if (!SHEET_URL || SHEET_URL === 'https://script.google.com/a/macros/bluevalleyk12.org/s/AKfycbx7RPeiHocOVTlOXeacnqVWxA4PXOZ8HwGHz1FuYeRtqyCHXGEDv4syiQQ1Oa0brs4e/exec') {
+    body.innerHTML = '<div class="lb-empty">Leaderboard not connected yet. Add your Apps Script URL to activate it.</div>';
+    return;
+  }
+
+  try {
+    const res = await fetch(SHEET_URL + '?action=get');
+    const data = await res.json();
+    lbAllData = data;
+    renderLeaderboard();
+  } catch (e) {
+    body.innerHTML = '<div class="lb-empty">Could not load leaderboard. Check your Apps Script URL.</div>';
+  }
+}
+
+function renderLeaderboard() {
+  const body = document.getElementById('lb-body');
+  let filtered = lbAllData;
+  if (lbFilter !== 'all') filtered = filtered.filter(r => r.level === lbFilter);
+  filtered.sort((a, b) => b.score - a.score);
+  const top = filtered.slice(0, 15);
+
+  if (!top.length) {
+    body.innerHTML = '<div class="lb-empty">No scores yet for this filter. Be the first.</div>';
+    return;
+  }
+
+  body.innerHTML = top.map((r, i) => `
+    <div class="lb-row">
+      <div class="lb-rank">${i + 1}</div>
+      <div class="lb-name">${escHtml(r.name)}</div>
+      <div class="lb-level">${escHtml(r.level)}</div>
+      <div class="lb-score">${r.score}</div>
+    </div>
+  `).join('');
+}
+
+function filterLB(filter, btn) {
+  lbFilter = filter;
+  document.querySelectorAll('.lb-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLeaderboard();
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ─────────────────────────────────────────────
+   GOOGLE SHEETS POST
+───────────────────────────────────────────── */
+async function postScore(level, score) {
+  if (!SHEET_URL || SHEET_URL === 'YOUR_APPS_SCRIPT_URL_HERE') return;
+  if (!playerName) return;
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: playerName, level, score, date: new Date().toLocaleDateString() })
+    });
+  } catch (e) {
+    console.log('Score post failed:', e);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   START
+───────────────────────────────────────────── */
+init();
+
+</script>
+</body>
+</html>
