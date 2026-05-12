@@ -1301,7 +1301,7 @@ button { font-family: inherit; }
 /* ─────────────────────────────────────────────
    CONFIG: Replace SHEET_URL with your Apps Script URL
 ───────────────────────────────────────────── */
-const SHEET_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const SHEET_URL = 'https://script.google.com/a/macros/bluevalleyk12.org/s/AKfycbx7RPeiHocOVTlOXeacnqVWxA4PXOZ8HwGHz1FuYeRtqyCHXGEDv4syiQQ1Oa0brs4e/exec';
 
 /* ─────────────────────────────────────────────
    GAME DATA
@@ -1973,7 +1973,7 @@ async function loadLeaderboard() {
   const body = document.getElementById('lb-body');
   body.innerHTML = '<div class="lb-loading">Loading scores...</div>';
 
-  if (!SHEET_URL || SHEET_URL === 'https://script.google.com/a/macros/bluevalleyk12.org/s/AKfycbx7RPeiHocOVTlOXeacnqVWxA4PXOZ8HwGHz1FuYeRtqyCHXGEDv4syiQQ1Oa0brs4e/exec') {
+  if (!SHEET_URL) {
     body.innerHTML = '<div class="lb-empty">Leaderboard not connected yet. Add your Apps Script URL to activate it.</div>';
     return;
   }
@@ -2025,7 +2025,7 @@ function escHtml(s) {
    GOOGLE SHEETS POST
 ───────────────────────────────────────────── */
 async function postScore(level, score) {
-  if (!SHEET_URL || SHEET_URL === 'YOUR_APPS_SCRIPT_URL_HERE') return;
+  if (!SHEET_URL) return;
   if (!playerName) return;
   try {
     await fetch(SHEET_URL, {
