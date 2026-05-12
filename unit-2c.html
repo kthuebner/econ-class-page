@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Signal | Supply & Demand Game</title>
+<link href="https://fonts.googleapis.com/css2?family=News+Cycle:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --purple: #472567;
+    --purple-dark: #2e1845;
+    --purple-mid: #5c3180;
+    --purple-light: #7a4aab;
+    --orange: #ff9e44;
+    --orange-dim: #cc7a2a;
+    --white: #f5f0ff;
+    --supply: #c084fc;
+    --demand: #ff9e44;
+    --correct: #4ade80;
+    --wrong: #f87171;
+    --gold: #ffd166;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--purple-dark);
+    color: var(--orange);
+    font-family: 'News Cycle', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SCANLINE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* HUD */
+  #hud {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    background: var(--purple-dark);
+    border-bottom: 2px solid var(--orange);
+    z-index: 100;
+  }
+
+  #hud-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    color: var(--orange);
+  }
+
+  #hud-tier {
+    font-size: 0.85rem;
+    color: var(--white);
+    opacity: 0.7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  #hud-score-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #hud-score-label {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  #hud-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    min-width: 60px;
+    text-align: right;
+    transition: color 0.2s;
+  }
+
+  #hud-score.bump {
+    color: var(--correct);
+    transform: scale(1.2);
+  }
+
+  /* MAIN CONTAINER */
+  #game-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 80px 24px 60px;
+  }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* INTRO SCREEN */
+  #intro-screen {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .game-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 6rem);
+    letter-spacing: 8px;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .game-subtitle {
+    font-size: 1rem;
+    color: var(--white);
+    opacity: 0.6;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .tier-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+    text-align: left;
+  }
+
+  .tier-card {
+    border: 1px solid rgba(255,158,68,0.3);
+    padding: 16px;
+    background: rgba(255,158,68,0.05);
+  }
+
+  .tier-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--orange);
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .tier-card-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .tier-card-desc {
+    font-size: 0.8rem;
+    color: var(--white);
+    opacity: 0.6;
+    line-height: 1.4;
+  }
+
+  /* BUTTONS */
+  .btn {
+    background: var(--orange);
+    color: var(--purple-dark);
+    border: none;
+    padding: 14px 36px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-block;
+  }
+
+  .btn:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .btn:active { transform: translateY(0); }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--orange);
+    color: var(--orange);
+  }
+
+  .btn-outline:hover {
+    background: var(--orange);
+    color: var(--purple-dark);
+  }
+
+  .btn-sm {
+    padding: 8px 20px;
+    font-size: 0.95rem;
+  }
+
+  /* TIER HEADER */
+  .tier-header {
+    margin-bottom: 32px;
+    border-bottom: 1px solid rgba(255,158,68,0.2);
+    padding-bottom: 16px;
+  }
+
+  .tier-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--orange);
+    opacity: 0.6;
+    margin-bottom: 4px;
+  }
+
+  .tier-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 4px;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+
+  .tier-instructions {
+    font-size: 0.95rem;
+    color: var(--white);
+    opacity: 0.75;
+    line-height: 1.5;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    margin-bottom: 28px;
+  }
+
+  .progress-track {
+    height: 4px;
+    background: rgba(255,158,68,0.15);
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--orange);
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-size: 0.75rem;
+    opacity: 0.5;
+    text-align: right;
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: rgba(255,158,68,0.04);
+    border: 1px solid rgba(255,158,68,0.15);
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  .q-text {
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .q-text strong {
+    color: var(--orange);
+  }
+
+  /* GRAPH CONTAINER */
+  .graph-wrap {
+    position: relative;
+    margin-bottom: 24px;
+    background: rgba(71,37,103,0.6);
+    border: 1px solid rgba(255,158,68,0.1);
+    padding: 16px;
+  }
+
+  .graph-wrap canvas {
+    max-height: 280px;
+  }
+
+  .graph-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-dot {
+    width: 20px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .legend-dot.demand { background: var(--demand); }
+  .legend-dot.supply { background: var(--supply); }
+  .legend-dot.demand-before { background: var(--demand); opacity: 0.4; border-top: 2px dashed var(--demand); height: 0; }
+  .legend-dot.supply-before { background: var(--supply); opacity: 0.4; border-top: 2px dashed var(--supply); height: 0; }
+
+  /* ANSWER OPTIONS */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .option-btn {
+    padding: 12px 16px;
+    background: rgba(255,158,68,0.08);
+    border: 1px solid rgba(255,158,68,0.25);
+    color: var(--orange);
+    font-family: 'News Cycle', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    line-height: 1.3;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: rgba(255,158,68,0.18);
+    border-color: var(--orange);
+  }
+
+  .option-btn.correct {
+    background: rgba(74,222,128,0.15);
+    border-color: var(--correct);
+    color: var(--correct);
+  }
+
+  .option-btn.wrong {
+    background: rgba(248,113,113,0.15);
+    border-color: var(--wrong);
+    color: var(--wrong);
+  }
+
+  .option-btn.revealed {
+    background: rgba(74,222,128,0.08);
+    border-color: rgba(74,222,128,0.4);
+    color: rgba(74,222,128,0.7);
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback-box {
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    display: none;
+  }
+
+  .feedback-box.correct {
+    background: rgba(74,222,128,0.1);
+    border-left: 3px solid var(--correct);
+    color: var(--correct);
+  }
+
+  .feedback-box.wrong {
+    background: rgba(248,113,113,0.1);
+    border-left: 3px solid var(--wrong);
+    color: var(--wrong);
+  }
+
+  /* BONUS QUESTION */
+  .bonus-prompt {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,158,68,0.15);
+  }
+
+  .bonus-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  /* HEADLINE CARD */
+  .headline-card {
+    background: var(--white);
+    color: var(--purple-dark);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .headline-source {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--purple-mid);
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+
+  .headline-text {
+    font-family: 'News Cycle', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--purple-dark);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .headline-dateline {
+    font-size: 0.75rem;
+    color: var(--purple-mid);
+    opacity: 0.6;
+  }
+
+  /* NEXT BUTTON */
+  .next-wrap {
+    text-align: right;
+    margin-top: 16px;
+  }
+
+  /* LEVEL COMPLETE */
+  #level-complete {
+    text-align: center;
+    padding: 60px 20px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .lc-eyebrow {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0.6;
+    margin-bottom: 12px;
+  }
+
+  .lc-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    letter-spacing: 6px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .lc-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .lc-score-label {
+    font-size: 0.85rem;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+
+  .lc-unlock {
+    font-size: 1rem;
+    color: var(--white);
+    opacity: 0.8;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .lc-unlock strong {
+    color: var(--orange);
+  }
+
+  /* END SCREEN */
+  #end-screen {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .end-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 5px;
+    margin-bottom: 8px;
+  }
+
+  .end-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .end-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 6rem;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .end-score-label {
+    font-size: 0.85rem;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .end-summary {
+    max-width: 480px;
+    margin: 0 auto 36px;
+    font-size: 1rem;
+    color: var(--white);
+    opacity: 0.75;
+    line-height: 1.6;
+  }
+
+  /* CHAIN REACTION CARD */
+  .chain-card {
+    background: rgba(255,158,68,0.06);
+    border: 1px solid rgba(255,158,68,0.2);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .chain-context {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--orange);
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .chain-chain {
+    font-size: 1rem;
+    color: var(--white);
+    opacity: 0.8;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .chain-chain span {
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scorePopIn {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); color: var(--correct); }
+    100% { transform: scale(1); }
+  }
+
+  .score-pop { animation: scorePopIn 0.4s ease; }
+
+  /* UNLOCK ANIMATION */
+  .unlock-bar {
+    width: 0;
+    height: 3px;
+    background: var(--gold);
+    margin: 24px auto;
+    transition: width 1s ease;
+  }
+
+  .unlock-bar.fill { width: 200px; }
+
+  /* POINT FLASH */
+  .point-flash {
+    position: fixed;
+    top: 60px;
+    right: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--correct);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 200;
+    transition: none;
+  }
+
+  .point-flash.show {
+    animation: pointFloat 1s ease forwards;
+  }
+
+  @keyframes pointFloat {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-40px); }
+  }
+
+  /* TIER 1 CLICK TARGETS */
+  .click-target-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .graph-click-zone {
+    position: absolute;
+    cursor: crosshair;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+
+  .graph-click-zone:hover {
+    background: rgba(255,158,68,0.1);
+  }
+
+  /* SUPPLY/DEMAND LABELS on graphs */
+  .curve-label {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    pointer-events: none;
+  }
+
+  .multi-part-divider {
+    border: none;
+    border-top: 1px dashed rgba(255,158,68,0.2);
+    margin: 20px 0;
+  }
+
+  .part-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.5;
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div id="hud">
+  <div>
+    <div id="hud-title">MARKET SIGNAL</div>
+    <div id="hud-tier">Supply &amp; Demand</div>
+  </div>
+  <div id="hud-score-wrap">
+    <div id="hud-score-label">Score</div>
+    <div id="hud-score">0</div>
+  </div>
+</div>
+
+<div id="point-flash" class="point-flash"></div>
+
+<div id="game-wrap">
+
+  <!-- INTRO -->
+  <div id="intro-screen" class="screen active">
+    <div class="game-logo">MARKET<br>SIGNAL</div>
+    <div class="game-subtitle">A Supply &amp; Demand Game</div>
+    <div class="tier-preview">
+      <div class="tier-card">
+        <div class="tier-card-num">01</div>
+        <div class="tier-card-name">Read the Graph</div>
+        <div class="tier-card-desc">Identify curves, axes, and equilibrium on a supply &amp; demand diagram.</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-card-num">02</div>
+        <div class="tier-card-name">Read the Shift</div>
+        <div class="tier-card-desc">A market changed. Read what happened from the before/after graph.</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-card-num">03</div>
+        <div class="tier-card-name">Predict the Shift</div>
+        <div class="tier-card-desc">A headline just dropped. Predict what happens to supply, demand, and price.</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-card-num">★</div>
+        <div class="tier-card-name">Chain Reaction</div>
+        <div class="tier-card-desc">Follow the consequences one step further. What happens next?</div>
+      </div>
+    </div>
+    <button class="btn" onclick="startGame()">START GAME</button>
+  </div>
+
+  <!-- TIER 1 -->
+  <div id="tier1-screen" class="screen">
+    <div class="tier-header">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start">
+        <div>
+          <div class="tier-label">Tier 1 of 3</div>
+          <div class="tier-title">READ THE GRAPH</div>
+        </div>
+        <button id="restart-btn-t1" class="btn btn-outline btn-sm" onclick="restartTier1()" style="margin-top:8px">↺ RESTART TIER</button>
+      </div>
+      <div class="tier-instructions">Look at each supply and demand diagram. Answer the question about what you see. Clear 5 of 6 to unlock the next level.</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="t1-progress" style="width:0%"></div></div>
+      <div class="progress-label" id="t1-progress-label">0 / 6</div>
+    </div>
+    <div id="tier1-content"></div>
+  </div>
+
+  <!-- TIER 1 COMPLETE -->
+  <div id="t1-complete" class="screen">
+    <div id="level-complete" style="text-align:center; padding: 60px 20px;">
+      <div class="lc-eyebrow">Tier 1 Complete</div>
+      <div class="lc-title">GRAPH READER</div>
+      <div class="unlock-bar" id="ub1"></div>
+      <div class="lc-score" id="t1-final-score">0</div>
+      <div class="lc-score-label">points this tier</div>
+      <div class="lc-unlock" id="t1-unlock-msg"></div>
+      <div id="t1-unlock-btn"></div>
+    </div>
+  </div>
+
+  <!-- TIER 2 -->
+  <div id="tier2-screen" class="screen">
+    <div class="tier-header">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start">
+        <div>
+          <div class="tier-label">Tier 2 of 3</div>
+          <div class="tier-title">READ THE SHIFT</div>
+        </div>
+        <button id="restart-btn-t2" class="btn btn-outline btn-sm" onclick="restartTier2()" style="margin-top:8px">↺ RESTART TIER</button>
+      </div>
+      <div class="tier-instructions">Something happened in this market. The dotted line shows where the curve was. The solid line shows where it is now. What happened?</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="t2-progress" style="width:0%"></div></div>
+      <div class="progress-label" id="t2-progress-label">0 / 6</div>
+    </div>
+    <div id="tier2-content"></div>
+  </div>
+
+  <!-- TIER 2 COMPLETE -->
+  <div id="t2-complete" class="screen">
+    <div id="level-complete-2">
+      <div style="text-align:center; padding: 60px 20px;">
+        <div class="lc-eyebrow">Tier 2 Complete</div>
+        <div class="lc-title">SHIFT ANALYST</div>
+        <div class="unlock-bar" id="ub2"></div>
+        <div class="lc-score" id="t2-final-score">0</div>
+        <div class="lc-score-label">points this tier</div>
+        <div class="lc-unlock" id="t2-unlock-msg"></div>
+        <div id="t2-unlock-btn"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER 3 -->
+  <div id="tier3-screen" class="screen">
+    <div class="tier-header">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start">
+        <div>
+          <div class="tier-label">Tier 3 of 3</div>
+          <div class="tier-title">PREDICT THE SHIFT</div>
+        </div>
+        <button id="restart-btn-t3" class="btn btn-outline btn-sm" onclick="restartTier3()" style="margin-top:8px">↺ RESTART TIER</button>
+      </div>
+      <div class="tier-instructions">A headline just dropped. Look at the starting graph. Predict which curve moves, which direction, and what happens to the equilibrium price.</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="t3-progress" style="width:0%"></div></div>
+      <div class="progress-label" id="t3-progress-label">0 / 7</div>
+    </div>
+    <div id="tier3-content"></div>
+  </div>
+
+  <!-- TIER 3 COMPLETE -->
+  <div id="t3-complete" class="screen">
+    <div style="text-align:center; padding: 60px 20px;">
+      <div class="lc-eyebrow">Tier 3 Complete</div>
+      <div class="lc-title">MARKET ANALYST</div>
+      <div class="unlock-bar" id="ub3"></div>
+      <div class="lc-score" id="t3-final-score">0</div>
+      <div class="lc-score-label">points this tier</div>
+      <div class="lc-unlock" id="t3-unlock-msg"></div>
+      <div id="t3-unlock-btn"></div>
+    </div>
+  </div>
+
+  <!-- BONUS ROUND -->
+  <div id="bonus-screen" class="screen">
+    <div class="tier-header">
+      <div class="tier-label">Bonus Round</div>
+      <div class="tier-title">CHAIN REACTION</div>
+      <div class="tier-instructions">You predicted the shift. Now follow it one step further. What happens next in each market?</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="tb-progress" style="width:0%"></div></div>
+      <div class="progress-label" id="tb-progress-label">0 / 4</div>
+    </div>
+    <div id="bonus-content"></div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div id="end-screen" class="screen">
+    <div class="end-title">FINAL SCORE</div>
+    <div class="end-rank" id="end-rank">ECONOMIST</div>
+    <div class="end-score" id="end-score">0</div>
+    <div class="end-score-label">total points</div>
+    <div class="end-summary" id="end-summary"></div>
+    <button class="btn" onclick="resetGame()">PLAY AGAIN</button>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// GAME STATE
+// ============================================================
+let score = 0;
+let tierScores = [0, 0, 0, 0];
+let currentTier = 0;
+let charts = {};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function updateScore(pts) {
+  score += pts;
+  const el = document.getElementById('hud-score');
+  el.textContent = score;
+  el.classList.remove('score-pop');
+  void el.offsetWidth;
+  el.classList.add('score-pop');
+
+  const flash = document.getElementById('point-flash');
+  flash.textContent = '+' + pts;
+  flash.classList.remove('show');
+  void flash.offsetWidth;
+  flash.classList.add('show');
+}
+
+function updateHudTier(label) {
+  document.getElementById('hud-tier').textContent = label;
+}
+
+// ============================================================
+// CHART HELPERS
+// ============================================================
+function makeSupplyDemandChart(canvasId, opts = {}) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  if (charts[canvasId]) { charts[canvasId].destroy(); }
+
+  const {
+    showDemandBefore = false,
+    showSupplyBefore = false,
+    demandShift = 0,   // positive = right shift
+    supplyShift = 0,
+    showEquilibrium = true,
+    highlightEq = false
+  } = opts;
+
+  // Base curves: price on Y (0-10), quantity on X (0-10)
+  // Demand: downward sloping  price = 10 - qty
+  // Supply: upward sloping    price = qty
+  // Equilibrium at (5,5)
+
+  const demandCurrent = [
+    {x: 0 + demandShift, y: 10},
+    {x: 5 + demandShift, y: 5},
+    {x: 10 + demandShift, y: 0}
+  ];
+  const supplyCurrent = [
+    {x: 0 + supplyShift, y: 0},
+    {x: 5 + supplyShift, y: 5},
+    {x: 10 + supplyShift, y: 10}
+  ];
+  const demandBefore = [
+    {x: 0, y: 10}, {x: 5, y: 5}, {x: 10, y: 0}
+  ];
+  const supplyBefore = [
+    {x: 0, y: 0}, {x: 5, y: 5}, {x: 10, y: 10}
+  ];
+
+  // Equilibrium calculation
+  // demand: y = 10 - (x - demandShift) => x = 10 + demandShift - y
+  // supply: y = x - supplyShift => x = y + supplyShift
+  // eq: 10 + demandShift - y = y + supplyShift => y = (10 + demandShift - supplyShift) / 2
+  const eqY = (10 + demandShift - supplyShift) / 2;
+  const eqX = eqY + supplyShift;
+
+  const datasets = [];
+
+  if (showDemandBefore) {
+    datasets.push({
+      label: 'Demand (before)',
+      data: demandBefore,
+      borderColor: 'rgba(255,158,68,0.35)',
+      borderDash: [6, 4],
+      borderWidth: 2,
+      pointRadius: 0,
+      tension: 0,
+      showLine: true
+    });
+  }
+
+  if (showSupplyBefore) {
+    datasets.push({
+      label: 'Supply (before)',
+      data: supplyBefore,
+      borderColor: 'rgba(192,132,252,0.35)',
+      borderDash: [6, 4],
+      borderWidth: 2,
+      pointRadius: 0,
+      tension: 0,
+      showLine: true
+    });
+  }
+
+  datasets.push({
+    label: 'Demand',
+    data: demandCurrent,
+    borderColor: '#ff9e44',
+    borderWidth: 3,
+    pointRadius: 0,
+    tension: 0,
+    showLine: true
+  });
+
+  datasets.push({
+    label: 'Supply',
+    data: supplyCurrent,
+    borderColor: '#c084fc',
+    borderWidth: 3,
+    pointRadius: 0,
+    tension: 0,
+    showLine: true
+  });
+
+  if (showEquilibrium) {
+    datasets.push({
+      label: 'Equilibrium',
+      data: [{x: eqX, y: eqY}],
+      borderColor: '#ffd166',
+      backgroundColor: '#ffd166',
+      pointRadius: 8,
+      pointHoverRadius: 10,
+      showLine: false
+    });
+  }
+
+  charts[canvasId] = new Chart(ctx, {
+    type: 'scatter',
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      animation: { duration: 600 },
+      scales: {
+        x: {
+          min: 0, max: 11,
+          title: { display: false },
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: 'rgba(245,240,255,0.3)', font: { size: 10 } }
+        },
+        y: {
+          min: 0, max: 11,
+          title: { display: false },
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: 'rgba(245,240,255,0.3)', font: { size: 10 } }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
+      }
+    }
+  });
+
+  return charts[canvasId];
+}
+
+// ============================================================
+// TIER 1 DATA
+// ============================================================
+const tier1Questions = [
+  {
+    id: 't1q1',
+    question: '<strong>Which curve shows the perspective of the consumer?</strong>',
+    options: ['The orange downward-sloping curve', 'The purple upward-sloping curve', 'The gold dot in the middle', 'The vertical axis (Price)'],
+    correct: 0,
+    feedback: 'The orange downward-sloping curve is the Demand curve. It shows how much consumers want to buy at different prices. As price rises, quantity demanded falls.',
+    chartOpts: {}
+  },
+  {
+    id: 't1q2',
+    question: '<strong>Which curve shows the perspective of the producer?</strong>',
+    options: ['The orange downward-sloping curve', 'The purple upward-sloping curve', 'The gold dot in the middle', 'The horizontal axis (Quantity)'],
+    correct: 1,
+    feedback: 'The purple upward-sloping curve is the Supply curve. It shows how much producers want to sell at different prices. As price rises, quantity supplied increases.',
+    chartOpts: {}
+  },
+  {
+    id: 't1q3',
+    question: 'The gold dot on this diagram represents something important. <strong>What does it show?</strong>',
+    options: ['The highest price consumers will pay', 'The lowest price producers will accept', 'The equilibrium price', 'The midpoint of the demand curve'],
+    correct: 2,
+    feedback: 'The gold dot is the equilibrium price. It is the point where the supply and demand curves intersect: where the amount producers want to sell exactly matches what consumers want to buy.',
+    chartOpts: {}
+  },
+  {
+    id: 't1q4',
+    question: '<strong>At the point where the two curves cross, what is true about the market?</strong>',
+    options: ['Producers want to sell more than consumers want to buy', 'Consumers want to buy more than producers want to sell', 'The amount producers want to sell equals the amount consumers want to buy', 'The market has shut down'],
+    correct: 2,
+    feedback: 'Where supply and demand intersect, the quantity supplied equals the quantity demanded. This is the market equilibrium: no shortage, no surplus.',
+    chartOpts: {}
+  },
+  {
+    id: 't1q5',
+    question: 'At a very high price, look at the demand curve. <strong>What does the Law of Demand tell us about quantity demanded at that high price?</strong>',
+    options: ['Consumers demand a higher quantity', 'Consumers demand a lower quantity', 'Quantity demanded stays the same regardless of price', 'Producers supply less at high prices'],
+    correct: 1,
+    feedback: 'The Law of Demand: at a higher price, consumers demand a lower quantity. The demand curve slopes downward because of this relationship.',
+    chartOpts: {}
+  },
+  {
+    id: 't1q6',
+    question: 'Look at the supply curve. <strong>What does the Law of Supply tell us about quantity supplied when price is high?</strong>',
+    options: ['Producers supply a lower quantity because costs are high', 'Producers supply a higher quantity because higher prices make production more profitable', 'Quantity supplied does not change with price', 'The supply curve shifts to the right'],
+    correct: 1,
+    feedback: 'The Law of Supply: at a higher price, producers supply a higher quantity. Higher prices make production more profitable, so producers want to make and sell more.',
+    chartOpts: {}
+  }
+];
+
+// ============================================================
+// TIER 2 DATA
+// ============================================================
+const tier2Questions = [
+  {
+    id: 't2q1',
+    market: 'Gasoline Market',
+    chartOpts: { showDemandBefore: true, demandShift: -2 },
+    partA: {
+      question: 'The dotted orange line shows where demand was. The solid orange line shows where it is now. <strong>What happened to demand?</strong>',
+      options: ['Demand increased', 'Demand decreased', 'Supply increased', 'Supply decreased'],
+      correct: 1,
+      feedback: 'Demand decreased. The whole demand curve shifted left, meaning consumers want to buy less gasoline at every price.'
+    },
+    partB: {
+      question: '<strong>What happened to the equilibrium price?</strong>',
+      options: ['Equilibrium price went up', 'Equilibrium price went down', 'Equilibrium price stayed the same'],
+      correct: 1,
+      feedback: 'When demand decreases, the equilibrium price falls. With fewer buyers willing to purchase at any given price, producers have to lower prices to sell their product.'
+    },
+    bonus: {
+      question: 'Which T.O.N.I.E. factor most likely caused this demand decrease?',
+      options: ['Income increased: consumers have more money to spend on gas', 'Other goods became available: electric vehicles offer an alternative to gasoline', 'Number of producers increased: more refineries came online', 'Expectations shifted: consumers expect prices to rise soon'],
+      correct: 1,
+      feedback: '+5 bonus! Other Goods: as EVs become more available and affordable, some consumers substitute away from gasoline.'
+    }
+  },
+  {
+    id: 't2q2',
+    market: 'Gasoline Market',
+    chartOpts: { showDemandBefore: true, demandShift: 2 },
+    partA: {
+      question: 'The dotted orange line shows where demand was. The solid orange line shows where it is now. <strong>What happened?</strong>',
+      options: ['Demand increased', 'Demand decreased', 'Supply increased', 'Supply decreased'],
+      correct: 0,
+      feedback: 'Demand increased. The whole demand curve shifted right, meaning consumers want to buy more gasoline at every price.'
+    },
+    partB: {
+      question: '<strong>What happened to the equilibrium price?</strong>',
+      options: ['Equilibrium price went up', 'Equilibrium price went down', 'Equilibrium price stayed the same'],
+      correct: 0,
+      feedback: 'When demand increases, the equilibrium price rises. More buyers competing for the same supply drives the price up.'
+    },
+    bonus: {
+      question: 'Which factor most likely caused this demand increase?',
+      options: ['Government imposed a gas tax', 'Summer travel season began (Tastes/Expectations)', 'A new oil refinery opened', 'The economy entered a recession'],
+      correct: 1,
+      feedback: '+5 bonus! Summer travel season is a classic demand shifter for gasoline: more people driving means demand for gas increases at all prices.'
+    }
+  },
+  {
+    id: 't2q3',
+    market: 'Lumber Market',
+    chartOpts: { showSupplyBefore: true, supplyShift: -2 },
+    partA: {
+      question: 'The dotted purple line shows where supply was. The solid purple line shows where it is now. <strong>What happened?</strong>',
+      options: ['Demand increased', 'Demand decreased', 'Supply increased', 'Supply decreased'],
+      correct: 3,
+      feedback: 'Supply decreased. The supply curve shifted left, meaning producers are willing to sell less lumber at every price.'
+    },
+    partB: {
+      question: '<strong>Still looking at the Lumber Market: what happened to the equilibrium price?</strong>',
+      options: ['Equilibrium price went up', 'Equilibrium price went down', 'Equilibrium price stayed the same'],
+      correct: 0,
+      feedback: 'When supply decreases, the equilibrium price rises. Less lumber available means buyers compete more intensely, driving prices up.'
+    },
+    bonus: {
+      question: 'Which supply determinant most likely caused this shift?',
+      options: ['Technology improved (new sawmill equipment)', 'Cost to produce increased OR producers cut production (expectations)', 'Number of lumber sellers increased', 'Government subsidized the lumber industry'],
+      correct: 1,
+      feedback: '+5 bonus! Either rising costs or producers cutting back due to expectations (like COVID shutdowns) could shift supply left.'
+    }
+  },
+  {
+    id: 't2q4',
+    market: 'Oil Market',
+    chartOpts: { showSupplyBefore: true, supplyShift: 2 },
+    partA: {
+      question: 'The dotted purple line shows where supply was. The solid purple line shows where it is now. <strong>What happened?</strong>',
+      options: ['Demand increased', 'Demand decreased', 'Supply increased', 'Supply decreased'],
+      correct: 2,
+      feedback: 'Supply increased. The supply curve shifted right: producers are willing to supply more oil at every price.'
+    },
+    partB: {
+      question: '<strong>What happened to the equilibrium price?</strong>',
+      options: ['Equilibrium price went up', 'Equilibrium price went down', 'Equilibrium price stayed the same'],
+      correct: 1,
+      feedback: 'When supply increases, the equilibrium price falls. More oil on the market means producers have to lower prices to sell it all.'
+    },
+    bonus: {
+      question: 'Which supply determinant most likely caused this?',
+      options: ['Oil became less popular (tastes changed)', 'New drilling technology was discovered (Technology)', 'Government banned offshore drilling', 'Consumer incomes rose'],
+      correct: 1,
+      feedback: '+5 bonus! New technology that makes extraction cheaper or more efficient shifts the supply curve right: producers can supply more at every price.'
+    }
+  },
+  {
+    id: 't2q5',
+    market: 'Oil Market',
+    chartOpts: { showSupplyBefore: true, supplyShift: -2 },
+    partA: {
+      question: 'The dotted purple line shows where supply was. The solid purple line shows where it is now. <strong>What happened?</strong>',
+      options: ['Demand increased', 'Demand decreased', 'Supply increased', 'Supply decreased'],
+      correct: 3,
+      feedback: 'Supply decreased. The supply curve shifted left: producers are supplying less oil at every price level.'
+    },
+    partB: {
+      question: '<strong>What happened to the equilibrium price?</strong>',
+      options: ['Equilibrium price went up', 'Equilibrium price went down', 'Equilibrium price stayed the same'],
+      correct: 0,
+      feedback: 'A supply decrease raises the equilibrium price. Less oil on the market means higher prices for buyers.'
+    },
+    bonus: {
+      question: 'Which supply determinant most likely caused this?',
+      options: ['New oil fields discovered', 'OPEC cut production quotas (Number of sellers / Government regulation)', 'Technology improved drilling efficiency', 'Consumer demand for oil fell'],
+      correct: 1,
+      feedback: "+5 bonus! OPEC production cuts reduce the number of sellers effectively producing, shifting supply left and driving prices up. You'll see this in the OPEC case study."
+    }
+  },
+  {
+    id: 't2q6',
+    market: 'Concert Ticket Market',
+    chartOpts: { showDemandBefore: true, demandShift: 3 },
+    partA: {
+      question: 'The dotted orange line shows where demand was. The solid orange line shows where it is now. <strong>What happened?</strong>',
+      options: ['Demand increased', 'Demand decreased', 'Supply increased', 'Supply decreased'],
+      correct: 0,
+      feedback: 'Demand increased. The demand curve shifted right: more consumers want to buy tickets at every price level.'
+    },
+    partB: {
+      question: '<strong>What happened to the equilibrium price?</strong>',
+      options: ['Equilibrium price went up', 'Equilibrium price went down', 'Equilibrium price stayed the same'],
+      correct: 0,
+      feedback: 'When demand increases, the equilibrium price rises. With more fans competing for a fixed number of tickets, prices go up.'
+    },
+    bonus: {
+      question: 'Which T.O.N.I.E. factor most likely caused this?',
+      options: ['Income fell (fewer people can afford tickets)', 'Tastes changed (a major artist announced a tour)', 'Number of buyers decreased', 'Expectations of future prices fell'],
+      correct: 1,
+      feedback: '+5 bonus! A major artist announcement shifts Tastes: suddenly everyone wants to go, driving demand up sharply.'
+    }
+  }
+];
+
+// ============================================================
+// TIER 3 DATA
+// ============================================================
+const tier3Questions = [
+  {
+    id: 't3q1',
+    source: 'National Business Wire',
+    headline: 'COVID-19 Forces Sawmill Shutdowns Across Pacific Northwest',
+    dateline: 'March 2020',
+    market: 'Lumber Market',
+    curve: 'supply',       // 'supply' or 'demand'
+    direction: 'decrease', // 'increase' or 'decrease'
+    priceEffect: 'up',
+    explanation: 'COVID-19 shut down sawmills, reducing the number of producers and raising production costs. Supply decreased (shifted left), raising the equilibrium price.',
+    chartAfterOpts: { supplyShift: -2.5 }
+  },
+  {
+    id: 't3q2',
+    source: 'Reuters Economy',
+    headline: 'Stimulus Checks Arrive: Home Improvement Spending Surges as Americans Upgrade Backyards and Offices',
+    dateline: 'April 2020',
+    market: 'Lumber Market',
+    curve: 'demand',
+    direction: 'increase',
+    priceEffect: 'up',
+    explanation: 'Stimulus money boosted household income, and stuck-at-home Americans poured it into renovations. Demand increased (shifted right), further pushing lumber prices up. Combined with the supply decrease, prices quadrupled.',
+    chartAfterOpts: { demandShift: 2.5 }
+  },
+  {
+    id: 't3q3',
+    source: 'AP Energy Report',
+    headline: 'OPEC Announces Surprise Production Cut: Member Nations to Reduce Output',
+    dateline: 'October 1973',
+    market: 'Oil Market',
+    curve: 'supply',
+    direction: 'decrease',
+    priceEffect: 'up',
+    explanation: 'OPEC nations cut production, reducing the supply of oil on global markets. Supply decreased (shifted left), driving oil prices sharply higher.',
+    chartAfterOpts: { supplyShift: -2.5 }
+  },
+  {
+    id: 't3q4',
+    source: 'Green Auto Report',
+    headline: 'Gas Prices Hit Record Highs: EV Sales Jump 40% as Consumers Seek Alternatives',
+    dateline: 'Current Events',
+    market: 'Electric Vehicle Market',
+    curve: 'demand',
+    direction: 'increase',
+    priceEffect: 'up',
+    explanation: "As gas prices rise, EVs become more attractive as a substitute good. Demand for EVs increases (shifts right), raising EV prices. This is a preview of a concept we'll return to in a later unit.",
+    chartAfterOpts: { demandShift: 2.5 }
+  },
+  {
+    id: 't3q5',
+    source: 'Tech Industry Digest',
+    headline: 'AI Hyperscaling Race: Tech Giants Compete for GPU Chips as Data Center Buildout Accelerates',
+    dateline: 'Current Events',
+    market: 'GPU / Semiconductor Market',
+    curve: 'demand',
+    direction: 'increase',
+    priceEffect: 'up',
+    explanation: 'The AI boom created massive demand for GPUs used in training models and running data centers. Demand increased (shifted right), driving chip prices dramatically higher. More on this in a later unit.',
+    chartAfterOpts: { demandShift: 2.5 }
+  },
+  {
+    id: 't3q6',
+    source: 'Travel Industry Weekly',
+    headline: 'Memorial Day Marks Start of Summer Travel Season: AAA Expects Record Road Trip Numbers',
+    dateline: 'May',
+    market: 'Gasoline Market',
+    curve: 'demand',
+    direction: 'increase',
+    priceEffect: 'up',
+    explanation: 'Summer travel increases demand for gasoline. More Americans driving means demand shifts right, raising the equilibrium price at gas stations.',
+    chartAfterOpts: { demandShift: 2 }
+  },
+  {
+    id: 't3q7',
+    source: 'Energy Technology Review',
+    headline: 'Breakthrough: New Offshore Drilling Technology Could Unlock Billions of Barrels of Previously Unreachable Oil',
+    dateline: 'Energy News',
+    market: 'Oil Market',
+    curve: 'supply',
+    direction: 'increase',
+    priceEffect: 'down',
+    explanation: 'New technology lowers the cost of extraction and makes more oil accessible, increasing supply. The supply curve shifts right, lowering the equilibrium price.',
+    chartAfterOpts: { supplyShift: 2.5 }
+  }
+];
+
+// ============================================================
+// BONUS DATA
+// ============================================================
+const bonusQuestions = [
+  {
+    id: 'bq1',
+    context: 'Following the OPEC oil shock...',
+    chain: '<span>Oil supply decreased</span> → Oil prices spiked → <strong>What happens to the quantity of gasoline demanded?</strong>',
+    options: ['Quantity demanded increases (more people want gas at any price)', 'Quantity demanded decreases (higher prices cause consumers to buy less)', 'Demand shifts right (a new T.O.N.I.E. factor kicked in)', 'Supply increases to compensate'],
+    correct: 1,
+    feedback: 'Correct: higher oil prices mean higher gas prices, which causes consumers to demand a lower quantity. This is a movement along the demand curve (price changed), not a shift.'
+  },
+  {
+    id: 'bq2',
+    context: 'Following the AI boom GPU demand surge...',
+    chain: '<span>GPU demand increased</span> → GPU prices rose significantly → <strong>What do chipmakers (producers) do in response?</strong>',
+    options: ['Produce fewer GPUs because demand is scary', 'Expand production: higher prices make supplying GPUs more profitable', 'The supply curve shifts left', 'Quantity demanded increases further'],
+    correct: 1,
+    feedback: 'Higher prices signal producers to supply more. Chipmakers like NVIDIA invested heavily in expanding production capacity. This is the Law of Supply in action.'
+  },
+  {
+    id: 'bq3',
+    context: 'Following the COVID lumber price spike...',
+    chain: '<span>Lumber prices quadrupled</span> → Construction costs surged → <strong>What happens to the quantity demanded for new homes?</strong>',
+    options: ['Quantity demanded for new homes increases (everyone wants a home)', 'Quantity demanded for new homes decreases (homes become more expensive to build and buy)', 'Supply of new homes increases immediately', 'The lumber market is unrelated to home prices'],
+    correct: 1,
+    feedback: 'Higher lumber costs raise home prices, which decreases demand for new homes. Markets are connected: a shock in one market ripples into others.'
+  },
+  {
+    id: 'bq4',
+    context: 'Following the gas price spike and EV demand surge...',
+    chain: '<span>EV demand increased</span> → More consumers want EVs at every price → <strong>What happens to equilibrium EV prices?</strong>',
+    options: ['EV prices fall (more competition forces prices down)', 'EV prices rise (higher demand with the same supply raises the equilibrium price)', 'EV prices stay the same (manufacturers control pricing)', 'Supply instantly adjusts so prices do not change'],
+    correct: 1,
+    feedback: "When demand increases and supply stays the same, the equilibrium price rises. EV prices did climb significantly during this period. Supply can't adjust instantly, so prices go up first."
+  }
+];
+
+// ============================================================
+// TIER 1 LOGIC
+// ============================================================
+let t1Index = 0;
+let t1Correct = 0;
+let t1Score = 0;
+let t1Answered = [];
+
+function startGame() {
+  showScreen('tier1-screen');
+  updateHudTier('Tier 1: Read the Graph');
+  renderT1Question();
+}
+
+function renderT1Question() {
+  const q = tier1Questions[t1Index];
+  const content = document.getElementById('tier1-content');
+  const answered = t1Answered[t1Index] || false;
+
+  const optionsHtml = q.options.map((opt, i) => {
+    let cls = 'option-btn';
+    if (answered) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === t1Answered[t1Index]?.chosen && i !== q.correct) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="answerT1(${i})" ${answered ? 'disabled' : ''}>${opt}</button>`;
+  }).join('');
+
+  const feedbackHtml = answered
+    ? `<div class="feedback-box ${t1Answered[t1Index]?.correct ? 'correct' : 'wrong'}" style="display:block">${q.feedback}</div>`
+    : `<div class="feedback-box" id="t1-feedback-${q.id}"></div>`;
+
+  const navHtml = answered
+    ? `<div class="next-wrap">
+        ${t1Index < tier1Questions.length - 1
+          ? `<button class="btn btn-sm" onclick="nextT1()">NEXT &rarr;</button>`
+          : `<button class="btn btn-sm" onclick="finishTier1()">SEE RESULTS &rarr;</button>`}
+       </div>`
+    : '';
+
+  content.innerHTML = `
+    <div class="q-card" style="animation: fadeIn 0.3s ease">
+      <div class="q-text">${q.question}</div>
+      <div class="graph-wrap">
+        <canvas id="chart-${q.id}" height="240"></canvas>
+      </div>
+      <div class="options-grid">${optionsHtml}</div>
+      ${feedbackHtml}
+      ${navHtml}
+    </div>
+  `;
+
+  makeSupplyDemandChart(`chart-${q.id}`, q.chartOpts);
+  updateProgress('t1', t1Index, tier1Questions.length);
+}
+
+function answerT1(chosen) {
+  const q = tier1Questions[t1Index];
+  const isCorrect = chosen === q.correct;
+  t1Answered[t1Index] = { chosen, correct: isCorrect };
+  if (isCorrect) {
+    t1Correct++;
+    t1Score += 5;
+    tierScores[0] += 5;
+    updateScore(5);
+  }
+  renderT1Question();
+}
+
+function nextT1() {
+  t1Index++;
+  renderT1Question();
+}
+
+function finishTier1() {
+  document.getElementById('restart-btn-t1').style.display = 'none';
+  const el = document.getElementById('t1-final-score');
+  el.textContent = t1Score;
+  const msg = document.getElementById('t1-unlock-msg');
+  const btn = document.getElementById('t1-unlock-btn');
+  if (t1Correct >= 5) {
+    msg.innerHTML = `You identified <strong>${t1Correct} of 6</strong> correctly. Tier 2 unlocked.`;
+    btn.innerHTML = `<button class="btn" onclick="startTier2()">UNLOCK TIER 2 &rarr;</button><button class="btn btn-outline" style="margin-left:12px" onclick="restartTier1()">RETRY TIER 1</button>`;
+  } else {
+    msg.innerHTML = `You got <strong>${t1Correct} of 6</strong>. You need 5 correct to unlock Tier 2. Try again.`;
+    btn.innerHTML = `<button class="btn" onclick="restartTier1()">RETRY TIER 1</button>`;
+  }
+  showScreen('t1-complete');
+  setTimeout(() => {
+    document.getElementById('ub1').classList.add('fill');
+  }, 200);
+}
+
+// ============================================================
+// TIER 2 LOGIC
+// ============================================================
+let t2Index = 0;
+let t2Score = 0;
+let t2State = []; // {partA: null, partB: null, bonus: null}
+
+function startTier2() {
+  showScreen('tier2-screen');
+  updateHudTier('Tier 2: Read the Shift');
+  renderT2Question();
+}
+
+function renderT2Question() {
+  const q = tier2Questions[t2Index];
+  const state = t2State[t2Index] || { partA: null, partB: null, bonus: null };
+  t2State[t2Index] = state;
+
+  const partAAnswered = state.partA !== null;
+  const partBAnswered = state.partB !== null;
+  const bonusAnswered = state.bonus !== null;
+
+  const partAOptions = q.partA.options.map((opt, i) => {
+    let cls = 'option-btn';
+    if (partAAnswered) {
+      if (i === q.partA.correct) cls += ' correct';
+      else if (i === state.partA.chosen && !state.partA.correct) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="answerT2partA(${i})" ${partAAnswered ? 'disabled' : ''}>${opt}</button>`;
+  }).join('');
+
+  const partBOptions = q.partB.options.map((opt, i) => {
+    let cls = 'option-btn';
+    if (partBAnswered) {
+      if (i === q.partB.correct) cls += ' correct';
+      else if (i === state.partB.chosen && !state.partB.correct) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="answerT2partB(${i})" ${partBAnswered ? 'disabled' : ''}>${opt}</button>`;
+  }).join('');
+
+  let bonusHtml = '';
+  if (partBAnswered && q.bonus) {
+    const bonusOptions = q.bonus.options.map((opt, i) => {
+      let cls = 'option-btn';
+      if (bonusAnswered) {
+        if (i === q.bonus.correct) cls += ' correct';
+        else if (i === state.bonus?.chosen && !state.bonus?.correct) cls += ' wrong';
+      }
+      return `<button class="${cls}" onclick="answerT2bonus(${i})" ${bonusAnswered ? 'disabled' : ''}>${opt}</button>`;
+    }).join('');
+
+    bonusHtml = `
+      <div class="bonus-prompt">
+        <div class="bonus-label">Bonus Question (+5 pts)</div>
+        <div class="q-text" style="margin-bottom:12px">${q.bonus.question}</div>
+        <div class="options-grid">${bonusOptions}</div>
+        ${bonusAnswered ? `<div class="feedback-box ${state.bonus.correct ? 'correct' : 'wrong'}" style="display:block">${q.bonus.feedback}</div>` : ''}
+      </div>`;
+  }
+
+  const showNext = partBAnswered;
+  const navHtml = showNext
+    ? `<div class="next-wrap">
+        ${t2Index < tier2Questions.length - 1
+          ? `<button class="btn btn-sm" onclick="nextT2()">NEXT &rarr;</button>`
+          : `<button class="btn btn-sm" onclick="finishTier2()">SEE RESULTS &rarr;</button>`}
+       </div>`
+    : '';
+
+  const isBefore = q.chartOpts.showDemandBefore ? 'Demand (dotted = before, solid = after)' : 'Supply (dotted = before, solid = after)';
+
+  const content = document.getElementById('tier2-content');
+  content.innerHTML = `
+    <div class="q-card" style="animation: fadeIn 0.3s ease">
+      <div style="font-size:1.1rem; font-weight:700; text-transform:uppercase; letter-spacing:3px; color:var(--gold); margin-bottom:12px; border-left:3px solid var(--gold); padding-left:10px">${q.market}</div>
+      <div class="graph-wrap">
+        <canvas id="chart-t2-${t2Index}" height="260"></canvas>
+        <div class="graph-legend">
+          <div class="legend-item"><div class="legend-dot demand"></div> Demand (solid)</div>
+          <div class="legend-item"><div class="legend-dot supply"></div> Supply (solid)</div>
+          <div class="legend-item" style="opacity:0.5"><div style="width:20px;height:0;border-top:2px dashed #ff9e44"></div> Before</div>
+        </div>
+      </div>
+
+      <div class="part-label">Part A</div>
+      <div class="q-text">${q.partA.question}</div>
+      <div class="options-grid">${partAOptions}</div>
+      ${partAAnswered ? `<div class="feedback-box ${state.partA.correct ? 'correct' : 'wrong'}" style="display:block">${q.partA.feedback}</div>` : ''}
+
+      ${partAAnswered ? `<hr class="multi-part-divider"><div class="part-label">Part B</div><div class="q-text">${q.partB.question}</div><div class="options-grid">${partBOptions}</div>${partBAnswered ? `<div class="feedback-box ${state.partB.correct ? 'correct' : 'wrong'}" style="display:block">${q.partB.feedback}</div>` : ''}` : ''}
+
+      ${bonusHtml}
+      ${navHtml}
+    </div>
+  `;
+
+  makeSupplyDemandChart(`chart-t2-${t2Index}`, q.chartOpts);
+  updateProgress('t2', t2Index, tier2Questions.length);
+}
+
+function answerT2partA(chosen) {
+  const q = tier2Questions[t2Index];
+  const isCorrect = chosen === q.partA.correct;
+  t2State[t2Index].partA = { chosen, correct: isCorrect };
+  if (isCorrect) { t2Score += 8; tierScores[1] += 8; updateScore(8); }
+  renderT2Question();
+}
+
+function answerT2partB(chosen) {
+  const q = tier2Questions[t2Index];
+  const isCorrect = chosen === q.partB.correct;
+  t2State[t2Index].partB = { chosen, correct: isCorrect };
+  if (isCorrect) { t2Score += 7; tierScores[1] += 7; updateScore(7); }
+  renderT2Question();
+}
+
+function answerT2bonus(chosen) {
+  const q = tier2Questions[t2Index];
+  const isCorrect = chosen === q.bonus.correct;
+  t2State[t2Index].bonus = { chosen, correct: isCorrect };
+  if (isCorrect) { t2Score += 5; tierScores[1] += 5; updateScore(5); }
+  renderT2Question();
+}
+
+function nextT2() {
+  t2Index++;
+  renderT2Question();
+}
+
+function finishTier2() {
+  document.getElementById('restart-btn-t2').style.display = 'none';
+  const t2Correct = t2State.filter(s => s && s.partA && s.partA.correct).length;
+  document.getElementById('t2-final-score').textContent = t2Score;
+  const msg = document.getElementById('t2-unlock-msg');
+  const btn = document.getElementById('t2-unlock-btn');
+  if (t2Correct >= 4) {
+    msg.innerHTML = `You read <strong>${t2Correct} of 6</strong> shifts correctly. Tier 3 unlocked.`;
+    btn.innerHTML = `<button class="btn" onclick="startTier3()">UNLOCK TIER 3 &rarr;</button><button class="btn btn-outline" style="margin-left:12px" onclick="restartTier2()">RETRY TIER 2</button>`;
+  } else {
+    msg.innerHTML = `You read <strong>${t2Correct} of 6</strong> shifts correctly. You need 4 correct to unlock Tier 3. Try again.`;
+    btn.innerHTML = `<button class="btn" onclick="restartTier2()">RETRY TIER 2</button>`;
+  }
+  showScreen('t2-complete');
+  setTimeout(() => document.getElementById('ub2').classList.add('fill'), 200);
+}
+
+// ============================================================
+// TIER 3 LOGIC
+// ============================================================
+let t3Index = 0;
+let t3Score = 0;
+let t3State = [];
+let tier3Selected = [];
+
+function startTier3() {
+  const shuffled = [...tier3Questions].sort(() => Math.random() - 0.5);
+  tier3Selected = shuffled.slice(0, 5);
+  t3Index = 0; t3State = [];
+  showScreen('tier3-screen');
+  updateHudTier('Tier 3: Predict the Shift');
+  renderT3Question();
+}
+
+function renderT3Question() {
+  const q = tier3Selected[t3Index];
+  const state = t3State[t3Index] || { curve: null, direction: null, price: null, revealed: false };
+  t3State[t3Index] = state;
+
+  const curveAnswered = state.curve !== null;
+  const dirAnswered = state.direction !== null;
+  const priceAnswered = state.price !== null;
+
+  const curveOpts = ['Supply', 'Demand'].map((opt, i) => {
+    const val = i === 0 ? 'supply' : 'demand';
+    let cls = 'option-btn';
+    if (curveAnswered) {
+      if (val === q.curve) cls += ' correct';
+      else if (val === state.curve && val !== q.curve) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="answerT3curve('${val}')" ${curveAnswered ? 'disabled' : ''}>${opt}</button>`;
+  }).join('');
+
+  const dirOpts = ['increase', 'decrease'].map((val) => {
+    let cls = 'option-btn';
+    const label = val === 'increase' ? 'Increases (shifts right)' : 'Decreases (shifts left)';
+    if (dirAnswered) {
+      if (val === q.direction) cls += ' correct';
+      else if (val === state.direction && val !== q.direction) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="answerT3dir('${val}')" ${dirAnswered ? 'disabled' : ''}>${label}</button>`;
+  }).join('');
+
+  const priceOpts = ['up', 'down'].map((val) => {
+    let cls = 'option-btn';
+    const label = val === 'up' ? 'Equilibrium price goes UP' : 'Equilibrium price goes DOWN';
+    if (priceAnswered) {
+      if (val === q.priceEffect) cls += ' correct';
+      else if (val === state.price && val !== q.priceEffect) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="answerT3price('${val}')" ${priceAnswered ? 'disabled' : ''}>${label}</button>`;
+  }).join('');
+
+  let revealedChart = '';
+  if (priceAnswered && !state.revealed) {
+    state.revealed = true;
+  }
+  if (state.revealed) {
+    revealedChart = `
+      <div style="margin-top:16px">
+        <div class="part-label" style="color:var(--gold)">Result: Here is what happened</div>
+        <div class="graph-wrap">
+          <canvas id="chart-t3-after-${t3Index}" height="220"></canvas>
+        </div>
+        <div class="feedback-box correct" style="display:block">${q.explanation}</div>
+      </div>`;
+  }
+
+  const showNext = priceAnswered;
+  const navHtml = showNext
+    ? `<div class="next-wrap">
+        ${t3Index < tier3Selected.length - 1
+          ? `<button class="btn btn-sm" onclick="nextT3()">NEXT HEADLINE &rarr;</button>`
+          : `<button class="btn btn-sm" onclick="finishTier3()">SEE RESULTS &rarr;</button>`}
+       </div>`
+    : '';
+
+  const content = document.getElementById('tier3-content');
+  content.innerHTML = `
+    <div class="q-card" style="animation: fadeIn 0.3s ease">
+      <div class="headline-card">
+        <div class="headline-source">Breaking: ${q.source}</div>
+        <div class="headline-text">${q.headline}</div>
+        <div class="headline-dateline">${q.dateline} · ${q.market}</div>
+      </div>
+
+      <div class="graph-wrap">
+        <canvas id="chart-t3-${t3Index}" height="220"></canvas>
+        <div class="graph-legend">
+          <div class="legend-item"><div class="legend-dot demand"></div> Demand</div>
+          <div class="legend-item"><div class="legend-dot supply"></div> Supply</div>
+        </div>
+      </div>
+
+      <div class="part-label">Step 1: Which curve moves?</div>
+      <div class="options-grid">${curveOpts}</div>
+
+      ${curveAnswered ? `<hr class="multi-part-divider"><div class="part-label">Step 2: Which direction?</div><div class="options-grid">${dirOpts}</div>` : ''}
+      ${dirAnswered ? `<hr class="multi-part-divider"><div class="part-label">Step 3: What happens to the equilibrium price?</div><div class="options-grid">${priceOpts}</div>` : ''}
+
+      ${revealedChart}
+      ${navHtml}
+    </div>
+  `;
+
+  makeSupplyDemandChart(`chart-t3-${t3Index}`, {});
+
+  if (state.revealed) {
+    setTimeout(() => {
+      makeSupplyDemandChart(`chart-t3-after-${t3Index}`, {
+        showDemandBefore: q.curve === 'demand',
+        showSupplyBefore: q.curve === 'supply',
+        ...q.chartAfterOpts
+      });
+    }, 50);
+  }
+
+  updateProgress('t3', t3Index, tier3Selected.length);
+}
+
+function answerT3curve(val) {
+  const q = tier3Selected[t3Index];
+  const isCorrect = val === q.curve;
+  t3State[t3Index].curve = val;
+  if (isCorrect) { t3Score += 10; tierScores[2] += 10; updateScore(10); }
+  renderT3Question();
+}
+
+function answerT3dir(val) {
+  const q = tier3Selected[t3Index];
+  const isCorrect = val === q.direction;
+  t3State[t3Index].direction = val;
+  if (isCorrect) { t3Score += 10; tierScores[2] += 10; updateScore(10); }
+  renderT3Question();
+}
+
+function answerT3price(val) {
+  const q = tier3Selected[t3Index];
+  const isCorrect = val === q.priceEffect;
+  t3State[t3Index].price = val;
+  if (isCorrect) { t3Score += 5; tierScores[2] += 5; updateScore(5); }
+  renderT3Question();
+}
+
+function nextT3() {
+  t3Index++;
+  renderT3Question();
+}
+
+function finishTier3() {
+  document.getElementById('restart-btn-t3').style.display = 'none';
+  const t3Correct = t3State.filter((s, i) => s && s.curve !== null && s.curve === tier3Selected[i]?.curve).length;
+  document.getElementById('t3-final-score').textContent = t3Score;
+  const btn = document.getElementById('t3-unlock-btn');
+  if (t3Correct >= 4) {
+    document.getElementById('t3-unlock-msg').innerHTML = `You predicted <strong>${t3Correct} of 5</strong> shifts correctly. Bonus Round unlocked.`;
+    btn.innerHTML = `<button class="btn" onclick="startBonus()">ENTER BONUS ROUND &rarr;</button><button class="btn btn-outline" style="margin-left:12px" onclick="restartTier3()">RETRY TIER 3</button>`;
+  } else {
+    document.getElementById('t3-unlock-msg').innerHTML = `You predicted <strong>${t3Correct} of 5</strong> shifts correctly. You need 4 to unlock the Bonus Round. Try again.`;
+    btn.innerHTML = `<button class="btn" onclick="restartTier3()">RETRY TIER 3</button>`;
+  }
+  showScreen('t3-complete');
+  setTimeout(() => document.getElementById('ub3').classList.add('fill'), 200);
+}
+
+// ============================================================
+// BONUS LOGIC
+// ============================================================
+let bIndex = 0;
+let bScore = 0;
+let bAnswered = [];
+let bonusSelected = [];
+
+function startBonus() {
+  bIndex = 0;
+  bAnswered = [];
+  bonusSelected = [...bonusQuestions];
+  showScreen('bonus-screen');
+  updateHudTier('Bonus: Chain Reaction');
+  renderBonus();
+}
+
+function renderBonus() {
+  const q = bonusSelected[bIndex];
+  const ans = bAnswered[bIndex];
+  const answered = ans !== undefined;
+
+  const opts = q.options.map((opt, i) => {
+    let cls = 'option-btn';
+    if (answered) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === ans.chosen && !ans.correct) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="answerBonus(${i})" ${answered ? 'disabled' : ''}>${opt}</button>`;
+  }).join('');
+
+  const navHtml = answered
+    ? `<div class="next-wrap">
+        ${bIndex < bonusSelected.length - 1
+          ? `<button class="btn btn-sm" onclick="nextBonus()">NEXT &rarr;</button>`
+          : `<button class="btn btn-sm" onclick="finishGame()">FINAL SCORE &rarr;</button>`}
+       </div>`
+    : '';
+
+  document.getElementById('bonus-content').innerHTML = `
+    <div class="chain-card" style="animation: fadeIn 0.3s ease">
+      <div class="chain-context">${q.context}</div>
+      <div class="chain-chain">${q.chain}</div>
+      <div class="options-grid">${opts}</div>
+      ${answered ? `<div class="feedback-box ${ans.correct ? 'correct' : 'wrong'}" style="display:block">${q.feedback}</div>` : ''}
+      ${navHtml}
+    </div>
+  `;
+
+  updateProgress('tb', bIndex, bonusSelected.length);
+}
+
+function answerBonus(chosen) {
+  const q = bonusSelected[bIndex];
+  const isCorrect = chosen === q.correct;
+  bAnswered[bIndex] = { chosen, correct: isCorrect };
+  if (isCorrect) { bScore += 15; tierScores[3] += 15; updateScore(15); }
+  renderBonus();
+}
+
+function nextBonus() {
+  bIndex++;
+  renderBonus();
+}
+
+// ============================================================
+// END GAME
+// ============================================================
+function finishGame() {
+  showScreen('end-screen');
+  updateHudTier('Complete');
+  document.getElementById('end-score').textContent = score;
+
+  let rank, summary;
+  const maxScore = (6*5) + (6*8 + 6*7 + 6*5) + (7*10 + 7*10 + 7*5) + (4*15);
+
+  if (score >= maxScore * 0.85) {
+    rank = 'CHIEF ECONOMIST';
+    summary = 'Outstanding. You can read a market, interpret a shift, predict a consequence, and follow the chain. That is the full skill set.';
+  } else if (score >= maxScore * 0.65) {
+    rank = 'MARKET ANALYST';
+    summary = 'Strong work. You have a solid command of supply and demand. Review any questions you missed, especially the shift directions.';
+  } else if (score >= maxScore * 0.45) {
+    rank = 'JUNIOR ANALYST';
+    summary = 'Good start. You have the basics down. Go back and review the T.O.N.I.E. factors and the 6 supply determinants to sharpen your shift predictions.';
+  } else {
+    rank = 'ECON INTERN';
+    summary = 'Keep working at it. Review your supply and demand notes, then try again. Focus on which direction each curve shifts for each type of event.';
+  }
+
+  document.getElementById('end-rank').textContent = rank;
+  document.getElementById('end-summary').textContent = summary;
+}
+
+function resetGame() {
+  score = 0; tierScores = [0,0,0,0];
+  t1Index = 0; t1Correct = 0; t1Score = 0; t1Answered = [];
+  t2Index = 0; t2Score = 0; t2State = [];
+  t3Index = 0; t3Score = 0; t3State = []; tier3Selected = [];
+  bIndex = 0; bScore = 0; bAnswered = []; bonusSelected = [];
+  document.getElementById('hud-score').textContent = '0';
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+  showScreen('intro-screen');
+  updateHudTier('Supply & Demand');
+  ['ub1','ub2','ub3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('fill');
+  });
+}
+
+function restartTier1() {
+  document.getElementById('restart-btn-t1').style.display = '';
+  t1Index = 0; t1Correct = 0; t1Score = 0; t1Answered = [];
+  score -= tierScores[0]; tierScores[0] = 0;
+  document.getElementById('hud-score').textContent = score;
+  Object.keys(charts).forEach(k => { if (k.startsWith('chart-t1')) { charts[k].destroy(); delete charts[k]; } });
+  showScreen('tier1-screen');
+  updateHudTier('Tier 1: Read the Graph');
+  renderT1Question();
+}
+
+function restartTier2() {
+  document.getElementById('restart-btn-t2').style.display = '';
+  t2Index = 0; t2Score = 0; t2State = [];
+  score -= tierScores[1]; tierScores[1] = 0;
+  document.getElementById('hud-score').textContent = score;
+  Object.keys(charts).forEach(k => { if (k.startsWith('chart-t2')) { charts[k].destroy(); delete charts[k]; } });
+  showScreen('tier2-screen');
+  updateHudTier('Tier 2: Read the Shift');
+  renderT2Question();
+}
+
+function restartTier3() {
+  document.getElementById('restart-btn-t3').style.display = '';
+  const shuffled = [...tier3Questions].sort(() => Math.random() - 0.5);
+  tier3Selected = shuffled.slice(0, 5);
+  t3Index = 0; t3Score = 0; t3State = [];
+  score -= tierScores[2]; tierScores[2] = 0;
+  document.getElementById('hud-score').textContent = score;
+  Object.keys(charts).forEach(k => { if (k.startsWith('chart-t3')) { charts[k].destroy(); delete charts[k]; } });
+  showScreen('tier3-screen');
+  updateHudTier('Tier 3: Predict the Shift');
+  renderT3Question();
+}
+function updateProgress(tier, index, total) {
+  const pct = (index / total) * 100;
+  const fill = document.getElementById(`${tier}-progress`);
+  const label = document.getElementById(`${tier}-progress-label`);
+  if (fill) fill.style.width = pct + '%';
+  if (label) label.textContent = `Question ${index + 1} of ${total}`;
+}
+</script>
+</body>
+</html>
