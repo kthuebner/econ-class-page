@@ -197,6 +197,8 @@
       flex-direction: column;
     }
 
+    /* Push buttons to bottom without leaving a visible dark gap */
+
     .card:hover {
       transform: translateY(-5px);
     }
@@ -205,7 +207,8 @@
       padding: 24px 24px 20px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
+      flex: 1;
     }
 
     .card-unit-label {
@@ -250,7 +253,6 @@
       transition: background 0.2s ease, letter-spacing 0.2s ease;
       position: relative;
       overflow: hidden;
-      margin-top: auto;
     }
 
     .card-btn::before {
@@ -328,6 +330,12 @@
 
     .card:hover .card-resource { filter: brightness(1.15); }
     .card:hover .card-resource::after { transform: translate(3px, -3px); }
+
+    .card-resource:hover {
+      filter: brightness(1.5) !important;
+      color: white;
+      letter-spacing: 0.15em;
+    }
 
     /* ══ Per-unit resource button colors ══ */
     .unit-1 .card-resource { background: linear-gradient(135deg, #06284a, #0b3d6b); }
@@ -501,7 +509,7 @@
 
   <section class="case-studies">
     <div class="section-header">
-      <h2 class="section-title">Case Studies & Unit Overviews</h2>
+      <h2 class="section-title">Case Studies, Unit Overviews & Games</h2>
       <div class="title-underline"></div>
     </div>
 
@@ -524,7 +532,7 @@
         </div>
         <a href="unit-2.html" class="card-btn">Case Study #2</a>
         <a href="unit-2b.html" class="card-resource">Unit 2 Overview</a>
-        <a href="unit-2c.html" class="card-resource">Supply & Demand Game</a>
+        <a href="unit-2c.html" class="card-resource">Unit 2 Resource</a>
       </div>
 
       <div class="card unit-3">
@@ -562,6 +570,7 @@
         <div class="card-header">
           <div class="card-unit-label">Unit 6</div>
           <div class="card-title">Why Do We Trade?</div>
+          <div class="card-mini-label">Mini Unit</div>
         </div>
         <a href="unit-6.html" class="card-btn">Case Study #6-not live</a>
         <a href="unit-6b.html" class="card-resource">Unit 6 Overview</a>
