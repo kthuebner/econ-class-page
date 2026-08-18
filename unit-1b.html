@@ -214,15 +214,23 @@
         }
 
         .investment-card {
+            --accent:      var(--navy);
+            --accent-soft: rgba(35,55,92,0.10);
             background: var(--card);
             border: 1px solid var(--line);
+            border-top: 4px solid var(--accent);
             padding: 2rem;
             transition: border-color 0.25s ease, box-shadow 0.25s ease;
         }
 
+        /* Type colour code: muted, one hue per investment type */
+        .investment-card.type-stocks      { --accent: #9c5440; --accent-soft: rgba(156,84,64,0.11); }
+        .investment-card.type-index       { --accent: #2f6f6a; --accent-soft: rgba(47,111,106,0.11); }
+        .investment-card.type-bonds       { --accent: #2f4a7a; --accent-soft: rgba(47,74,122,0.11); }
+        .investment-card.type-commodities { --accent: #8a6a33; --accent-soft: rgba(138,106,51,0.13); }
+
         .investment-card:hover {
-            border-color: var(--navy-mid);
-            box-shadow: 0 6px 20px rgba(22,35,58,0.09);
+            box-shadow: 0 6px 20px rgba(22,35,58,0.11);
         }
 
         .investment-card h3 {
@@ -233,14 +241,30 @@
             line-height: 1;
             padding-bottom: 0.75rem;
             margin-bottom: 1.25rem;
-            border-bottom: 3px solid var(--navy);
+            border-bottom: 3px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .investment-icon {
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            line-height: 1;
+            background: var(--accent-soft);
+            border-bottom: 2px solid var(--accent);
         }
 
         .definition {
             background: var(--panel);
             padding: 1rem 1.25rem;
             margin-bottom: 1rem;
-            border-left: 3px solid var(--navy);
+            border-left: 3px solid var(--accent);
         }
 
         .definition strong,
@@ -251,13 +275,13 @@
             font-weight: 700;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--navy);
+            color: var(--accent);
         }
 
         .example-box {
             background: var(--card);
             border: 1px solid var(--line);
-            border-left: 3px solid var(--navy-mid);
+            border-left: 3px solid var(--accent);
             padding: 1rem 1.25rem;
             margin: 1rem 0;
         }
@@ -286,7 +310,7 @@
             border: 1px solid var(--line);
         }
 
-        .risk-dot.filled { background: var(--navy); border-color: var(--navy); }
+        .risk-dot.filled { background: var(--accent); border-color: var(--accent); }
 
         /* ---------- Collapsible detail ---------- */
 
@@ -303,15 +327,15 @@
             font-weight: 700;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--navy);
+            color: var(--accent);
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: color 0.2s ease;
+            transition: opacity 0.2s ease;
         }
 
         .card-more > summary::-webkit-details-marker { display: none; }
-        .card-more > summary:hover { color: var(--navy-mid); }
+        .card-more > summary:hover { opacity: 0.7; }
 
         .card-more > summary::after {
             content: '';
@@ -366,7 +390,7 @@
             width: 100%;
             margin-top: 1.25rem;
             padding: 0.85rem 1rem;
-            background: var(--ink);
+            background: var(--accent);
             border: none;
             color: #ffffff;
             font-family: 'DM Sans', sans-serif;
@@ -379,7 +403,7 @@
             transition: background 0.2s ease;
         }
 
-        .buffett-trigger:hover { background: var(--navy); }
+        .buffett-trigger:hover { filter: brightness(1.12); }
 
         .buffett-trigger img {
             width: 42px;
@@ -586,8 +610,8 @@
         </div>
 
         <div class="investment-grid">
-            <div class="investment-card">
-                <h3>Stocks</h3>
+            <div class="investment-card type-stocks">
+                <h3><span class="investment-icon" aria-hidden="true">📈</span>Stocks</h3>
                 <div class="definition">
                     <strong>What it is</strong> You own a tiny piece of a company. When the company does well, your stock value goes up. When it doesn't... well, you get the idea.
                 </div>
@@ -634,8 +658,8 @@
                 </details>
             </div>
 
-            <div class="investment-card">
-                <h3>Index Funds &amp; ETFs</h3>
+            <div class="investment-card type-index">
+                <h3><span class="investment-icon" aria-hidden="true">🛒</span>Index Funds &amp; ETFs</h3>
                 <div class="definition">
                     <strong>What it is</strong> Like a basket containing hundreds of different stocks. Instead of picking individual companies, you buy the whole basket and let someone else manage it.
                 </div>
@@ -687,8 +711,8 @@
                 </button>
             </div>
 
-            <div class="investment-card">
-                <h3>Bonds</h3>
+            <div class="investment-card type-bonds">
+                <h3><span class="investment-icon" aria-hidden="true">🏛️</span>Bonds</h3>
                 <div class="definition">
                     <strong>What it is</strong> You're basically loaning money to the government or a company, and they promise to pay you back with interest. Think of it as being the bank.
                 </div>
@@ -735,8 +759,8 @@
                 </details>
             </div>
 
-            <div class="investment-card">
-                <h3>Commodities</h3>
+            <div class="investment-card type-commodities">
+                <h3><span class="investment-icon" aria-hidden="true">🌾</span>Commodities</h3>
                 <div class="definition">
                     <strong>What it is</strong> Investing in physical stuff like gold, oil, wheat, or coffee. You're betting on the price of actual materials that people need.
                 </div>
