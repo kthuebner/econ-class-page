@@ -623,7 +623,42 @@
     100% { opacity: 0; transform: translateY(-40px); }
   }
 
-  /* TIER 1 CLICK TARGETS */
+  /* TIER NAV */
+  #tier-nav {
+    display: none;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .tier-nav-btn {
+    background: transparent;
+    border: 1px solid rgba(255,158,68,0.3);
+    color: rgba(255,158,68,0.5);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    cursor: default;
+    pointer-events: none;
+    transition: all 0.2s;
+  }
+
+  .tier-nav-btn.unlocked {
+    border-color: var(--orange);
+    color: var(--orange);
+    cursor: pointer;
+    pointer-events: all;
+  }
+
+  .tier-nav-btn.unlocked:hover {
+    background: rgba(255,158,68,0.15);
+  }
+
+  .tier-nav-btn.current {
+    background: rgba(255,158,68,0.15);
+    border-color: var(--orange);
+    color: var(--orange);
+  }
   .click-target-wrap {
     position: relative;
     display: inline-block;
@@ -670,6 +705,12 @@
   <div>
     <div id="hud-title">MARKET SIGNAL</div>
     <div id="hud-tier">Supply &amp; Demand</div>
+  </div>
+  <div id="tier-nav">
+    <button id="nav-t1" class="tier-nav-btn" onclick="jumpToTier(1)">T1</button>
+    <button id="nav-t2" class="tier-nav-btn" onclick="jumpToTier(2)">T2</button>
+    <button id="nav-t3" class="tier-nav-btn" onclick="jumpToTier(3)">T3</button>
+    <button id="nav-bonus" class="tier-nav-btn" onclick="jumpToTier(4)">★</button>
   </div>
   <div id="hud-score-wrap">
     <div id="hud-score-label">Score</div>
@@ -752,7 +793,7 @@
         </div>
         <button id="restart-btn-t2" class="btn btn-outline btn-sm" onclick="restartTier2()" style="margin-top:8px">↺ RESTART TIER</button>
       </div>
-      <div class="tier-instructions">Something happened in this market. The dotted line shows where the curve was. The solid line shows where it is now. What happened?</div>
+      <div class="tier-instructions">Something happened in this market. The dotted line shows where the curve was. The solid line shows where it is now. What happened? Clear 3 of 4 to unlock the next level.</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-track"><div class="progress-fill" id="t2-progress" style="width:0%"></div></div>
@@ -1153,52 +1194,6 @@ const tier2Questions = [
       feedback: '+5 bonus! New technology that makes extraction cheaper or more efficient shifts the supply curve right: producers can supply more at every price.'
     }
   },
-  {
-    id: 't2q5',
-    market: 'Oil Market',
-    chartOpts: { showSupplyBefore: true, supplyShift: -2 },
-    partA: {
-      question: 'The dotted purple line shows where supply was. The solid purple line shows where it is now. <strong>What happened?</strong>',
-      options: ['Demand increased', 'Demand decreased', 'Supply increased', 'Supply decreased'],
-      correct: 3,
-      feedback: 'Supply decreased. The supply curve shifted left: producers are supplying less oil at every price level.'
-    },
-    partB: {
-      question: '<strong>What happened to the equilibrium price?</strong>',
-      options: ['Equilibrium price went up', 'Equilibrium price went down', 'Equilibrium price stayed the same'],
-      correct: 0,
-      feedback: 'A supply decrease raises the equilibrium price. Less oil on the market means higher prices for buyers.'
-    },
-    bonus: {
-      question: 'Which supply determinant most likely caused this?',
-      options: ['New oil fields discovered', 'OPEC cut production quotas (Number of sellers / Government regulation)', 'Technology improved drilling efficiency', 'Consumer demand for oil fell'],
-      correct: 1,
-      feedback: "+5 bonus! OPEC production cuts reduce the number of sellers effectively producing, shifting supply left and driving prices up. You'll see this in the OPEC case study."
-    }
-  },
-  {
-    id: 't2q6',
-    market: 'Concert Ticket Market',
-    chartOpts: { showDemandBefore: true, demandShift: 3 },
-    partA: {
-      question: 'The dotted orange line shows where demand was. The solid orange line shows where it is now. <strong>What happened?</strong>',
-      options: ['Demand increased', 'Demand decreased', 'Supply increased', 'Supply decreased'],
-      correct: 0,
-      feedback: 'Demand increased. The demand curve shifted right: more consumers want to buy tickets at every price level.'
-    },
-    partB: {
-      question: '<strong>What happened to the equilibrium price?</strong>',
-      options: ['Equilibrium price went up', 'Equilibrium price went down', 'Equilibrium price stayed the same'],
-      correct: 0,
-      feedback: 'When demand increases, the equilibrium price rises. With more fans competing for a fixed number of tickets, prices go up.'
-    },
-    bonus: {
-      question: 'Which T.O.N.I.E. factor most likely caused this?',
-      options: ['Income fell (fewer people can afford tickets)', 'Tastes changed (a major artist announced a tour)', 'Number of buyers decreased', 'Expectations of future prices fell'],
-      correct: 1,
-      feedback: '+5 bonus! A major artist announcement shifts Tastes: suddenly everyone wants to go, driving demand up sharply.'
-    }
-  }
 ];
 
 // ============================================================
@@ -1338,6 +1333,8 @@ let t1Score = 0;
 let t1Answered = [];
 
 function startGame() {
+  unlockNav(1);
+  setNavCurrent(1);
   showScreen('tier1-screen');
   updateHudTier('Tier 1: Read the Graph');
   renderT1Question();
@@ -1430,6 +1427,8 @@ let t2Score = 0;
 let t2State = []; // {partA: null, partB: null, bonus: null}
 
 function startTier2() {
+  unlockNav(2);
+  setNavCurrent(2);
   showScreen('tier2-screen');
   updateHudTier('Tier 2: Read the Shift');
   renderT2Question();
@@ -1557,11 +1556,11 @@ function finishTier2() {
   document.getElementById('t2-final-score').textContent = t2Score;
   const msg = document.getElementById('t2-unlock-msg');
   const btn = document.getElementById('t2-unlock-btn');
-  if (t2Correct >= 4) {
-    msg.innerHTML = `You read <strong>${t2Correct} of 6</strong> shifts correctly. Tier 3 unlocked.`;
+  if (t2Correct >= 3) {
+    msg.innerHTML = `You read <strong>${t2Correct} of 4</strong> shifts correctly. Tier 3 unlocked.`;
     btn.innerHTML = `<button class="btn" onclick="startTier3()">UNLOCK TIER 3 &rarr;</button><button class="btn btn-outline" style="margin-left:12px" onclick="restartTier2()">RETRY TIER 2</button>`;
   } else {
-    msg.innerHTML = `You read <strong>${t2Correct} of 6</strong> shifts correctly. You need 4 correct to unlock Tier 3. Try again.`;
+    msg.innerHTML = `You read <strong>${t2Correct} of 4</strong> shifts correctly. You need 3 correct to unlock Tier 3. Try again.`;
     btn.innerHTML = `<button class="btn" onclick="restartTier2()">RETRY TIER 2</button>`;
   }
   showScreen('t2-complete');
@@ -1577,6 +1576,8 @@ let t3State = [];
 let tier3Selected = [];
 
 function startTier3() {
+  unlockNav(3);
+  setNavCurrent(3);
   const shuffled = [...tier3Questions].sort(() => Math.random() - 0.5);
   tier3Selected = shuffled.slice(0, 5);
   t3Index = 0; t3State = [];
@@ -1745,6 +1746,8 @@ let bAnswered = [];
 let bonusSelected = [];
 
 function startBonus() {
+  unlockNav(4);
+  setNavCurrent(4);
   bIndex = 0;
   bAnswered = [];
   bonusSelected = [...bonusQuestions];
@@ -1836,6 +1839,12 @@ function resetGame() {
   t2Index = 0; t2Score = 0; t2State = [];
   t3Index = 0; t3Score = 0; t3State = []; tier3Selected = [];
   bIndex = 0; bScore = 0; bAnswered = []; bonusSelected = [];
+  unlockedTiers = new Set();
+  document.getElementById('tier-nav').style.display = 'none';
+  ['nav-t1','nav-t2','nav-t3','nav-bonus'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) { btn.classList.remove('unlocked','current'); }
+  });
   document.getElementById('hud-score').textContent = '0';
   Object.values(charts).forEach(c => c.destroy());
   charts = {};
@@ -1854,6 +1863,7 @@ function restartTier1() {
   document.getElementById('hud-score').textContent = score;
   Object.keys(charts).forEach(k => { if (k.startsWith('chart-t1')) { charts[k].destroy(); delete charts[k]; } });
   showScreen('tier1-screen');
+  setNavCurrent(1);
   updateHudTier('Tier 1: Read the Graph');
   renderT1Question();
 }
@@ -1865,6 +1875,7 @@ function restartTier2() {
   document.getElementById('hud-score').textContent = score;
   Object.keys(charts).forEach(k => { if (k.startsWith('chart-t2')) { charts[k].destroy(); delete charts[k]; } });
   showScreen('tier2-screen');
+  setNavCurrent(2);
   updateHudTier('Tier 2: Read the Shift');
   renderT2Question();
 }
@@ -1878,9 +1889,42 @@ function restartTier3() {
   document.getElementById('hud-score').textContent = score;
   Object.keys(charts).forEach(k => { if (k.startsWith('chart-t3')) { charts[k].destroy(); delete charts[k]; } });
   showScreen('tier3-screen');
+  setNavCurrent(3);
   updateHudTier('Tier 3: Predict the Shift');
   renderT3Question();
 }
+// TIER NAV
+// ============================================================
+let unlockedTiers = new Set();
+
+function unlockNav(tierNum) {
+  unlockedTiers.add(tierNum);
+  document.getElementById('tier-nav').style.display = 'flex';
+  const ids = { 1: 'nav-t1', 2: 'nav-t2', 3: 'nav-t3', 4: 'nav-bonus' };
+  unlockedTiers.forEach(t => {
+    const btn = document.getElementById(ids[t]);
+    if (btn) btn.classList.add('unlocked');
+  });
+}
+
+function setNavCurrent(tierNum) {
+  const ids = { 1: 'nav-t1', 2: 'nav-t2', 3: 'nav-t3', 4: 'nav-bonus' };
+  Object.values(ids).forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.remove('current');
+  });
+  const cur = document.getElementById(ids[tierNum]);
+  if (cur) cur.classList.add('current');
+}
+
+function jumpToTier(tierNum) {
+  if (!unlockedTiers.has(tierNum)) return;
+  if (tierNum === 1) { showScreen('tier1-screen'); updateHudTier('Tier 1: Read the Graph'); setNavCurrent(1); renderT1Question(); }
+  if (tierNum === 2) { showScreen('tier2-screen'); updateHudTier('Tier 2: Read the Shift'); setNavCurrent(2); renderT2Question(); }
+  if (tierNum === 3) { showScreen('tier3-screen'); updateHudTier('Tier 3: Predict the Shift'); setNavCurrent(3); renderT3Question(); }
+  if (tierNum === 4) { showScreen('bonus-screen'); updateHudTier('Bonus: Chain Reaction'); setNavCurrent(4); renderBonus(); }
+}
+
 function updateProgress(tier, index, total) {
   const pct = (index / total) * 100;
   const fill = document.getElementById(`${tier}-progress`);
