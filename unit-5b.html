@@ -1,1 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- ==========================================================================
+     ECON REVIEW GAME ENGINE  ·  v1
+     Blue Valley Academy · Intro to Economics
+
+     TO BUILD A NEW UNIT, EDIT ONLY THREE THINGS:
+       1. <title> below
+       2. The THEME block (CSS variables + Google Fonts link)
+       3. The UNIT object and ROUNDS array at the top of the script
+
+     Everything under "ENGINE" needs no changes.
+     House rules: no em dashes anywhere. Definitions 5 to 7 words.
+     ========================================================================== -->
+
+<title>Unit 5 Review · The Government and the Economy</title>
+
+<!-- ============ THEME: FONTS ============
+     Swap to whatever the unit's deck uses.
+     Unit 1 uses Oswald + Roboto + Permanent Marker. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:wght@400;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<style>
+  /* ================= THEME: COLOR + TYPE =================
+     c1  primary bar color        (masthead, round header, buttons)
+     c2  dark anchor              (tabs, secondary bins)
+     c3  bright accent            (third bin color)
+     c4  highlight                (selection, Next button, fourth bin)
+     Each has a matching -ink for readable text on top of it.
+     ======================================================== */
+  :root{
+    --c1:#35648f;      --c1-ink:#ffffff;
+    --c2:#262b31;      --c2-ink:#ffffff;
+    --c3:#8aabcb;      --c3-ink:#1b2733;
+    --c4:#e8a33d;      --c4-ink:#20242a;
+
+    --ground:#d4d4d4;  /* page background */
+    --dot:#bfbfbf;     /* halftone dot, set equal to ground to remove texture */
+    --panel:#eeeeee;   /* bin body */
+    --ink:#242424;     /* body text */
+    --line:#111111;    /* hard border */
+    --ok:#2e7d4f;
+    --no:#c1272d;
+
+    --head:'Oswald',sans-serif;
+    --body:'Open Sans',sans-serif;
+    --marker:'Permanent Marker',cursive;
+
+    --mast:50px;
+  }
+
+  /* ================= ENGINE STYLES: do not edit ================= */
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    background-color:var(--ground);
+    background-image:radial-gradient(var(--dot) 1.1px, transparent 1.1px);
+    background-size:6px 6px;
+    color:var(--ink);font-family:var(--body);
+    overflow:hidden;-webkit-text-size-adjust:100%;
+  }
+
+  .mast{
+    position:fixed;top:0;left:0;right:0;height:var(--mast);
+    display:flex;align-items:stretch;background:var(--c1);
+    border-bottom:3px solid var(--line);z-index:60;
+  }
+  .mast-tab{
+    background:var(--c2);color:var(--c2-ink);
+    display:flex;align-items:center;padding:0 22px 0 14px;
+    clip-path:polygon(0 0,100% 0,calc(100% - 14px) 100%,0 100%);
+  }
+  .mast-tab b{font-family:var(--head);font-weight:700;font-size:19px;letter-spacing:.5px;text-transform:uppercase;line-height:1;}
+  .mast-mid{
+    flex:1;display:flex;align-items:center;padding:0 14px;
+    font-family:var(--head);font-weight:500;font-size:13px;letter-spacing:1.6px;
+    text-transform:uppercase;color:var(--c1-ink);opacity:.85;
+    white-space:nowrap;overflow:hidden;
+  }
+  .mast-right{display:flex;align-items:center;gap:12px;padding:0 14px;}
+  .dots{display:flex;gap:5px;align-items:center;}
+  .dot{width:8px;height:8px;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.25);
+    transition:background .2s ease,transform .2s ease;}
+  .dot.done{background:#fff;}
+  .dot.here{background:var(--c4);transform:scale(1.45);}
+  .score{font-family:var(--head);font-weight:600;font-size:19px;color:var(--c1-ink);line-height:1;white-space:nowrap;}
+  .score i{font-style:normal;font-size:10px;letter-spacing:1.5px;opacity:.7;}
+
+  .stage{position:fixed;top:var(--mast);left:0;right:0;bottom:0;overflow:hidden;}
+  .track{display:flex;height:100%;width:100%;
+    transition:transform .5s cubic-bezier(.6,.02,.2,1);will-change:transform;}
+  .page{flex:0 0 100%;height:100%;overflow-y:auto;padding:20px 26px 98px;
+    opacity:.2;transition:opacity .4s ease;}
+  .page.live{opacity:1;}
+  .inner{max-width:900px;margin:0 auto;}
+
+  .headbar{display:flex;align-items:stretch;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.24));margin-bottom:14px;}
+  .headbar .rnum{
+    background:var(--c2);color:var(--c2-ink);
+    font-family:var(--head);font-weight:600;font-size:14px;letter-spacing:1.5px;
+    display:flex;align-items:center;padding:7px 20px 7px 12px;
+    clip-path:polygon(0 0,100% 0,calc(100% - 13px) 100%,0 100%);
+  }
+  .headbar h2{
+    background:var(--c1);color:var(--c1-ink);flex:1;
+    font-family:var(--head);font-weight:600;
+    font-size:clamp(18px,3.4vw,29px);letter-spacing:.5px;text-transform:uppercase;
+    line-height:1.15;padding:6px 34px 6px 16px;margin-left:-13px;
+    display:flex;align-items:center;
+    clip-path:polygon(0 0,calc(100% - 20px) 0,100% 50%,calc(100% - 20px) 100%,0 100%);
+  }
+
+  .art{margin-top:16px;}
+  .art svg{display:block;width:100%;height:auto;}
+  .art .narrow{display:none;}
+  .art .cap{
+    font-family:var(--head);font-weight:500;font-size:11px;letter-spacing:1.6px;
+    text-transform:uppercase;color:rgba(0,0,0,.5);margin-top:6px;text-align:center;
+  }
+  .art .cap.narrow{display:none;}
+  @media (max-width:760px){
+    .art .wide{display:none;}
+    .art .narrow{display:block;}
+    .art .cap.narrow{display:block;}
+  }
+
+  .note{
+    display:inline-block;background:#fff;border:2px solid var(--line);
+    font-family:var(--marker);font-size:12.5px;line-height:1.45;color:#1a1a1a;
+    padding:8px 13px;margin:2px 0 18px 6px;transform:rotate(-.7deg);
+    box-shadow:3px 3px 0 rgba(0,0,0,.22);max-width:620px;
+  }
+
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#fff;color:var(--ink);font-family:var(--body);font-size:13px;line-height:1.35;
+    padding:8px 12px;border:2px solid var(--line);box-shadow:2px 2px 0 rgba(0,0,0,.28);
+    cursor:pointer;user-select:none;
+    transition:transform .1s ease,background .12s ease,box-shadow .12s ease;
+  }
+  .chip:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(0,0,0,.28);}
+  .chip.sel{background:var(--c4);color:var(--c4-ink);box-shadow:4px 4px 0 rgba(0,0,0,.35);}
+  .chip.ok{background:var(--ok);color:#fff;}
+  .chip.no{background:var(--no);color:#fff;}
+  .chip.locked{cursor:default;}
+  .chip.locked:hover{transform:none;box-shadow:2px 2px 0 rgba(0,0,0,.28);}
+  .badge{
+    font-family:var(--head);font-weight:600;font-size:11px;
+    background:var(--c1);color:var(--c1-ink);width:18px;height:18px;flex:0 0 18px;
+    display:inline-flex;align-items:center;justify-content:center;
+  }
+  .chip.ok .badge,.chip.no .badge{background:rgba(0,0,0,.3);color:#fff;}
+
+  .pool{
+    display:flex;flex-wrap:wrap;gap:9px;align-content:flex-start;
+    min-height:58px;padding:12px;margin-bottom:16px;
+    border:2px dashed rgba(0,0,0,.3);background:rgba(255,255,255,.35);
+  }
+  .pool.over{border-color:var(--c1);background:rgba(0,0,0,.05);}
+  .pool.empty::after{
+    content:'All placed. Hit Check answers.';
+    font-family:var(--head);font-weight:500;font-size:11px;letter-spacing:2px;
+    text-transform:uppercase;color:rgba(0,0,0,.35);
+  }
+
+  .bins{display:grid;gap:12px;}
+  .bins.two{grid-template-columns:1fr 1fr;}
+  .bins.three{grid-template-columns:repeat(3,1fr);}
+  .bins.four{grid-template-columns:repeat(4,1fr);}
+  .bins.five{grid-template-columns:repeat(5,1fr);gap:16px;}
+  .bin{
+    position:relative;background:var(--panel);border:2px solid var(--line);
+    box-shadow:3px 3px 0 rgba(0,0,0,.24);min-height:132px;padding-bottom:10px;
+    transition:background .12s ease;
+  }
+  .bin.over{background:#fff8dd;}
+  .bin-head{
+    font-family:var(--head);font-weight:600;font-size:15px;letter-spacing:.8px;
+    text-transform:uppercase;padding:7px 11px;margin-bottom:9px;line-height:1.15;
+    border-bottom:2px solid var(--line);
+  }
+  .bin-head small{
+    display:block;font-family:var(--body);font-weight:400;font-size:10px;
+    letter-spacing:.2px;text-transform:none;opacity:.85;margin-top:2px;
+  }
+  .bin[data-side="c1"] .bin-head{background:var(--c1);color:var(--c1-ink);}
+  .bin[data-side="c2"] .bin-head{background:var(--c2);color:var(--c2-ink);}
+  .bin[data-side="c3"] .bin-head{background:var(--c3);color:var(--c3-ink);}
+  .bin[data-side="c4"] .bin-head{background:var(--c4);color:var(--c4-ink);}
+  .drop{display:flex;flex-wrap:wrap;align-content:flex-start;gap:7px;padding:0 9px;min-height:76px;}
+
+  .bins.five .bin{min-height:108px;}
+  .bins.five .drop{min-height:54px;}
+  .bins.five .bin-head{font-size:20px;text-align:center;}
+  .bins.five .bin:not(:last-child)::after{
+    content:'\203A';position:absolute;right:-14px;top:50%;transform:translateY(-50%);
+    font-family:var(--head);font-weight:700;font-size:26px;color:var(--c2);
+    line-height:1;pointer-events:none;
+  }
+
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .mcol{display:flex;flex-direction:column;gap:8px;}
+  .mhead{
+    font-family:var(--head);font-weight:600;font-size:11px;letter-spacing:2.5px;
+    text-transform:uppercase;color:var(--c2-ink);background:var(--c2);
+    padding:5px 10px;border:2px solid var(--line);
+  }
+  .mcol .chip{width:100%;justify-content:flex-start;}
+  .mcol .chip.left{background:var(--panel);font-weight:700;}
+  .mcol .chip.left.sel{background:var(--c4);color:var(--c4-ink);}
+  .mcol .chip.left.ok,.mcol .chip.left.no{color:#fff;}
+  .fix{font-family:var(--marker);font-size:11.5px;line-height:1.4;color:#8a1a1f;padding:1px 4px 3px;}
+
+  .bar{
+    position:fixed;left:0;right:0;bottom:0;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:10px 18px;background:#fff;border-top:3px solid var(--line);z-index:50;
+  }
+  .verdict{font-family:var(--body);font-size:12.5px;color:#444;min-height:16px;}
+  .verdict b{font-family:var(--head);font-weight:600;color:var(--c2);letter-spacing:.5px;}
+  .btns{display:flex;gap:9px;}
+  button.act{
+    font-family:var(--head);font-weight:600;font-size:15px;letter-spacing:1.2px;
+    text-transform:uppercase;padding:8px 20px;cursor:pointer;line-height:1.2;
+    background:var(--c1);color:var(--c1-ink);border:2px solid var(--line);
+    box-shadow:3px 3px 0 rgba(0,0,0,.3);
+    transition:transform .1s ease,box-shadow .1s ease,opacity .12s ease;
+  }
+  button.act:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 rgba(0,0,0,.3);}
+  button.act:disabled{opacity:.35;cursor:not-allowed;box-shadow:2px 2px 0 rgba(0,0,0,.2);}
+  button.act.ghost{background:#fff;color:var(--ink);}
+  button.act.go{background:var(--c4);color:var(--c4-ink);}
+
+  .final{text-align:center;}
+  .final .headbar{text-align:left;}
+  .bignum{font-family:var(--head);font-weight:700;font-size:clamp(70px,16vw,132px);line-height:.95;color:var(--c2);}
+  .bignum em{font-style:normal;font-size:.32em;color:#6d6d6d;}
+  .rank{font-family:var(--marker);font-size:clamp(17px,3vw,24px);color:var(--ink);margin:6px 0 8px;line-height:1.3;}
+  .ranksub{font-size:13.5px;line-height:1.65;color:#4a4a4a;max-width:520px;margin:0 auto 20px;}
+  .tally{max-width:540px;margin:0 auto 20px;text-align:left;border:2px solid var(--line);box-shadow:3px 3px 0 rgba(0,0,0,.24);}
+  .trow{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    background:#fff;padding:7px 12px;font-size:12.5px;border-bottom:1px solid #d0d0d0;}
+  .trow:last-child{border-bottom:0;}
+  .trow b{font-family:var(--head);font-weight:600;font-size:15px;}
+  .trow.full b{color:var(--ok);}
+  .trow.part b{color:#b07d00;}
+  .trow.thin b{color:var(--no);}
+  .backlink{
+    display:inline-block;font-family:var(--head);font-weight:500;font-size:12px;
+    letter-spacing:1.6px;text-transform:uppercase;color:var(--c2);
+    text-decoration:none;border-bottom:2px solid var(--c2);padding-bottom:1px;
+  }
+  .backlink:hover{color:var(--no);border-color:var(--no);}
+
+  :focus-visible{outline:3px solid var(--c2);outline-offset:2px;}
+
+  @media (max-width:760px){
+    .page{padding:16px 14px 100px;}
+    .bins.three,.bins.four{grid-template-columns:1fr 1fr;}
+    .bins.five{grid-template-columns:1fr 1fr;gap:10px;}
+    .bins.five .bin::after{display:none;}
+    .match{grid-template-columns:1fr;gap:16px;}
+    .mast-mid{display:none;}
+    .chip{font-size:12px;padding:7px 10px;}
+    .bar{padding:9px 12px;}
+    .verdict{font-size:11px;}
+    button.act{font-size:13px;padding:7px 14px;}
+  }
+  @media (max-width:440px){
+    .bins.two{grid-template-columns:1fr;}
+    .dots{gap:4px;}
+    .dot{width:6px;height:6px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .track,.page,.chip{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-tab"><b id="mastTab">Econ Notes #X</b></div>
+  <div class="mast-mid" id="mastMid">Review Game</div>
+  <div class="mast-right">
+    <div class="dots" id="dots"></div>
+    <div class="score"><i>SCORE</i> <b id="score">0</b>/<b id="outof">0</b></div>
+  </div>
+</header>
+
+<main class="stage"><div class="track" id="track"></div></main>
+
+<div class="bar">
+  <div class="verdict" id="verdict">Place every card, then check your answers.</div>
+  <div class="btns">
+    <button class="act ghost" id="back" type="button">Back</button>
+    <button class="act" id="check" type="button" disabled>Check answers</button>
+    <button class="act go" id="next" type="button" style="display:none;">Next round</button>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   EDIT FROM HERE
+   ========================================================================== */
+
+const UNIT = {
+  tab:      'Econ Notes #5',
+  subtitle: 'Review Game \u00B7 The Government and the Economy',
+  backHref: 'unit-5.html',
+  backText: 'Back to the 1973 oil crisis case study'
+};
+
+/* Feedback tiers on the results screen. */
+const TIERS = [
+  {min:90, rank:'You could read the economy on the news tonight.', sub:'You know the indicators, the cycle, and who pulls which lever.'},
+  {min:75, rank:'Strong. A couple of levers still get crossed.',    sub:'Find your weakest round below and go back to those notes.'},
+  {min:55, rank:'You have the vocabulary. The distinctions are shaky.', sub:'Fiscal vs. monetary and demand-pull vs. cost-push are worth another pass.'},
+  {min:0,  rank:'Time for another run through the notes.',          sub:'Go back through Econ Notes #5, then replay. It is built for that.'}
+];
+
+/* --------------------------------------------------------------------------
+   Business cycle curve drawn under Round 05. The five dots sit at the
+   horizontal centers of the five slots above, so students can see the shape
+   of the wave while they order the phases. Colors track the slot headers.
+   -------------------------------------------------------------------------- */
+const ART_CYCLE = `
+<svg class="wide" viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A business cycle wave. Slot 1 sits on a rising stretch, slot 2 at the crest, slot 3 on the falling stretch, slot 4 at the bottom, slot 5 on the next rise.">
+  <text x="2" y="14" style="font-family:var(--head)" font-weight="600" font-size="12"
+        letter-spacing="2" fill="rgba(0,0,0,.45)">GDP GROWTH</text>
+  <text x="2" y="103" style="font-family:var(--head)" font-weight="600" font-size="12"
+        letter-spacing="2" fill="rgba(0,0,0,.45)">CAPACITY</text>
+
+  <line x1="0" y1="111" x2="1000" y2="111" stroke="rgba(0,0,0,.35)"
+        stroke-width="2" stroke-dasharray="7 7"/>
+
+  <path d="M 0,182 C 30,178 55,162 93,126 C 150,72 220,44 296,44
+           C 372,44 448,78 500,112 C 552,146 628,178 704,178
+           C 780,178 856,142 907,104 C 945,76 975,58 1000,48"
+        fill="none" style="stroke:var(--c2)" stroke-width="5" stroke-linecap="round"/>
+
+  <circle cx="93"  cy="126" r="17" fill="#fff" style="stroke:var(--line)" stroke-width="2.5"/>
+  <circle cx="93"  cy="126" r="13" style="fill:var(--c4)"/>
+  <text x="93" y="132" text-anchor="middle" font-weight="700" font-size="15"
+        style="font-family:var(--head);fill:var(--c4-ink)">01</text>
+
+  <circle cx="296" cy="44"  r="17" fill="#fff" style="stroke:var(--line)" stroke-width="2.5"/>
+  <circle cx="296" cy="44"  r="13" style="fill:var(--c1)"/>
+  <text x="296" y="50" text-anchor="middle" font-weight="700" font-size="15"
+        style="font-family:var(--head);fill:var(--c1-ink)">02</text>
+
+  <circle cx="500" cy="112" r="17" fill="#fff" style="stroke:var(--line)" stroke-width="2.5"/>
+  <circle cx="500" cy="112" r="13" style="fill:var(--c2)"/>
+  <text x="500" y="118" text-anchor="middle" font-weight="700" font-size="15"
+        style="font-family:var(--head);fill:var(--c2-ink)">03</text>
+
+  <circle cx="704" cy="178" r="17" fill="#fff" style="stroke:var(--line)" stroke-width="2.5"/>
+  <circle cx="704" cy="178" r="13" style="fill:var(--c1)"/>
+  <text x="704" y="184" text-anchor="middle" font-weight="700" font-size="15"
+        style="font-family:var(--head);fill:var(--c1-ink)">04</text>
+
+  <circle cx="907" cy="104" r="17" fill="#fff" style="stroke:var(--line)" stroke-width="2.5"/>
+  <circle cx="907" cy="104" r="13" style="fill:var(--c3)"/>
+  <text x="907" y="110" text-anchor="middle" font-weight="700" font-size="15"
+        style="font-family:var(--head);fill:var(--c3-ink)">05</text>
+</svg>
+
+<svg class="narrow" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A business cycle wave. Slot 1 sits on a rising stretch, slot 2 at the crest, slot 3 on the falling stretch, slot 4 at the bottom, slot 5 on the next rise.">
+  <text x="2" y="16" style="font-family:var(--head)" font-weight="600" font-size="14"
+        letter-spacing="1.5" fill="rgba(0,0,0,.45)">GDP GROWTH</text>
+  <text x="2" y="126" style="font-family:var(--head)" font-weight="600" font-size="14"
+        letter-spacing="1.5" fill="rgba(0,0,0,.45)">CAPACITY</text>
+
+  <line x1="0" y1="134" x2="440" y2="134" stroke="rgba(0,0,0,.35)"
+        stroke-width="2" stroke-dasharray="6 6"/>
+
+  <path d="M 0,212 C 13,208 24,190 41,151 C 66,91 97,60 130,60
+           C 164,60 197,98 220,135 C 243,173 276,208 310,208
+           C 343,208 377,168 399,126 C 416,96 429,76 440,65"
+        fill="none" style="stroke:var(--c2)" stroke-width="6" stroke-linecap="round"/>
+
+  <circle cx="41"  cy="151" r="21" fill="#fff" style="stroke:var(--line)" stroke-width="3"/>
+  <circle cx="41"  cy="151" r="16" style="fill:var(--c4)"/>
+  <text x="41" y="158" text-anchor="middle" font-weight="700" font-size="19"
+        style="font-family:var(--head);fill:var(--c4-ink)">01</text>
+
+  <circle cx="130" cy="60"  r="21" fill="#fff" style="stroke:var(--line)" stroke-width="3"/>
+  <circle cx="130" cy="60"  r="16" style="fill:var(--c1)"/>
+  <text x="130" y="67" text-anchor="middle" font-weight="700" font-size="19"
+        style="font-family:var(--head);fill:var(--c1-ink)">02</text>
+
+  <circle cx="220" cy="135" r="21" fill="#fff" style="stroke:var(--line)" stroke-width="3"/>
+  <circle cx="220" cy="135" r="16" style="fill:var(--c2)"/>
+  <text x="220" y="142" text-anchor="middle" font-weight="700" font-size="19"
+        style="font-family:var(--head);fill:var(--c2-ink)">03</text>
+
+  <circle cx="310" cy="208" r="21" fill="#fff" style="stroke:var(--line)" stroke-width="3"/>
+  <circle cx="310" cy="208" r="16" style="fill:var(--c1)"/>
+  <text x="310" y="215" text-anchor="middle" font-weight="700" font-size="19"
+        style="font-family:var(--head);fill:var(--c1-ink)">04</text>
+
+  <circle cx="399" cy="126" r="21" fill="#fff" style="stroke:var(--line)" stroke-width="3"/>
+  <circle cx="399" cy="126" r="16" style="fill:var(--c3)"/>
+  <text x="399" y="133" text-anchor="middle" font-weight="700" font-size="19"
+        style="font-family:var(--head);fill:var(--c3-ink)">05</text>
+</svg>
+
+<div class="cap wide">Each slot above sits here on the curve</div>
+<div class="cap narrow">Slot 01 through 05 run left to right</div>`;
+
+
+const ROUNDS = [
+
+  /* ---- 01 ---------------------------------------------------------------- */
+  {
+    type:'bins',
+    num:'01',
+    title:'Is This a Good Number?',
+    howto:'Tap a card, then tap the column it belongs in. Dragging works too.',
+    layout:'two',
+    bins:[
+      {id:'good', side:'c1', label:'GOOD SIGN',    sub:'The economy is in decent shape'},
+      {id:'bad',  side:'c2', label:'WARNING SIGN', sub:'Something is going wrong'}
+    ],
+    items:[
+      {t:'GDP growing 2.5% in a developed economy', bin:'good'},
+      {t:'CPI inflation at 2%',                     bin:'good'},
+      {t:'Unemployment at 4%',                      bin:'good'},
+      {t:'GDP shrinking by 2%',                     bin:'bad'},
+      {t:'Unemployment at 10%',                     bin:'bad'},
+      {t:'CPI inflation at 9%',                     bin:'bad'},
+      {t:'Prices falling year after year',          bin:'bad'}
+    ]
+  },
+
+  /* ---- 02 ---------------------------------------------------------------- */
+  {
+    type:'bins',
+    num:'02',
+    title:'Which Indicator Is That?',
+    howto:'Four ways to take the economy\u2019s temperature. Sort each clue under the indicator it describes.',
+    layout:'four',
+    bins:[
+      {id:'gdp',  side:'c1', label:'GDP',         sub:'Is the economy growing?'},
+      {id:'unem', side:'c2', label:'UNEMPLOYMENT', sub:'Can people find work?'},
+      {id:'cpi',  side:'c3', label:'CPI',          sub:'What is happening to prices?'},
+      {id:'conf', side:'c4', label:'CONFIDENCE',   sub:'How do people feel?'}
+    ],
+    items:[
+      {t:'Total value of everything a country produces',   bin:'gdp'},
+      {t:'Has a nominal version and a real version',       bin:'gdp'},
+      {t:'Share of the labor force still job hunting',     bin:'unem'},
+      {t:'Misses people who gave up looking for work',     bin:'unem'},
+      {t:'Tracks a representative basket of goods',        bin:'cpi'},
+      {t:'Read about 9% in 2022',                          bin:'cpi'},
+      {t:'How optimistic households feel about the future',bin:'conf'},
+      {t:'When it drops, spending drops and layoffs follow',bin:'conf'}
+    ]
+  },
+
+  /* ---- 03 ---------------------------------------------------------------- */
+  {
+    type:'match',
+    num:'03',
+    title:'Terms and Meanings',
+    howto:'Tap a term on the left, then tap its meaning on the right. Tap again to undo.',
+    pairs:[
+      {a:'Real GDP',            b:'Growth measured after subtracting inflation'},
+      {a:'Deflation',           b:'Prices fall, so people stop spending'},
+      {a:'Multiplier Effect',   b:'One person\u2019s spending becomes another\u2019s income'},
+      {a:'Deficit Spending',    b:'Government spends more than it collects'},
+      {a:'Recessionary Gap',    b:'Economy running below what it could'},
+      {a:'Bull Market',         b:'Rising stock prices and investor optimism'},
+      {a:'Keynesian Economics', b:'Government spends to end a downturn'}
+    ]
+  },
+
+  /* ---- 04 ---------------------------------------------------------------- */
+  {
+    type:'bins',
+    num:'04',
+    title:'Demand-Pull or Cost-Push?',
+    howto:'Both push prices up. The difference is which side of the market started it.',
+    layout:'two',
+    bins:[
+      {id:'pull', side:'c1', label:'DEMAND-PULL', sub:'Too many dollars chasing too few goods'},
+      {id:'push', side:'c2', label:'COST-PUSH',   sub:'Production costs rise and get passed on'}
+    ],
+    items:[
+      {t:'Stimulus checks put extra cash in millions of pockets', bin:'pull'},
+      {t:'The Fed cuts rates and borrowing gets cheap',           bin:'pull'},
+      {t:'Confident shoppers bid up prices on everything',        bin:'pull'},
+      {t:'A labor shortage forces employers to raise wages',      bin:'push'},
+      {t:'Oil prices spike and trucking gets expensive',          bin:'push'},
+      {t:'Supply chains break and factories cannot get parts',    bin:'push'}
+    ]
+  },
+
+  /* ---- 05 ---------------------------------------------------------------- */
+  {
+    type:'bins',
+    num:'05',
+    title:'Put the Business Cycle in Order',
+    howto:'Five phases of the business cycle. Start where growth is picking up.',
+    layout:'five',
+    bins:[
+      {id:'s1', side:'c4', label:'01'},
+      {id:'s2', side:'c1', label:'02'},
+      {id:'s3', side:'c2', label:'03'},
+      {id:'s4', side:'c1', label:'04'},
+      {id:'s5', side:'c3', label:'05'}
+    ],
+    art:ART_CYCLE,
+    items:[
+      {t:'Expansion: hiring and output pick up',    bin:'s1'},
+      {t:'Peak: the economy runs too hot',          bin:'s2'},
+      {t:'Contraction: growth slows, layoffs begin',bin:'s3'},
+      {t:'Trough: GDP shrinks, unemployment high',  bin:'s4'},
+      {t:'Recovery: the climb back out',            bin:'s5'}
+    ]
+  },
+
+  /* ---- 06 ---------------------------------------------------------------- */
+  {
+    type:'bins',
+    num:'06',
+    title:'Fiscal or Monetary?',
+    howto:'Same goal, different hands on the wheel. Sort by who does it and what they use.',
+    layout:'two',
+    bins:[
+      {id:'fis', side:'c1', label:'FISCAL POLICY',   sub:'Congress and the President'},
+      {id:'mon', side:'c2', label:'MONETARY POLICY', sub:'The Federal Reserve'}
+    ],
+    items:[
+      {t:'A $100 billion infrastructure bill passes', bin:'fis'},
+      {t:'Income tax rates get cut',                  bin:'fis'},
+      {t:'Stimulus checks and the child tax credit',  bin:'fis'},
+      {t:'Run by officials voters actually elected',  bin:'fis'},
+      {t:'The federal funds rate target is raised',   bin:'mon'},
+      {t:'Government bonds are bought on the open market', bin:'mon'},
+      {t:'Run by officials nobody votes for',         bin:'mon'}
+    ]
+  },
+
+  /* ---- 07 ---------------------------------------------------------------- */
+  {
+    type:'bins',
+    num:'07',
+    title:'Two Stories About Tax Cuts',
+    howto:'Supply-side economics promises one chain of events. Researchers found another. Sort the steps.',
+    layout:'two',
+    bins:[
+      {id:'promise', side:'c4', label:'THE TRICKLE-DOWN PROMISE', sub:'What supply-side economics says will happen'},
+      {id:'found',   side:'c2', label:'WHAT RESEARCHERS FOUND',   sub:'What actually followed the cuts'}
+    ],
+    items:[
+      {t:'Businesses use the savings to hire and expand',        bin:'promise'},
+      {t:'New workers spend their pay across the economy',       bin:'promise'},
+      {t:'A wider tax base makes the cuts pay for themselves',   bin:'promise'},
+      {t:'Companies run stock buybacks and pay dividends',       bin:'found'},
+      {t:'Top earners gain while the bottom 99% see little',     bin:'found'},
+      {t:'Revenue falls, growth does not follow, deficits grow', bin:'found'}
+    ]
+  },
+
+  /* ---- 08 ---------------------------------------------------------------- */
+  {
+    type:'match',
+    num:'08',
+    title:'The Fed\u2019s Toolkit',
+    howto:'Tap a tool on the left, then tap what it actually does.',
+    pairs:[
+      {a:'Federal Funds Rate',        b:'What banks charge each other overnight'},
+      {a:'Discount Rate',             b:'What the Fed charges banks directly'},
+      {a:'Required Reserve Ratio',    b:'How much banks must keep on hand'},
+      {a:'Open Market Operations',    b:'The Fed buying or selling bonds'},
+      {a:'Interest on Excess Reserves', b:'The Fed pays banks to park money'},
+      {a:'Dual Mandate',              b:'Hold down inflation and unemployment together'},
+      {a:'Taking Away the Punchbowl', b:'Tighten before the boom turns dangerous'}
+    ]
+  },
+
+  /* ---- 09 ---------------------------------------------------------------- */
+  {
+    type:'bins',
+    num:'09',
+    title:'Progressive or Regressive?',
+    howto:'Ask what share of a person\u2019s income the tax takes, not how many dollars.',
+    layout:'two',
+    bins:[
+      {id:'prog', side:'c1', label:'PROGRESSIVE', sub:'Rate goes up as income goes up'},
+      {id:'reg',  side:'c2', label:'REGRESSIVE',  sub:'Lower earners give up a bigger share'}
+    ],
+    items:[
+      {t:'Income tax',                          bin:'prog'},
+      {t:'Estate tax',                          bin:'prog'},
+      {t:'The rate rises as income rises',      bin:'prog'},
+      {t:'Sales tax',                           bin:'reg'},
+      {t:'Payroll tax, which caps near $168,000', bin:'reg'},
+      {t:'Tariffs',                             bin:'reg'}
+    ]
+  },
+
+  /* ---- 10 ---------------------------------------------------------------- */
+  {
+    type:'bins',
+    num:'10',
+    title:'1973: Shock, Damage, Cure',
+    howto:'The oil crisis case study. Sort each card into the stage of the story it belongs to.',
+    layout:'three',
+    bins:[
+      {id:'play',   side:'c1', label:'THE CARTEL\u2019S PLAY', sub:'How OPEC gained the power'},
+      {id:'damage', side:'c2', label:'THE DAMAGE',       sub:'What it did to the U.S. economy'},
+      {id:'cure',   side:'c3', label:'THE CURE',         sub:'How the country finally got out'}
+    ],
+    items:[
+      {t:'Members agree to cut production together',      bin:'play'},
+      {t:'Coordinating turns price takers into a price maker', bin:'play'},
+      {t:'Oil quadruples from $3 to $12 a barrel',        bin:'damage'},
+      {t:'Inflation at 11% while unemployment climbs',    bin:'damage'},
+      {t:'Volcker pushes interest rates to 20%',          bin:'cure'},
+      {t:'A deliberate recession, unemployment hits 10.8%',bin:'cure'}
+    ]
+  }
+
+];
+
+/* ==========================================================================
+   ENGINE  ·  nothing below needs editing
+   ========================================================================== */
+
+const TOTAL = ROUNDS.reduce((s,r)=> s + (r.type==='bins' ? r.items.length : r.pairs.length), 0);
+const state = ROUNDS.map(()=>({checked:false, got:0}));
+let idx = 0, sel = null, dragged = null;
+
+const track = document.getElementById('track');
+const dotsEl = document.getElementById('dots');
+const scoreEl = document.getElementById('score');
+const verdictEl = document.getElementById('verdict');
+const backBtn = document.getElementById('back');
+const checkBtn = document.getElementById('check');
+const nextBtn = document.getElementById('next');
+
+document.getElementById('outof').textContent = TOTAL;
+document.getElementById('mastTab').textContent = UNIT.tab;
+document.getElementById('mastMid').textContent = UNIT.subtitle;
+document.title = UNIT.tab + ' Review';
+
+function shuffle(a){
+  const c = a.slice();
+  for(let i=c.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [c[i],c[j]]=[c[j],c[i]]; }
+  return c;
+}
+
+ROUNDS.forEach((r,i)=>{
+  const page = document.createElement('section');
+  page.className = 'page';
+  const inner = document.createElement('div');
+  inner.className = 'inner';
+  inner.innerHTML =
+    '<div class="headbar"><div class="rnum">ROUND '+r.num+'</div><h2>'+r.title+'</h2></div>'+
+    '<div class="note">'+r.howto+'</div>';
+  inner.appendChild(r.type==='bins' ? buildBins(r,i) : buildMatch(r,i));
+  if(r.art){
+    const a = document.createElement('div');
+    a.className = 'art';
+    a.innerHTML = r.art;
+    inner.appendChild(a);
+  }
+  page.appendChild(inner);
+  track.appendChild(page);
+  const d = document.createElement('span'); d.className='dot'; dotsEl.appendChild(d);
+});
+
+const resultPage = document.createElement('section');
+resultPage.className = 'page';
+resultPage.innerHTML = '<div class="inner final" id="finalInner"></div>';
+track.appendChild(resultPage);
+const lastDot = document.createElement('span'); lastDot.className='dot'; dotsEl.appendChild(lastDot);
+
+function buildBins(r, ri){
+  const wrap = document.createElement('div');
+  const pool = document.createElement('div');
+  pool.className = 'pool';
+  pool.dataset.bin = 'pool';
+
+  shuffle(r.items).forEach(it=>{
+    const c = document.createElement('div');
+    c.className = 'chip';
+    c.textContent = it.t;
+    c.draggable = true;
+    c.dataset.bin = it.bin;
+    c.tabIndex = 0;
+    c.addEventListener('click', ()=>pickChip(c, ri));
+    c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();pickChip(c,ri);} });
+    c.addEventListener('dragstart', e=>{ if(state[ri].checked){e.preventDefault();return;} dragged=c; c.classList.add('sel'); });
+    c.addEventListener('dragend', ()=>{ if(dragged) dragged.classList.remove('sel'); dragged=null; });
+    pool.appendChild(c);
+  });
+
+  hookDrop(pool, pool, ri);
+  wrap.appendChild(pool);
+
+  const bins = document.createElement('div');
+  bins.className = 'bins ' + r.layout;
+  r.bins.forEach(b=>{
+    const box = document.createElement('div');
+    box.className = 'bin';
+    box.dataset.side = b.side;
+    box.innerHTML = '<div class="bin-head">'+b.label+(b.sub ? '<small>'+b.sub+'</small>' : '')+'</div>';
+    const drop = document.createElement('div');
+    drop.className = 'drop';
+    drop.dataset.bin = b.id;
+    box.appendChild(drop);
+    hookDrop(drop, box, ri);
+    bins.appendChild(box);
+  });
+  wrap.appendChild(bins);
+  return wrap;
+}
+
+function hookDrop(zone, clickZone, ri){
+  clickZone.addEventListener('click', e=>{
+    if(e.target.closest('.chip')) return;
+    if(sel && sel.ri === ri) placeChip(sel.el, zone, ri);
+  });
+  clickZone.addEventListener('dragover', e=>{ e.preventDefault(); clickZone.classList.add('over'); });
+  clickZone.addEventListener('dragleave', ()=>clickZone.classList.remove('over'));
+  clickZone.addEventListener('drop', e=>{
+    e.preventDefault(); clickZone.classList.remove('over');
+    if(dragged) placeChip(dragged, zone, ri);
+  });
+}
+
+function pickChip(c, ri){
+  if(state[ri].checked) return;
+  if(c.parentElement.dataset.bin !== 'pool'){
+    placeChip(c, c.closest('.page').querySelector('.pool'), ri);
+    return;
+  }
+  clearSel();
+  sel = {el:c, ri:ri};
+  c.classList.add('sel');
+}
+
+function placeChip(c, zone, ri){
+  zone.appendChild(c);
+  c.classList.remove('sel');
+  clearSel();
+  refreshBins(ri);
+}
+
+function clearSel(){
+  document.querySelectorAll('.chip.sel').forEach(x=>x.classList.remove('sel'));
+  sel = null;
+}
+
+function refreshBins(ri){
+  const pool = track.children[ri].querySelector('.pool');
+  pool.classList.toggle('empty', pool.children.length===0);
+  checkBtn.disabled = pool.children.length !== 0;
+}
+
+function buildMatch(r, ri){
+  const wrap = document.createElement('div');
+  wrap.className = 'match';
+  const L = document.createElement('div'); L.className='mcol'; L.innerHTML='<div class="mhead">Term</div>';
+  const R = document.createElement('div'); R.className='mcol'; R.innerHTML='<div class="mhead">Meaning</div>';
+
+  r.pairs.forEach((p,n)=>{
+    const l = document.createElement('div');
+    l.className='chip left'; l.dataset.key=n; l.tabIndex=0;
+    l.innerHTML = '<span class="badge" style="visibility:hidden;">0</span><span>'+p.a+'</span>';
+    l.addEventListener('click', ()=>tapMatch(l,'L',ri));
+    l.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();tapMatch(l,'L',ri);} });
+    L.appendChild(l);
+  });
+
+  shuffle(r.pairs.map((p,n)=>({t:p.b,key:n}))).forEach(p=>{
+    const rr = document.createElement('div');
+    rr.className='chip right'; rr.dataset.key=p.key; rr.tabIndex=0;
+    rr.innerHTML = '<span class="badge" style="visibility:hidden;">0</span><span>'+p.t+'</span>';
+    rr.addEventListener('click', ()=>tapMatch(rr,'R',ri));
+    rr.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();tapMatch(rr,'R',ri);} });
+    R.appendChild(rr);
+  });
+
+  wrap.appendChild(L); wrap.appendChild(R);
+  return wrap;
+}
+
+function tapMatch(el, side, ri){
+  if(state[ri].checked) return;
+  if(el.dataset.pair){
+    const twin = track.children[ri].querySelector('.chip.'+(side==='L'?'right':'left')+'[data-pair="'+el.dataset.pair+'"]');
+    unpair(el); if(twin) unpair(twin);
+    refreshMatch(ri);
+    return;
+  }
+  if(!sel || sel.ri !== ri || sel.side === side){
+    clearSel(); sel = {el:el, side:side, ri:ri}; el.classList.add('sel');
+    return;
+  }
+  const n = nextPairNum(ri);
+  stampPair(sel.el, n); stampPair(el, n);
+  clearSel(); refreshMatch(ri);
+}
+
+function nextPairNum(ri){
+  const used = [...track.children[ri].querySelectorAll('.chip[data-pair]')].map(x=>+x.dataset.pair);
+  let n = 1; while(used.includes(n)) n++;
+  return n;
+}
+function stampPair(el, n){
+  el.dataset.pair = n;
+  const b = el.querySelector('.badge');
+  b.textContent = n; b.style.visibility = 'visible';
+}
+function unpair(el){
+  delete el.dataset.pair;
+  const b = el.querySelector('.badge');
+  b.textContent = '0'; b.style.visibility = 'hidden';
+}
+function refreshMatch(ri){
+  const done = track.children[ri].querySelectorAll('.chip.left[data-pair]').length;
+  checkBtn.disabled = done !== ROUNDS[ri].pairs.length;
+}
+
+checkBtn.addEventListener('click', ()=>{
+  const r = ROUNDS[idx];
+  const page = track.children[idx];
+  let got = 0;
+
+  if(r.type==='bins'){
+    page.querySelectorAll('.drop').forEach(zone=>{
+      [...zone.children].forEach(c=>{
+        c.classList.add('locked'); c.draggable = false;
+        if(c.dataset.bin === zone.dataset.bin){ c.classList.add('ok'); got++; }
+        else c.classList.add('no');
+      });
+    });
+  } else {
+    page.querySelectorAll('.chip.left').forEach(l=>{
+      const partner = page.querySelector('.chip.right[data-pair="'+l.dataset.pair+'"]');
+      l.classList.add('locked');
+      if(partner) partner.classList.add('locked');
+      if(partner && partner.dataset.key === l.dataset.key){
+        l.classList.add('ok'); partner.classList.add('ok'); got++;
+      } else {
+        l.classList.add('no');
+        if(partner) partner.classList.add('no');
+        const fix = document.createElement('div');
+        fix.className = 'fix';
+        fix.textContent = '\u21B3 ' + r.pairs[+l.dataset.key].b;
+        l.after(fix);
+      }
+    });
+  }
+
+  state[idx].checked = true;
+  state[idx].got = got;
+  scoreEl.textContent = state.reduce((s,x)=>s+x.got,0);
+
+  const n = (r.type==='bins') ? r.items.length : r.pairs.length;
+  verdictEl.innerHTML = got===n
+    ? '<b>Clean sweep.</b> ' + got + ' of ' + n + ' correct.'
+    : 'You got <b>' + got + ' of ' + n + '</b>. Red cards show what missed.';
+
+  checkBtn.style.display = 'none';
+  nextBtn.style.display = 'inline-block';
+  nextBtn.textContent = (idx === ROUNDS.length-1) ? 'See results' : 'Next round';
+  clearSel();
+});
+
+nextBtn.addEventListener('click', ()=>go(idx+1));
+backBtn.addEventListener('click', ()=>go(idx-1));
+document.addEventListener('keydown', e=>{
+  if(e.target.classList && e.target.classList.contains('chip')) return;
+  if(e.key==='ArrowRight' && nextBtn.style.display!=='none') go(idx+1);
+  if(e.key==='ArrowLeft') go(idx-1);
+});
+
+function go(n){
+  if(n < 0 || n > ROUNDS.length) return;
+  if(n > idx && idx < ROUNDS.length && !state[idx].checked) return;
+  idx = n;
+  track.style.transform = 'translateX(-' + (idx*100) + '%)';
+  [...track.children].forEach((p,i)=>p.classList.toggle('live', i===idx));
+  [...dotsEl.children].forEach((d,i)=>{
+    d.classList.toggle('here', i===idx);
+    d.classList.toggle('done', i<idx);
+  });
+  clearSel();
+  syncBar();
+  if(track.children[idx]) track.children[idx].scrollTop = 0;
+}
+
+function syncBar(){
+  backBtn.style.display = idx===0 ? 'none' : 'inline-block';
+  if(idx >= ROUNDS.length){
+    checkBtn.style.display='none'; nextBtn.style.display='none';
+    verdictEl.textContent = 'Review complete.';
+    renderFinal();
+    return;
+  }
+  const r = ROUNDS[idx];
+  const n = (r.type==='bins') ? r.items.length : r.pairs.length;
+  if(state[idx].checked){
+    checkBtn.style.display='none';
+    nextBtn.style.display='inline-block';
+    nextBtn.textContent = (idx === ROUNDS.length-1) ? 'See results' : 'Next round';
+    verdictEl.innerHTML = 'Round ' + r.num + ' scored <b>' + state[idx].got + ' of ' + n + '</b>.';
+  } else {
+    checkBtn.style.display='inline-block';
+    nextBtn.style.display='none';
+    verdictEl.textContent = 'Round ' + (idx+1) + ' of ' + ROUNDS.length + '. ' +
+      (r.type==='bins' ? 'Place every card, then check your answers.' : 'Pair every term, then check your answers.');
+    if(r.type==='bins') refreshBins(idx); else refreshMatch(idx);
+  }
+}
+
+function renderFinal(){
+  const total = state.reduce((s,x)=>s+x.got,0);
+  const pct = Math.round(total/TOTAL*100);
+  const tier = TIERS.find(t=>pct>=t.min) || TIERS[TIERS.length-1];
+
+  let rows = '';
+  ROUNDS.forEach((r,i)=>{
+    const n = (r.type==='bins') ? r.items.length : r.pairs.length;
+    const g = state[i].got;
+    const cls = g===n ? 'full' : (g >= n*0.6 ? 'part' : 'thin');
+    rows += '<div class="trow '+cls+'"><span>'+r.num+' &middot; '+r.title+'</span><b>'+g+' / '+n+'</b></div>';
+  });
+
+  document.getElementById('finalInner').innerHTML =
+    '<div class="headbar"><div class="rnum">DONE</div><h2>Final Score</h2></div>' +
+    '<div class="bignum">' + total + '<em> / ' + TOTAL + '</em></div>' +
+    '<div class="rank">' + tier.rank + '</div>' +
+    '<div class="ranksub">' + tier.sub + '</div>' +
+    '<div class="tally">' + rows + '</div>' +
+    '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;">' +
+      '<button class="act" type="button" onclick="location.reload()">Play again</button>' +
+    '</div>' +
+    '<a class="backlink" href="' + UNIT.backHref + '">' + UNIT.backText + '</a>';
+}
+
+go(0);
+</script>
+
+</body>
+</html>
