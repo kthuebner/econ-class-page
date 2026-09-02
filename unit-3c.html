@@ -88,7 +88,15 @@
   .dot{width:8px;height:8px;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.25);
     transition:background .2s ease,transform .2s ease;}
   .dot.done{background:#fff;}
-  .dot.here{background:var(--c4);transform:scale(1.45);}
+  .dot.aced{background:var(--c4);}
+  .dot.here{transform:scale(1.5);outline:2px solid rgba(255,255,255,.9);outline-offset:2px;}
+  .dot.here:not(.aced){background:#fff;}
+  .dot{position:relative;}
+  .dot.open{cursor:pointer;}
+  .dot.open::before{content:'';position:absolute;inset:-7px;}
+  .dot.open:hover{transform:scale(1.35);}
+  .dot.open.here:hover{transform:scale(1.5);}
+  .dot:focus-visible{outline:2px solid #fff;outline-offset:2px;}
   .score{font-family:var(--head);font-weight:600;font-size:19px;color:var(--c1-ink);line-height:1;white-space:nowrap;}
   .score i{font-style:normal;font-size:10px;letter-spacing:1.5px;opacity:.7;}
 
@@ -200,7 +208,8 @@
   .mcol .chip{width:100%;justify-content:flex-start;}
   .mcol .chip.left{background:var(--panel);font-weight:700;}
   .mcol .chip.left.sel{background:var(--c4);color:var(--c4-ink);}
-  .mcol .chip.left.ok,.mcol .chip.left.no{color:#fff;}
+  .mcol .chip.left.ok{background:var(--ok);color:#fff;}
+  .mcol .chip.left.no{background:var(--no);color:#fff;}
   .fix{font-family:var(--marker);font-size:11.5px;line-height:1.4;color:#8a1a1f;padding:1px 4px 3px;}
 
   .cwrap{width:100%;overflow-x:auto;margin-bottom:16px;}
@@ -910,6 +919,7 @@ checkBtn.addEventListener('click', ()=>{
   state[idx].checked = true;
   state[idx].got = got;
   scoreEl.textContent = state.reduce((s,x)=>s+x.got,0);
+  paintDots();
 
   const n = count(r);
   verdictEl.innerHTML = got===n
@@ -930,16 +940,74 @@ document.addEventListener('keydown', e=>{
   if(e.key==='ArrowLeft') go(idx-1);
 });
 
-function go(n){
+/* ---- dot navigation: a round unlocks once it is aced ---- */
+let reached = 0;
+
+function isAced(i){
+  if(i < 0 || i >= ROUNDS.length) return false;
+  return state[i].checked && state[i].got === count(ROUNDS[i]);
+}
+
+/* Open = the round you are on, the furthest you have reached (so you can
+   always get back to the frontier), or any earlier round you aced. */
+function isOpen(n){
+  if(n === idx || n === reached) return true;
+  return n < reached && isAced(n);
+}
+
+function dotLabel(i){
+  if(i >= ROUNDS.length){
+    return reached >= ROUNDS.length ? 'Final score. Click to jump.' : 'Final score, locked.';
+  }
+  const name = 'Round ' + ROUNDS[i].num;
+  if(i === idx) return name + ', current round.';
+  if(isAced(i)) return name + ' aced. Click to jump.';
+  if(state[i].checked) return name + ' scored ' + state[i].got + ' of ' + count(ROUNDS[i]) + ', ace it to unlock jumping.';
+  return name + ', locked.';
+}
+
+function paintDots(){
+  [...dotsEl.children].forEach((d,i)=>{
+    const done = i < ROUNDS.length ? state[i].checked : (reached >= ROUNDS.length);
+    const open = isOpen(i);
+    d.classList.toggle('done', done);
+    d.classList.toggle('aced', isAced(i));
+    d.classList.toggle('here', i === idx);
+    d.classList.toggle('open', open && i !== idx);
+    d.setAttribute('role','button');
+    d.setAttribute('aria-current', i === idx ? 'step' : 'false');
+    d.setAttribute('aria-disabled', open && i !== idx ? 'false' : 'true');
+    d.tabIndex = (open && i !== idx) ? 0 : -1;
+    const t = dotLabel(i);
+    d.setAttribute('aria-label', t);
+    d.title = t;
+  });
+}
+
+function dotJump(d){
+  const n = [...dotsEl.children].indexOf(d);
+  if(n < 0 || n === idx || !isOpen(n)) return;
+  go(n, true);
+}
+
+dotsEl.addEventListener('click', e=>{
+  const d = e.target.closest('.dot');
+  if(d) dotJump(d);
+});
+dotsEl.addEventListener('keydown', e=>{
+  if(e.key !== 'Enter' && e.key !== ' ') return;
+  const d = e.target.closest('.dot');
+  if(d){ e.preventDefault(); dotJump(d); }
+});
+
+function go(n, force){
   if(n < 0 || n > ROUNDS.length) return;
-  if(n > idx && idx < ROUNDS.length && !state[idx].checked) return;
+  if(!force && n > idx && idx < ROUNDS.length && !state[idx].checked) return;
   idx = n;
+  if(idx > reached) reached = idx;
   track.style.transform = 'translateX(-' + (idx*100) + '%)';
   [...track.children].forEach((p,i)=>p.classList.toggle('live', i===idx));
-  [...dotsEl.children].forEach((d,i)=>{
-    d.classList.toggle('here', i===idx);
-    d.classList.toggle('done', i<idx);
-  });
+  paintDots();
   clearSel();
   syncBar();
   if(track.children[idx]) track.children[idx].scrollTop = 0;
