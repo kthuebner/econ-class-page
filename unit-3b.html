@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Engine · Unit 3 · M x V = P x Q</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15241a;
+    --bg-deep:#0e1a12;
+    --panel:#1e3325;
+    --panel-hi:#27412e;
+    --green:#2D6A2D;
+    --green-light:#6abf6a;
+    --green-dim:rgba(106,191,106,.35);
+    --gold:#d9b13c;
+    --ink:#e9f1e6;
+    --muted:rgba(233,241,230,.62);
+    --faint:rgba(233,241,230,.34);
+    --correct:#6abf6a;
+    --wrong:#e2685f;
+    --line:rgba(106,191,106,.22);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    background:var(--bg-deep);
+    color:var(--ink);
+    font-family:'DM Sans',sans-serif;
+    font-weight:300;
+    min-height:100vh;
+    overflow-x:hidden;
+    background-image:radial-gradient(rgba(106,191,106,.07) 1px, transparent 1px);
+    background-size:16px 16px;
+  }
+
+  /* ---------- HUD ---------- */
+  #hud{
+    position:fixed;top:0;left:0;right:0;height:52px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:0 18px;
+    background:rgba(14,26,18,.96);
+    border-bottom:2px solid var(--green);
+    backdrop-filter:blur(6px);
+    z-index:100;
+  }
+  #hud-left{display:flex;align-items:baseline;gap:12px;min-width:0;}
+  #hud-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--green-light);white-space:nowrap;}
+  #hud-tier{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  #tier-nav{display:none;gap:5px;align-items:center;}
+  .tier-nav-btn{
+    background:transparent;border:1px solid var(--green-dim);color:var(--faint);
+    font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:2px;
+    padding:3px 9px;cursor:default;pointer-events:none;transition:all .2s;border-radius:3px;
+  }
+  .tier-nav-btn.unlocked{border-color:var(--green-light);color:var(--green-light);cursor:pointer;pointer-events:all;}
+  .tier-nav-btn.unlocked:hover{background:rgba(106,191,106,.16);}
+  .tier-nav-btn.current{background:rgba(106,191,106,.18);border-color:var(--green-light);color:var(--ink);}
+  .tier-nav-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  #hud-right{display:flex;align-items:center;gap:8px;}
+  #hud-score-label{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--faint);text-transform:uppercase;letter-spacing:1.5px;}
+  #hud-score{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--gold);min-width:52px;text-align:right;transition:transform .18s,color .18s;}
+  #hud-score.pop{transform:scale(1.28);color:#fff;}
+
+  /* ---------- STICKY FORMULA ---------- */
+  #formula-bar{
+    position:fixed;top:52px;left:0;right:0;
+    background:rgba(30,51,37,.97);
+    border-bottom:1px solid var(--line);
+    padding:9px 18px;z-index:99;
+    display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  }
+  .fx{display:flex;flex-direction:column;align-items:center;min-width:52px;}
+  .fx-letter{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;line-height:1;color:var(--green-light);}
+  .fx-letter.out{color:var(--gold);}
+  .fx-cap{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:2px;}
+  .fx-op{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;color:var(--faint);align-self:flex-start;margin-top:2px;}
+
+  /* ---------- LAYOUT ---------- */
+  #wrap{max-width:780px;margin:0 auto;padding:128px 18px 60px;}
+  .screen{display:none;}
+  .screen.active{display:block;animation:fade .28s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+  h1.big{font-family:'Bebas Neue',sans-serif;font-size:clamp(42px,8vw,74px);line-height:.92;letter-spacing:2px;color:var(--ink);margin-bottom:6px;}
+  h1.big em{color:var(--green-light);font-style:normal;}
+  .kicker{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+  .lede{font-size:1rem;color:var(--muted);line-height:1.65;max-width:560px;margin-bottom:26px;}
+
+  .tier-preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:28px;}
+  .tier-card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 14px;}
+  .tier-card-num{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;color:var(--green-light);opacity:.55;line-height:1;}
+  .tier-card-name{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:1px;color:var(--ink);margin:3px 0 5px;}
+  .tier-card-desc{font-size:.82rem;color:var(--muted);line-height:1.5;}
+
+  .btn{
+    background:var(--green);color:#fff;border:1px solid var(--green);
+    font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;
+    padding:11px 26px;border-radius:4px;cursor:pointer;transition:all .18s;
+  }
+  .btn:hover{background:var(--green-light);border-color:var(--green-light);color:#0e1a12;}
+  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+  .btn-outline{background:transparent;color:var(--green-light);}
+  .btn-outline:hover{background:rgba(106,191,106,.14);color:var(--ink);}
+  .btn-sm{font-size:.82rem;padding:7px 15px;letter-spacing:1.5px;}
+
+  /* ---------- TIER HEADER ---------- */
+  .tier-header{margin-bottom:16px;}
+  .tier-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);}
+  .tier-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,42px);letter-spacing:1.5px;line-height:1.05;color:var(--ink);}
+  .tier-instructions{font-size:.9rem;color:var(--muted);line-height:1.6;margin-top:4px;}
+
+  .progress-track{height:4px;background:rgba(106,191,106,.16);border-radius:3px;overflow:hidden;margin:14px 0 5px;}
+  .progress-fill{height:100%;background:var(--green-light);width:0;transition:width .3s ease;}
+  .progress-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:18px;}
+
+  /* ---------- QUESTION ---------- */
+  .scenario{
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--green-light);
+    border-radius:5px;padding:16px 18px;margin-bottom:8px;
+  }
+  .scenario-tag{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+  .scenario-text{font-size:1rem;line-height:1.6;color:var(--ink);}
+  .given{
+    display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px;
+  }
+  .given-chip{
+    font-family:'DM Mono',monospace;font-size:.8rem;background:var(--bg);border:1px solid var(--line);
+    border-radius:4px;padding:6px 11px;color:var(--green-light);
+  }
+  .given-chip b{color:var(--ink);font-weight:500;}
+  .prompt{font-size:.95rem;color:var(--ink);margin:16px 0 12px;font-weight:400;}
+
+  .opts{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    background:var(--panel);border:1px solid var(--line);border-radius:5px;
+    padding:13px 15px;text-align:left;color:var(--ink);font-family:'DM Sans',sans-serif;
+    font-size:.92rem;font-weight:300;cursor:pointer;transition:all .16s;line-height:1.45;
+  }
+  .opt:hover:not(:disabled){border-color:var(--green-light);background:var(--panel-hi);}
+  .opt:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  .opt:disabled{cursor:default;}
+  .opt.correct{background:rgba(106,191,106,.2);border-color:var(--correct);color:#fff;}
+  .opt.wrong{background:rgba(226,104,95,.18);border-color:var(--wrong);color:#fff;}
+  .opt .mark{font-family:'DM Mono',monospace;font-size:.75rem;margin-right:8px;color:var(--faint);}
+  .opt.correct .mark,.opt.wrong .mark{color:#fff;}
+
+  .numrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+  .numrow input{
+    background:var(--bg);border:1px solid var(--line);border-radius:5px;
+    color:var(--ink);font-family:'DM Mono',monospace;font-size:1.15rem;
+    padding:11px 13px;width:190px;
+  }
+  .numrow input:focus{outline:2px solid var(--green-light);outline-offset:1px;border-color:var(--green-light);}
+  .numrow input.correct{border-color:var(--correct);color:var(--correct);}
+  .numrow input.wrong{border-color:var(--wrong);color:var(--wrong);}
+  .numhint{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--faint);margin-top:7px;}
+
+  .feedback{
+    margin-top:14px;padding:14px 16px;border-radius:5px;
+    background:var(--panel);border:1px solid var(--line);
+    font-size:.9rem;line-height:1.6;color:var(--muted);display:none;
+  }
+  .feedback.show{display:block;animation:fade .22s ease;}
+  .feedback.right{border-left:3px solid var(--correct);}
+  .feedback.miss{border-left:3px solid var(--wrong);}
+  .fb-verdict{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1.5px;margin-bottom:5px;}
+  .feedback.right .fb-verdict{color:var(--correct);}
+  .feedback.miss .fb-verdict{color:var(--wrong);}
+  .feedback strong{color:var(--ink);font-weight:500;}
+  .work{
+    font-family:'DM Mono',monospace;font-size:.82rem;color:var(--green-light);
+    background:var(--bg);border-radius:4px;padding:9px 11px;margin-top:9px;line-height:1.55;
+  }
+
+  .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px;}
+
+  /* ---------- TIER COMPLETE ---------- */
+  .complete{text-align:center;padding:34px 10px;}
+  .complete-score{font-family:'Bebas Neue',sans-serif;font-size:4.4rem;line-height:1;color:var(--gold);}
+  .complete-msg{font-size:1rem;color:var(--muted);line-height:1.6;margin:12px auto 22px;max-width:440px;}
+  .complete-msg strong{color:var(--ink);font-weight:500;}
+  .unlock-bar{height:5px;background:rgba(106,191,106,.16);border-radius:3px;overflow:hidden;max-width:250px;margin:0 auto 20px;}
+  .unlock-fill{height:100%;width:0;background:var(--green-light);transition:width .8s ease;}
+  .unlock-fill.fill{width:100%;}
+
+  .end-rank{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,5vw,38px);letter-spacing:1.5px;color:var(--green-light);margin-bottom:4px;}
+  .end-score{font-family:'Bebas Neue',sans-serif;font-size:5rem;line-height:1;color:var(--gold);}
+  .end-summary{margin:22px auto 24px;max-width:420px;text-align:left;}
+  .end-row{display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid var(--line);font-size:.88rem;color:var(--muted);}
+  .end-row b{color:var(--ink);font-family:'DM Mono',monospace;font-weight:500;}
+
+  .footlink{margin-top:34px;text-align:center;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.06em;color:var(--faint);}
+  .footlink a{color:var(--green-light);text-decoration:none;}
+  .footlink a:hover{text-decoration:underline;}
+
+  @media (max-width:560px){
+    #hud{height:48px;padding:0 11px;}
+    #hud-title{font-size:1.05rem;letter-spacing:2px;}
+    #hud-tier{display:none;}
+    #formula-bar{top:48px;padding:7px 10px;gap:6px;}
+    .fx{min-width:40px;}
+    .fx-letter{font-size:1.2rem;}
+    .fx-cap{font-size:.48rem;}
+    #wrap{padding:118px 13px 50px;}
+    .numrow input{width:100%;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+
+<div id="hud">
+  <div id="hud-left">
+    <div id="hud-title">PRICE ENGINE</div>
+    <div id="hud-tier">What Is Money?</div>
+  </div>
+  <div id="tier-nav"></div>
+  <div id="hud-right">
+    <div id="hud-score-label">Score</div>
+    <div id="hud-score">0</div>
+  </div>
+</div>
+
+<div id="formula-bar">
+  <div class="fx"><div class="fx-letter">M</div><div class="fx-cap">Money</div></div>
+  <div class="fx-op">&times;</div>
+  <div class="fx"><div class="fx-letter">V</div><div class="fx-cap">Velocity</div></div>
+  <div class="fx-op">=</div>
+  <div class="fx"><div class="fx-letter out">P</div><div class="fx-cap">Prices</div></div>
+  <div class="fx-op">&times;</div>
+  <div class="fx"><div class="fx-letter">Q</div><div class="fx-cap">Output</div></div>
+</div>
+
+<div id="wrap">
+
+  <!-- INTRO -->
+  <div class="screen active" id="intro-screen">
+    <div class="kicker">Unit 3 &middot; Tool</div>
+    <h1 class="big">Price<br><em>Engine</em></h1>
+    <p class="lede">One equation explains the school store, Weimar Germany, the 1973 gas lines, and the prices you saw after 2020. Three tiers, each one harder than the last. The formula stays on screen the whole time, so this is not about memorizing it. It is about learning to read it.</p>
+
+    <div class="tier-preview" id="tier-preview"></div>
+
+    <button class="btn" onclick="startTier(1)">START TIER 1</button>
+    <div class="footlink">
+      <a href="unit-3.html">Hyperinflation case study</a> &middot;
+      <a href="unit-3b.html">Unit 3 reference</a> &middot;
+      <a href="index.html">Course home</a>
+    </div>
+  </div>
+
+  <!-- PLAY -->
+  <div class="screen" id="play-screen">
+    <div class="tier-header">
+      <div class="tier-label" id="p-label">Tier 1</div>
+      <div class="tier-title" id="p-title">The School Store</div>
+      <div class="tier-instructions" id="p-instr"></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="p-fill"></div></div>
+    <div class="progress-label" id="p-count">Question 1 of 6</div>
+
+    <div class="scenario">
+      <div class="scenario-tag" id="q-tag">Scenario</div>
+      <div class="scenario-text" id="q-text"></div>
+      <div class="given" id="q-given"></div>
+    </div>
+    <div class="prompt" id="q-prompt"></div>
+    <div id="q-body"></div>
+    <div class="feedback" id="q-feedback"></div>
+    <div class="actions" id="q-actions"></div>
+  </div>
+
+  <!-- TIER COMPLETE -->
+  <div class="screen" id="complete-screen">
+    <div class="complete">
+      <div class="tier-label" id="c-label">Tier 1 complete</div>
+      <div class="complete-score" id="c-score">0</div>
+      <div class="unlock-bar"><div class="unlock-fill" id="c-fill"></div></div>
+      <div class="complete-msg" id="c-msg"></div>
+      <div id="c-buttons"></div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div class="screen" id="end-screen">
+    <div class="complete">
+      <div class="kicker">Run complete</div>
+      <div class="end-rank" id="e-rank"></div>
+      <div class="end-score" id="e-score">0</div>
+      <div class="end-summary" id="e-summary"></div>
+      <div id="e-note" class="complete-msg"></div>
+      <button class="btn" onclick="location.reload()">RUN IT AGAIN</button>
+      <div class="footlink">
+        <a href="unit-3.html">Hyperinflation case study</a> &middot;
+        <a href="unit-3b.html">Unit 3 reference</a> &middot;
+        <a href="index.html">Course home</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   TIER DATA
+   ============================================================ */
+const VARS = [
+  {id:'M', label:'M &middot; Money supply'},
+  {id:'V', label:'V &middot; Velocity'},
+  {id:'P', label:'P &middot; Price level'},
+  {id:'Q', label:'Q &middot; Real output'}
+];
+
+const TIERS = [
+  {
+    n:1,
+    name:'The School Store',
+    blurb:'Mr. McBride starts printing BVA bucks. Name the variable, then work out what prices have to do.',
+    instr:'Mr. McBride runs the bucks. Ms. Ryan runs the store. The first four questions ask you to name a variable. After that you have to work out the consequence.',
+    pass:7, pts:10,
+    questions:[
+      { tag:'Name the variable',
+        text:'Mr. McBride secretly prints five thousand extra BVA bucks and hands them out to everyone.',
+        prompt:'Which variable just moved?',
+        opts:VARS.map(v=>v.label), correct:0,
+        why:'More bucks in circulation is a bigger money supply. Nothing new was produced, so this is M and only M, at least for the moment.' },
+      { tag:'Name the variable',
+        text:'Students stop saving their bucks. They now spend every buck the same day they get it.',
+        prompt:'Which variable just moved?',
+        opts:VARS.map(v=>v.label), correct:1,
+        why:'Velocity is how fast money changes hands. Nobody printed anything here. The same bucks are just moving faster, and that has the same effect on prices as printing more.' },
+      { tag:'Name the variable',
+        text:'A delivery truck arrives and Ms. Ryan doubles the number of items for sale.',
+        prompt:'Which variable just moved?',
+        opts:VARS.map(v=>v.label), correct:3,
+        why:'More real goods on the shelf is a rise in Q. This is the one variable that pushes prices down when it grows.' },
+      { tag:'Name the variable',
+        text:'A bag of chips that cost two bucks last week now costs five.',
+        prompt:'Which variable is this?',
+        opts:VARS.map(v=>v.label), correct:2,
+        why:'P is the price level. Notice it sits on the right side of the equation. P is the result, not the cause. Nobody decided prices would be five bucks. The other three variables forced it.' },
+      { tag:'Now the consequence',
+        text:'Mr. McBride triples the bucks in circulation. Ms. Ryan stocks the same items as always, and students spend at their usual pace.',
+        prompt:'What has to happen to P?',
+        opts:['P triples','P falls to one third','P does not change','Not enough information'],
+        correct:0,
+        why:'M tripled while V and Q sat still. The two sides have to balance, so P triples. No new snacks appeared. The same snacks are just being chased by three times as much paper.' },
+      { tag:'Now the consequence',
+        text:'Word spreads that McBride will keep printing. Students start spending their bucks the moment they get them instead of holding onto them. The number of bucks and the number of snacks are both unchanged.',
+        prompt:'What has to happen to P?',
+        opts:['P rises','P falls','P does not change, since M did not change','Q rises instead'],
+        correct:0,
+        why:'This is the doom loop. Expectations pushed V up, and V is on the same side as M. Prices rise even though nobody printed a single new buck. Expectations become self fulfilling.' },
+      { tag:'Now the consequence',
+        text:'Ms. Ryan gets a huge restock and doubles the number of items in the store. The bucks in circulation and the spending pace both stay the same.',
+        prompt:'What has to happen to P?',
+        opts:['P falls by half','P doubles','P does not change','P rises slightly'],
+        correct:0,
+        why:'Q doubled on the right side, so P has to fall by half to keep the equation balanced. Growing real output is the honest way to bring prices down.' },
+      { tag:'Now the consequence',
+        text:'Prices have been climbing for a week. McBride announces a hard cap: no more bucks will ever be printed. Students believe him.',
+        prompt:'What happens next?',
+        opts:['V falls and prices settle','V keeps rising and prices keep climbing','Q collapses and prices spike','Nothing changes, since the bucks are already out there'],
+        correct:0,
+        why:'This is the Rentenmark move. The bucks already in circulation did not disappear, but once students stop expecting prices to rise, they stop rushing to spend. V falls and the loop runs in reverse. It worked because people believed the promise.' },
+      { tag:'The hard one',
+        text:'McBride doubles the bucks in circulation. On the very same day, Ms. Ryan doubles the number of items in the store. Spending pace is unchanged.',
+        prompt:'What has to happen to P?',
+        opts:['P does not change','P doubles','P falls by half','P quadruples'],
+        correct:0,
+        why:'Both sides doubled, so they still balance and prices hold steady. This is the case most people get wrong. Printing money is not automatically inflationary. It is inflationary when M outruns Q, which is exactly what happened in Weimar because factories could not bake more bread.' }
+    ]
+  },
+  {
+    n:2,
+    name:'Run the Numbers',
+    blurb:'Actual arithmetic, starting gentle and ending on Weimar\u2019s factor of 800 million.',
+    instr:'Type the number. The formula is at the top of the screen the whole time, so use it. These start easy and get harder fast.',
+    pass:3, pts:20,
+    questions:[
+      { tag:'Warm up', type:'num',
+        text:'A small economy has a money supply of 1,000. Each unit of money changes hands 4 times. The economy produces 500 real goods.',
+        given:[['M','1,000'],['V','4'],['Q','500']],
+        prompt:'What is P, the price level?',
+        answer:8, hint:'Rearrange: P = (M x V) / Q',
+        work:'M x V = 1,000 x 4 = 4,000\n4,000 / 500 = 8',
+        why:'Multiply the left side, then divide by Q. That is all the equation ever asks you to do.' },
+      { tag:'Print more', type:'num',
+        text:'Same economy. The government doubles the money supply to 2,000. Velocity is still 4 and output is still 500 goods.',
+        given:[['M','2,000'],['V','4'],['Q','500']],
+        prompt:'What is P now?',
+        answer:16, hint:'Same steps as before',
+        work:'2,000 x 4 = 8,000\n8,000 / 500 = 16',
+        why:'M doubled and nothing else moved, so P doubled. Twice the money chasing exactly the same 500 goods.' },
+      { tag:'Output grows', type:'num',
+        text:'The money supply stays at 2,000 and velocity stays at 4, but this time the economy actually grows and produces 1,000 real goods instead of 500.',
+        given:[['M','2,000'],['V','4'],['Q','1,000']],
+        prompt:'What is P now?',
+        answer:8, hint:'Q is the divisor',
+        work:'2,000 x 4 = 8,000\n8,000 / 1,000 = 8',
+        why:'Prices fell right back to where they started. The extra money was harmless because real output grew to match it. Compare this to the last question: same M, same V, completely different outcome.' },
+      { tag:'Weimar, 1922 to 1923', type:'num',
+        text:'Between January 1922 and November 1923 the price of a loaf of bread in Germany rose by a factor of 800,000,000. Over that stretch, velocity rose by a factor of 4 as people rushed to spend. German factories produced about the same amount of bread as before, so treat Q as unchanged.',
+        given:[['P','x 800,000,000'],['V','x 4'],['Q','unchanged']],
+        prompt:'By what factor did the money supply rise?',
+        answer:200000000, hint:'If V did part of the work, M did not have to do all of it',
+        work:'M x V = P x Q\nM x 4 = 800,000,000\nM = 800,000,000 / 4 = 200,000,000',
+        why:'The money supply rose by a factor of 200 million, and velocity multiplied that by another 4 to produce the full 800 million. Printing did most of the damage, but panic spending did the rest. That is why hyperinflation outruns the printing presses.' }
+    ]
+  },
+  {
+    n:3,
+    name:'Two American Shocks',
+    blurb:'1973 and the years after 2020. Same equation, very different causes, and neither one is Weimar.',
+    instr:'Two times the United States got hit hard by inflation. Read which variable moved before you decide what caused it.',
+    pass:4, pts:25,
+    questions:[
+      { tag:'United States, 1973',
+        text:'In October 1973 OPEC cuts oil exports to the United States. Factories cannot run full shifts, trucks cannot make all their deliveries, and the country simply produces less than it did the year before. The Federal Reserve had not suddenly flooded the country with money.',
+        prompt:'In M x V = P x Q, which variable moved first?',
+        opts:['Q fell','M rose','M fell','V fell'],
+        correct:0,
+        why:'An oil embargo is a supply shock. It hits real output directly. Fewer goods actually get made, so Q falls. Nothing has happened to the money supply at all.' },
+      { tag:'United States, 1973',
+        text:'A classmate says inflation is always caused by the government printing too much money.',
+        prompt:'What does 1973 show about that claim?',
+        opts:[
+          'Prices can rise from a fall in output, with no new money printed at all',
+          'It is correct, since the Fed must have secretly printed money',
+          'It is correct, because oil prices are not part of inflation',
+          'Prices only rise when velocity falls'
+        ],
+        correct:0,
+        why:'Weimar was an M story. 1973 was a Q story. Both are the same equation, just a different variable moving. This is why the equation beats the slogan: it tells you where to look instead of assuming you already know.' },
+      { tag:'Stagflation',
+        text:'1973 produced something economists had barely seen before: prices rising and unemployment rising at the same time. They named it stagflation.',
+        prompt:'Which pair of moves matches stagflation?',
+        opts:[
+          'Q falls while P rises',
+          'M rises while Q rises',
+          'V falls while P falls',
+          'M falls while Q rises'
+        ],
+        correct:0,
+        why:'Falling Q means less is being produced, which means fewer jobs, and it forces P up at the same time. One variable moving explains both halves of stagflation at once.' },
+      { tag:'United States, spring 2020',
+        text:'Lockdowns begin. Restaurants, theaters, and stores close. Americans stop going out and start saving at the highest rate ever recorded. Money is sitting in accounts instead of moving around.',
+        prompt:'Which variable moved, and which way?',
+        opts:['V fell','V rose','M fell','Q rose'],
+        correct:0,
+        why:'Velocity collapsed. Notice this is the exact opposite of Weimar, where panic drove V up. Same variable, opposite direction, because people expected something different. In 1923 they expected prices to run away. In 2020 they expected uncertainty and held on to their cash.' },
+      { tag:'United States, 2021 to 2022',
+        text:'Stimulus payments and Federal Reserve action push the money supply up sharply. Supply chains are tangled, semiconductors are scarce, and ports are backed up, so output cannot keep up with demand. Then the country reopens and people start spending again.',
+        prompt:'What does the equation predict for P?',
+        opts:[
+          'P rises sharply, because M and V both climbed while Q stayed constrained',
+          'P falls, because output recovered',
+          'P does not change, because the rise in V cancels the rise in M',
+          'P cannot move unless a government prints during a shortage'
+        ],
+        correct:0,
+        why:'US inflation peaked at 9.1% in June 2022, the highest since the early 1980s. This one is not a clean single variable story like Weimar or 1973. M grew fast, Q stayed constrained, and V came back as people started spending again. Economists still argue about how much each piece contributed, and the honest answer is that all three moved at once.' },
+      { tag:'The closing question',
+        text:'Weimar spiraled until the currency died. US inflation peaked in June 2022 and then came back down over the following two years.',
+        prompt:'What is the main reason the United States did not spiral?',
+        opts:[
+          'The Fed is independent and credible, so people never expected runaway printing',
+          'The United States never increased its money supply at all',
+          'Supply shocks are not capable of causing inflation',
+          'The United States went back on the gold standard'
+        ],
+        correct:0,
+        why:'The doom loop needs expectations to run away. In Germany nobody believed the printing would stop, so V exploded. In the United States the Fed raised interest rates and people believed it would keep acting, so expectations stayed anchored and V never spiraled. That is what an independent central bank buys you, and it is the note the case study ends on.' }
+    ]
+  }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let tierIdx = 0;
+let qIdx = 0;
+let score = 0;
+let tierCorrect = 0;
+let answered = false;
+const unlocked = new Set([1]);
+const results = {};
+
+const $ = id => document.getElementById(id);
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function bumpScore(pts){
+  score += pts;
+  const el = $('hud-score');
+  el.textContent = score;
+  el.classList.add('pop');
+  setTimeout(()=>el.classList.remove('pop'), 190);
+}
+
+function buildNav(){
+  const nav = $('tier-nav');
+  nav.innerHTML = '';
+  TIERS.forEach(t=>{
+    const b = document.createElement('button');
+    b.className = 'tier-nav-btn';
+    b.id = 'nav-' + t.n;
+    b.type = 'button';
+    b.textContent = 'T' + t.n;
+    b.onclick = ()=>jumpToTier(t.n);
+    nav.appendChild(b);
+  });
+}
+
+function buildPreview(){
+  const wrap = $('tier-preview');
+  wrap.innerHTML = '';
+  TIERS.forEach(t=>{
+    const c = document.createElement('div');
+    c.className = 'tier-card';
+    c.innerHTML =
+      '<div class="tier-card-num">' + String(t.n).padStart(2,'0') + '</div>' +
+      '<div class="tier-card-name">' + t.name + '</div>' +
+      '<div class="tier-card-desc">' + t.blurb + '</div>';
+    wrap.appendChild(c);
+  });
+}
+
+function paintNav(){
+  $('tier-nav').style.display = 'flex';
+  TIERS.forEach(t=>{
+    const b = $('nav-' + t.n);
+    if(!b) return;
+    const open = unlocked.has(t.n);
+    b.classList.toggle('unlocked', open);
+    b.classList.toggle('current', t.n === tierIdx+1 && $('play-screen').classList.contains('active'));
+    b.setAttribute('aria-disabled', open ? 'false' : 'true');
+    b.title = open ? ('Tier ' + t.n + ': ' + t.name) : ('Tier ' + t.n + ' locked');
+  });
+}
+
+function jumpToTier(n){
+  if(!unlocked.has(n)) return;
+  startTier(n);
+}
+
+function startTier(n){
+  tierIdx = n-1;
+  qIdx = 0;
+  tierCorrect = 0;
+  const t = TIERS[tierIdx];
+  $('hud-tier').textContent = 'Tier ' + n + ': ' + t.name;
+  $('p-label').textContent = 'Tier ' + n;
+  $('p-title').textContent = t.name;
+  $('p-instr').textContent = t.instr;
+  showScreen('play-screen');
+  paintNav();
+  renderQ();
+}
+
+function renderQ(){
+  answered = false;
+  const t = TIERS[tierIdx];
+  const q = t.questions[qIdx];
+
+  $('p-fill').style.width = ((qIdx) / t.questions.length * 100) + '%';
+  $('p-count').textContent = 'Question ' + (qIdx+1) + ' of ' + t.questions.length;
+
+  $('q-tag').textContent = q.tag;
+  $('q-text').textContent = q.text;
+  $('q-prompt').textContent = q.prompt;
+
+  const g = $('q-given');
+  g.innerHTML = '';
+  if(q.given){
+    q.given.forEach(pair=>{
+      const c = document.createElement('div');
+      c.className = 'given-chip';
+      c.innerHTML = pair[0] + ' = <b>' + pair[1] + '</b>';
+      g.appendChild(c);
+    });
+  }
+
+  const body = $('q-body');
+  body.innerHTML = '';
+  const fb = $('q-feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  $('q-actions').innerHTML = '';
+
+  if(q.type === 'num'){
+    const row = document.createElement('div');
+    row.className = 'numrow';
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.inputMode = 'numeric';
+    inp.id = 'numin';
+    inp.autocomplete = 'off';
+    inp.setAttribute('aria-label', q.prompt);
+    inp.placeholder = 'Your answer';
+    inp.addEventListener('keydown', e=>{ if(e.key === 'Enter') submitNum(); });
+    inp.addEventListener('input', ()=>{
+      inp.classList.remove('wrong');
+      const h = document.querySelector('.numhint');
+      if(h){ h.textContent = q.hint; h.style.color = ''; }
+    });
+    const go = document.createElement('button');
+    go.className = 'btn btn-sm';
+    go.textContent = 'CHECK';
+    go.id = 'numgo';
+    go.onclick = submitNum;
+    row.appendChild(inp); row.appendChild(go);
+    body.appendChild(row);
+    const h = document.createElement('div');
+    h.className = 'numhint';
+    h.textContent = q.hint;
+    body.appendChild(h);
+    setTimeout(()=>inp.focus(), 60);
+  } else {
+    const box = document.createElement('div');
+    box.className = 'opts';
+    q.opts.forEach((o,i)=>{
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.type = 'button';
+      b.innerHTML = '<span class="mark">' + String.fromCharCode(65+i) + '</span>' + o;
+      b.onclick = ()=>pick(i, b);
+      box.appendChild(b);
+    });
+    body.appendChild(box);
+  }
+}
+
+function lockOpts(){
+  document.querySelectorAll('#q-body .opt').forEach(b=>b.disabled = true);
+}
+
+function pick(i, btn){
+  if(answered) return;
+  answered = true;
+  const t = TIERS[tierIdx];
+  const q = t.questions[qIdx];
+  const right = i === q.correct;
+  lockOpts();
+  const all = [...document.querySelectorAll('#q-body .opt')];
+  all[q.correct].classList.add('correct');
+  if(!right) btn.classList.add('wrong');
+  finishQ(right, q, t);
+}
+
+function submitNum(){
+  if(answered) return;
+  const inp = $('numin');
+  const raw = (inp.value || '').replace(/[, \s]/g,'');
+  if(raw === '') { inp.focus(); return; }
+  const val = Number(raw);
+  if(!isFinite(val)){
+    inp.classList.add('wrong');
+    const h = document.querySelector('.numhint');
+    if(h){ h.textContent = 'Numbers only. Commas are fine.'; h.style.color = 'var(--wrong)'; }
+    inp.focus();
+    return;
+  }
+  answered = true;
+  const t = TIERS[tierIdx];
+  const q = t.questions[qIdx];
+  const right = val === q.answer;
+  inp.classList.add(right ? 'correct' : 'wrong');
+  inp.disabled = true;
+  $('numgo').disabled = true;
+  finishQ(right, q, t);
+}
+
+function finishQ(right, q, t){
+  if(right){ tierCorrect++; bumpScore(t.pts); }
+  const fb = $('q-feedback');
+  fb.className = 'feedback show ' + (right ? 'right' : 'miss');
+  let html = '<div class="fb-verdict">' + (right ? 'Correct.' : 'Not this time.') + '</div>';
+  if(!right && q.type === 'num'){
+    html += '<div>The answer is <strong>' + q.answer.toLocaleString() + '</strong>.</div>';
+  }
+  html += '<div>' + q.why + '</div>';
+  if(q.work){
+    html += '<div class="work">' + q.work.replace(/\n/g,'<br>') + '</div>';
+  }
+  fb.innerHTML = html;
+
+  $('p-fill').style.width = ((qIdx+1) / t.questions.length * 100) + '%';
+
+  const act = $('q-actions');
+  act.innerHTML = '';
+  const next = document.createElement('button');
+  next.className = 'btn';
+  next.textContent = (qIdx + 1 < t.questions.length) ? 'NEXT QUESTION' : 'FINISH TIER ' + t.n;
+  next.onclick = ()=>{
+    if(qIdx + 1 < t.questions.length){ qIdx++; renderQ(); }
+    else finishTier();
+  };
+  act.appendChild(next);
+
+  const restart = document.createElement('button');
+  restart.className = 'btn btn-outline btn-sm';
+  restart.textContent = 'RESTART TIER';
+  restart.onclick = ()=>restartTier();
+  act.appendChild(restart);
+
+  setTimeout(()=>next.focus(), 60);
+}
+
+function restartTier(){
+  const t = TIERS[tierIdx];
+  score -= tierCorrect * t.pts;
+  if(score < 0) score = 0;
+  $('hud-score').textContent = score;
+  startTier(t.n);
+}
+
+function finishTier(){
+  const t = TIERS[tierIdx];
+  const total = t.questions.length;
+  results[t.n] = {correct:tierCorrect, total:total};
+  const passed = tierCorrect >= t.pass;
+
+  $('c-label').textContent = 'Tier ' + t.n + ' complete';
+  $('c-score').textContent = tierCorrect + ' / ' + total;
+
+  const msg = $('c-msg');
+  const btns = $('c-buttons');
+  btns.innerHTML = '';
+
+  if(passed){
+    if(t.n < TIERS.length){
+      unlocked.add(t.n + 1);
+      msg.innerHTML = 'You got <strong>' + tierCorrect + ' of ' + total + '</strong>. Tier ' + (t.n+1) + ' is unlocked.';
+      const go = document.createElement('button');
+      go.className = 'btn';
+      go.textContent = 'UNLOCK TIER ' + (t.n+1);
+      go.onclick = ()=>startTier(t.n+1);
+      btns.appendChild(go);
+    } else {
+      msg.innerHTML = 'You got <strong>' + tierCorrect + ' of ' + total + '</strong>. That is every tier cleared.';
+      const go = document.createElement('button');
+      go.className = 'btn';
+      go.textContent = 'SEE FINAL SCORE';
+      go.onclick = showEnd;
+      btns.appendChild(go);
+    }
+    const again = document.createElement('button');
+    again.className = 'btn btn-outline';
+    again.style.marginLeft = '10px';
+    again.textContent = 'RETRY TIER ' + t.n;
+    again.onclick = ()=>restartTier();
+    btns.appendChild(again);
+  } else {
+    msg.innerHTML = 'You got <strong>' + tierCorrect + ' of ' + total + '</strong>. You need <strong>' + t.pass + '</strong> to move on. Read the explanations, then run it again.';
+    const again = document.createElement('button');
+    again.className = 'btn';
+    again.textContent = 'RETRY TIER ' + t.n;
+    again.onclick = ()=>restartTier();
+    btns.appendChild(again);
+  }
+
+  showScreen('complete-screen');
+  paintNav();
+  const fill = $('c-fill');
+  fill.classList.remove('fill');
+  if(passed) setTimeout(()=>fill.classList.add('fill'), 180);
+}
+
+function boot(){
+  buildNav();
+  buildPreview();
+}
+boot();
+
+function showEnd(){
+  const maxScore = TIERS.reduce((s,t)=>s + t.questions.length * t.pts, 0);
+  $('e-score').textContent = score;
+  const pct = score / maxScore;
+  let rank, note;
+  if(pct >= 0.9){
+    rank = 'You can read the equation in the wild.';
+    note = 'A printing spree, an oil embargo, and a pandemic, all read with the same four letters. That is the whole point of MV = PQ.';
+  } else if(pct >= 0.72){
+    rank = 'Strong. The mechanics are there.';
+    note = 'The reasoning is solid. Go back to whichever tier cost you points and read the explanations again.';
+  } else if(pct >= 0.5){
+    rank = 'The idea is landing, the details are not yet.';
+    note = 'Most people lose points where P does not move, and on the 2020 question where velocity fell instead of rising. Those are worth a second look.';
+  } else {
+    rank = 'Worth another run.';
+    note = 'Start again at Tier 1. Cleared tiers stay unlocked, so you can jump straight back to the one that gave you trouble.';
+  }
+  $('e-rank').textContent = rank;
+  $('e-note').textContent = note;
+
+  const sum = $('e-summary');
+  sum.innerHTML = '';
+  TIERS.forEach(t=>{
+    const r = results[t.n];
+    const row = document.createElement('div');
+    row.className = 'end-row';
+    row.innerHTML = '<span>Tier ' + t.n + ' &middot; ' + t.name + '</span><b>' +
+      (r ? r.correct + ' / ' + r.total : 'not played') + '</b>';
+    sum.appendChild(row);
+  });
+
+  showScreen('end-screen');
+  paintNav();
+}
+</script>
+</body>
+</html>
